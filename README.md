@@ -1,2 +1,2 @@
 # 5th-tingting-node
-# Developer : Yang-Jiwon, Ha-Jiyoung
+Developer : Yang-Jiwon, Ha-Jiyoung
