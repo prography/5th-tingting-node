@@ -1,46 +1,51 @@
-const Sequelize = require("sequelize");
-const sequelize = require("../../loaders/dbLoader");
-
-const Matching = sequelize.define(
-    "Matching",
-    {
-        matching_id: {
-            type: Sequelize.INTEGER,
-            allowNull: false,
-            primaryKey: true,
-            autoIncrement: true
+module.exports = function(sequelize, DataTypes) {
+    return sequelize.define(
+        "matchings",
+        {
+            matching_id: {
+                type: DataTypes.INTEGER(11),
+                allowNull: false,
+                primaryKey: true
+            },
+            send_member_id: {
+                type: DataTypes.INTEGER(11),
+                allowNull: false,
+                references: {
+                    model: "users",
+                    key: "user_id"
+                }
+            },
+            send_team_id: {
+                type: DataTypes.INTEGER(11),
+                allowNull: false,
+                references: {
+                    model: "teams",
+                    key: "team_id"
+                }
+            },
+            receive_team_id: {
+                type: DataTypes.INTEGER(11),
+                allowNull: false,
+                references: {
+                    model: "teams",
+                    key: "team_id"
+                }
+            },
+            send_accept_all: {
+                type: DataTypes.INTEGER(11),
+                allowNull: false
+            },
+            receive_accept_all: {
+                type: DataTypes.INTEGER(11),
+                allowNull: false
+            },
+            verified_at: {
+                type: DataTypes.DATE,
+                allowNull: true
+            }
         },
-        send_member_id: {
-            type: Sequelize.INTEGER,
-            allowNull: false
-        },
-        send_team_id: {
-            type: Sequelize.INTEGER,
-            allowNull: false
-        },
-        receive_team_id: {
-            type: Sequelize.INTEGER,
-            allowNull: false
-        },
-        send_accept_all: {
-            type: Sequelize.INTEGER,
-            allowNull: false
-        },
-        receive_accept_all: {
-            type: Sequelize.INTEGER,
-            allowNull: false
-        },
-        verified_at: {
-            type: Sequelize.DATE,
-            allowNull: true
+        {
+            tableName: "matchings"
         }
-    },
-    {
-        tableName: "matchings",
-        freezeTableName: true,
-        underscored: true,
-        timestamps: false
-    }
-);
-
-module.exports = Matching;
+    );
+};

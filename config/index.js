@@ -1,9 +1,10 @@
-const sequelizeConfig = require("./sequelizeConfig");
+const dbConfig = require("./dbConfig");
 const dotenv = require("dotenv");
 dotenv.config();
 
 module.exports = {
     PORT: process.env.PORT,
     NODE_ENV: process.env.NODE_ENV,
-    SEQUELIZE_CONFIG: sequelizeConfig
+    DB_CONFIG: dbConfig,
+    SECRET_KEY: process.env.SECRET_KEY
 };

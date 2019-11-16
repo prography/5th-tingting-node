@@ -1,7 +1,7 @@
 const dotenv = require("dotenv");
 dotenv.config();
 
-const sequelizeConfig = {
+const dbConfig = {
     development: {
         username: process.env.DB_USERNAME || "root",
         password: process.env.DB_PASSWORD,
@@ -13,4 +13,4 @@ const sequelizeConfig = {
     // TO DO : test, production DB 추후에 추가
 };
 
-module.exports = sequelizeConfig;
+module.exports = dbConfig;

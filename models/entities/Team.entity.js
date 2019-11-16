@@ -1,51 +1,51 @@
-const Sequelize = require("sequelize");
-const sequelize = require("../../loaders/dbLoader");
-
-const Team = sequelize.define(
-    "Team",
-    {
-        team_id: {
-            type: Sequelize.INTEGER,
-            allowNull: false,
-            primaryKey: true,
-            autoIncrement: true
+module.exports = function(sequelize, DataTypes) {
+    return sequelize.define(
+        "teams",
+        {
+            team_id: {
+                type: DataTypes.INTEGER(11),
+                allowNull: false,
+                primaryKey: true
+            },
+            teamname: {
+                type: DataTypes.STRING(24),
+                allowNull: false,
+                unique: true
+            },
+            chat_address: {
+                type: DataTypes.STRING(100),
+                allowNull: false
+            },
+            owner_id: {
+                type: DataTypes.INTEGER(11),
+                allowNull: false,
+                references: {
+                    model: "users",
+                    key: "user_id"
+                }
+            },
+            intro: {
+                type: DataTypes.TEXT,
+                allowNull: false
+            },
+            gender: {
+                type: DataTypes.INTEGER(1),
+                allowNull: false
+            },
+            verified_at: {
+                type: DataTypes.DATE,
+                allowNull: true
+            },
+            team_member_number: {
+                type: DataTypes.INTEGER(3),
+                allowNull: true
+            }
         },
-        teamname: {
-            type: Sequelize.STRING(24),
-            allowNull: false,
-            unique: true
-        },
-        chat_address: {
-            type: Sequelize.STRING(100),
-            allowNull: false
-        },
-        gender: {
-            type: Sequelize.BOOLEAN,
-            allowNull: false
-        },
-        owner_id: {
-            type: Sequelize.INTEGER,
-            allowNull: false
-        },
-        team_member_number: {
-            type: Sequelize.INTEGER,
-            allowNull: false
-        },
-        intro: {
-            type: Sequelize.TEXT,
-            allowNull: false
-        },
-        verified_at: {
-            type: Sequelize.DATE,
-            allowNull: true
+        {
+            tableName: "teams",
+            freezeTableName: true,
+            underscored: true,
+            timestamps: false
         }
-    },
-    {
-        tableName: "teams",
-        freezeTableName: true,
-        underscored: true,
-        timestamps: false
-    }
-);
-
-module.exports = Team;
+    );
+};
