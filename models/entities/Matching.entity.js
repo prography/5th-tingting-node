@@ -1,8 +1,8 @@
 const Sequelize = require("sequelize");
-const sequelize = require("../../loaders/dbLoader");
+const db = require("../../loaders/dbLoader");
 
-const Matching = sequelize.define(
-    "Matching",
+const Matching = db.define(
+    "matchings",
     {
         matching_id: {
             type: Sequelize.INTEGER,
@@ -42,5 +42,4 @@ const Matching = sequelize.define(
         timestamps: false
     }
 );
-
 module.exports = Matching;

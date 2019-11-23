@@ -1,8 +1,8 @@
 const Sequelize = require("sequelize");
-const sequelize = require("../../loaders/dbLoader");
+const db = require("../../loaders/dbLoader");
 
-const Img = sequelize.define(
-    "Img",
+const Img = db.define(
+    "imgs",
     {
         img_id: {
             type: Sequelize.INTEGER,
@@ -26,5 +26,4 @@ const Img = sequelize.define(
         timestamps: false
     }
 );
-
 module.exports = Img;

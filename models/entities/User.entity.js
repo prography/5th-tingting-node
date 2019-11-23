@@ -1,14 +1,13 @@
 const Sequelize = require("sequelize");
-const sequelize = require("../../loaders/dbLoader");
+const db = require("../../loaders/dbLoader");
 
-const User = sequelize.define(
-    "User",
+const User = db.define(
+    "users",
     {
         user_id: {
-            type: Sequelize.INTEGER,
+            type: Sequelize.INTEGER(11),
             allowNull: false,
-            primaryKey: true,
-            autoIncrement: true
+            primaryKey: true
         },
         id: {
             type: Sequelize.STRING(20),
@@ -29,7 +28,7 @@ const User = sequelize.define(
             allowNull: false
         },
         height: {
-            type: Sequelize.INTEGER,
+            type: Sequelize.INTEGER(11),
             allowNull: false
         },
         thumbnail: {
@@ -43,7 +42,11 @@ const User = sequelize.define(
         created_at: {
             type: Sequelize.DATE,
             allowNull: false,
-            defaultValue: Sequelize.NOW
+            defaultValue: db.literal("CURRENT_TIMESTAMP")
+        },
+        gender: {
+            type: Sequelize.INTEGER(1),
+            allowNull: false
         }
     },
     {

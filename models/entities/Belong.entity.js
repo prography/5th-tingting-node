@@ -1,8 +1,8 @@
 const Sequelize = require("sequelize");
-const sequelize = require("../../loaders/dbLoader");
+const db = require("../../loaders/dbLoader");
 
-const Belong = sequelize.define(
-    "Belong",
+const Belong = db.define(
+    "belongs",
     {
         belong_id: {
             type: Sequelize.INTEGER,
@@ -26,5 +26,4 @@ const Belong = sequelize.define(
         timestamps: false
     }
 );
-
 module.exports = Belong;

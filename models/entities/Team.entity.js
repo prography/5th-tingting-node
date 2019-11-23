@@ -1,8 +1,8 @@
 const Sequelize = require("sequelize");
-const sequelize = require("../../loaders/dbLoader");
+const db = require("../../loaders/dbLoader");
 
-const Team = sequelize.define(
-    "Team",
+const Team = db.define(
+    "teams",
     {
         team_id: {
             type: Sequelize.INTEGER,
@@ -20,7 +20,7 @@ const Team = sequelize.define(
             allowNull: false
         },
         gender: {
-            type: Sequelize.BOOLEAN,
+            type: Sequelize.INTEGER(1),
             allowNull: false
         },
         owner_id: {
@@ -47,5 +47,4 @@ const Team = sequelize.define(
         timestamps: false
     }
 );
-
 module.exports = Team;
