@@ -4,11 +4,13 @@ const config = require("../config");
 const cookieParser = require("cookie-parser");
 const express = require("express");
 const logger = require("morgan");
+const passport = require("passport");
+const passportConfig = require("../middlewares/passport/passportConfig");
 const session = require("express-session");
 const MySQLStore = require("express-mysql-session")(session);
 
 const expressLoader = app => {
-    const env = config.NODE_ENV;
+    const env = config.NODE_ENV || "development";
     const db_config = config.DB_CONFIG[env];
     app.use(api);
     app.set("port", config.PORT);
@@ -16,6 +18,7 @@ const expressLoader = app => {
     app.use(bodyParser.json());
     app.use(bodyParser.urlencoded({ extended: true }));
     app.use(cookieParser());
+    passportConfig(passport);
     app.use(
         session({
             secret: config.SECRET_KEY,
@@ -30,6 +33,8 @@ const expressLoader = app => {
             })
         })
     );
+    app.use(passport.initialize());
+    app.use(passport.session());
 };
 
 module.exports = expressLoader;

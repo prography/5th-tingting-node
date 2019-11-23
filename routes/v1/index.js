@@ -7,7 +7,7 @@ const authRouter = require("./api/authRouter");
 const router = express.Router();
 
 //router.use("/auth", authRouter);
-//router.use("/users", userRouter);
+router.use("/users", userRouter);
 //router.use("/teams", teamRouter);
 //router.use("/candidates", candidateRouter);
 
