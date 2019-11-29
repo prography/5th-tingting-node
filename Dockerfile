@@ -1,7 +1,6 @@
 FROM node:10
 
 ENV TZ="/usr/share/zoneinfo/Asia/Seoul"
-ENV HOST 0.0.0.0
 
 ARG PROJECT_DIR=/tingting/web
 
