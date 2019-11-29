@@ -1,7 +1,7 @@
 import Belong from "./entities/Belong.entity";
 
 class ModelBelong {
-    async findTeamList_ByBelong(user_id) {
+    async findMyTeamList(user_id) {
         const teamList = [];
         await Belong.findAll({
             attributes: ['team_id'],
