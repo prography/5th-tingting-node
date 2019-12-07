@@ -2,23 +2,19 @@ const Sequelize = require("sequelize");
 const db = require("../../loaders/dbLoader");
 
 const User = db.define(
-    "users",
+    "user",
     {
-        user_id: {
+        id: {
             type: Sequelize.INTEGER(11),
             allowNull: false,
             primaryKey: true
         },
-        id: {
-            type: Sequelize.STRING(20),
+        kakao_id: {
+            type: Sequelize.STRING(180),
             allowNull: false,
-            unique: true
+            //unique: true
         },
-        password: {
-            type: Sequelize.STRING(20),
-            allowNull: false
-        },
-        username: {
+        name: {
             type: Sequelize.STRING(24),
             allowNull: false,
             unique: true
@@ -39,18 +35,32 @@ const User = db.define(
             type: Sequelize.STRING(45),
             allowNull: false
         },
+        gender: {
+            type: Sequelize.INTEGER(1),
+            allowNull: false
+        },
         created_at: {
             type: Sequelize.DATE,
             allowNull: false,
             defaultValue: db.literal("CURRENT_TIMESTAMP")
         },
-        gender: {
+        updated_at: {
+            type: Sequelize.DATE,
+            allowNull: false,
+            defaultValue: db.literal("CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP")
+        },
+        is_deleted: {
             type: Sequelize.INTEGER(1),
-            allowNull: false
-        }
+            allowNull: false,
+            defaultValue: 0
+        },
+        deleted_at: {
+            type: Sequelize.DATE,
+            defaultValue: null
+        },
     },
     {
-        tableName: "users",
+        tableName: "user",
         freezeTableName: true,
         underscored: true,
         timestamps: false

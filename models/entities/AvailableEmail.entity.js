@@ -1,29 +1,33 @@
 const Sequelize = require("sequelize");
 const db = require("../../loaders/dbLoader");
 
-const Img = db.define(
-    "imgs",
+const AvailableEmail = db.define(
+    "availableEmail",
     {
-        img_id: {
+        id: {
             type: Sequelize.INTEGER,
             allowNull: false,
             primaryKey: true,
             autoIncrement: true
         },
-        user_id: {
-            type: Sequelize.INTEGER,
+        name: {
+            type: Sequelize.STRING(45),
             allowNull: false
         },
-        url: {
-            type: Sequelize.STRING(100),
+        email: {
+            type: Sequelize.STRING(45),
+            allowNull: false
+        },
+        is_university: {
+            type: Sequelize.INTEGER(1),
             allowNull: false
         }
     },
     {
-        tableName: "imgs",
+        tableName: "availableEmail",
         freezeTableName: true,
         underscored: true,
         timestamps: false
     }
 );
-module.exports = Img;
+module.exports = AvailableEmail;
