@@ -9,24 +9,9 @@ const db = new Sequelize(
     db_config.username,
     db_config.password,
     {
-        host: db_config.localhost,
-        dialect: db_config.dialect
+        host: db_config.host,
+        dialect: "mysql"
     }
 );
-
-//Entity Load
-// const User = require("../models/entities/User.entity")(db, Sequelize);
-// const Team = require("../models/entities/Team.entity")(db, Sequelize);
-// const Img = require("../models/entities/Img.entity")(db, Sequelize);
-// const Belong = require("../models/entities/Belong.entity")(
-//     db,
-//     Sequelize
-// );
-// const Matching = require("../models/entities/Matching.entity")(
-//     db,
-//     Sequelize
-// );
-
-//Test DB Connection
 
 module.exports = db;

@@ -1,13 +1,22 @@
-const { getUserInfo } = require("../services/serUser");
+const serUser = require("../services/serUser");
 
-const getUser = async (req, res) => {
-    const id = req.params.id;
-    console.log(id);
-    const user = await getUserInfo(id).then();
-    console.log("cont-user:", user);
-    res.send(user);
+const getTeamList = async(req, res) => {
+    const UserService = new serUser();
+    const teamList = await UserService.findMyTeamList(req.params.id).then();
+    console.log(teamList);
+    console.log(req.params.id);
+    res.send({teamList});
 };
+
+const getUserInfo = async(req, res) =>{
+    const UserService = new serUser();
+    const userInfo = await UserService.findUserInfo(req.params.id).then();
+    res.send({
+        userInfo: userInfo
+    });
+}
 
 module.exports = {
-    getUser
-};
+    getTeamList,
+    getUserInfo,
+}

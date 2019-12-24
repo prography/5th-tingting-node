@@ -1,13 +1,25 @@
-const User = require("../models/entities/User.entity");
+import User from "./entities/User.entity";
 
-const getUserById = async id => {
-    const user = await User.findOne({ where: { user_id: id } }).then(user => {
-        return user.dataValues;
-    });
-    console.log("mod:", user);
-    return user;
-};
+class ModelUser{
+    async findUserInfo(id) {
 
-module.exports = {
-    getUserById
-};
+        //promise then
+        const userData = await User.findAll({
+            where:{
+                id: id
+            },
+        });
+        console.log("mod_user :", userData);
+        return userData;
+    }
+
+    //프로필 수정
+    async updateUserInfo(id, img){
+        const userData = await User.update(
+            {thumbnail: img},
+            {where: id}
+        ).then()
+        return userData;
+    }
+}
+module.exports = ModelUser;

@@ -1,51 +1,62 @@
-module.exports = function(sequelize, DataTypes) {
-    return sequelize.define(
-        "matchings",
-        {
-            matching_id: {
-                type: DataTypes.INTEGER(11),
-                allowNull: false,
-                primaryKey: true
-            },
-            send_member_id: {
-                type: DataTypes.INTEGER(11),
-                allowNull: false,
-                references: {
-                    model: "users",
-                    key: "user_id"
-                }
-            },
-            send_team_id: {
-                type: DataTypes.INTEGER(11),
-                allowNull: false,
-                references: {
-                    model: "teams",
-                    key: "team_id"
-                }
-            },
-            receive_team_id: {
-                type: DataTypes.INTEGER(11),
-                allowNull: false,
-                references: {
-                    model: "teams",
-                    key: "team_id"
-                }
-            },
-            send_accept_all: {
-                type: DataTypes.INTEGER(11),
-                allowNull: false
-            },
-            receive_accept_all: {
-                type: DataTypes.INTEGER(11),
-                allowNull: false
-            },
-            verified_at: {
-                type: DataTypes.DATE,
-                allowNull: true
-            }
+const Sequelize = require("sequelize");
+const db = require("../../loaders/dbLoader");
+
+const Matching = db.define(
+    "matching",
+    {
+        id: {
+            type: Sequelize.INTEGER,
+            allowNull: false,
+            primaryKey: true,
+            autoIncrement: true
         },
-        {
-            tableName: "matchings"
+        send_team_id: {
+            type: Sequelize.INTEGER,
+            allowNull: false
+        },
+        receive_team_id: {
+            type: Sequelize.INTEGER,
+            allowNull: false
+        },
+        send_accept_all: {
+            type: Sequelize.INTEGER(1),
+            allowNull: false,
+            defaultValue: 0
+        },
+        receive_accept_all: {
+            type: Sequelize.INTEGER(1),
+            allowNull: false,
+            defaultValue: 0
+        },
+        verified_at: {
+            type: Sequelize.DATE,
+            allowNull: true
+        },
+        created_at: {
+            type: Sequelize.DATE,
+            allowNull: false,
+            defaultValue: db.literal("CURRENT_TIMESTAMP")
+        },
+        updated_at: {
+            type: Sequelize.DATE,
+            allowNull: false,
+            defaultValue: db.literal("CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP")
+        },
+        is_deleted: {
+            type: Sequelize.INTEGER(1),
+            allowNull: false,
+            defaultValue: 0
+        },
+        deleted_at: {
+            type: Sequelize.DATE,
+            defaultValue: null
         }
-    );
-};
+    },
+    {
+        tableName: "matching",
+        freezeTableName: true,
+        underscored: true,
+        timestamps: false
+    }
+);
+module.exports = Matching;
