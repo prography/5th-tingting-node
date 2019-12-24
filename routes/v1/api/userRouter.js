@@ -6,8 +6,8 @@ const {updateUserInfo} = require("../../../controllers/userController");
 
 const router = express.Router();
 
-router.get("/:id", getTeamList);
-router.get('/:id/p', getUserInfo);
+//router.get("/teams/:id", getTeamList);
+router.get('/:id/profile', getUserInfo); //다른사람 프로필 보기
 //router.get('/:id/m',getMatchingList);
 //router.patch('/:id/update',updateUserInfo);
 module.exports = router;

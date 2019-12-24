@@ -11,6 +11,7 @@ class serUser {
         this.modMatching = new ModelMatching();
     }
 
+    //나의 개별 팀 찾기
     async findMyTeamList(user_id) {
         try {
             const teamList_owner = await this.modTeam.findMyTeamList(user_id).then();
@@ -22,6 +23,8 @@ class serUser {
             console.log(error);
         }
     };
+
+    //
     async findUserInfo(user_id){
         try {
         const userInfo = await this.modUser.findUserInfo(user_id).then();
@@ -31,6 +34,8 @@ class serUser {
         console.log(error);
     }
  };
+
+ //이건 망한거
     async findMatchingList(user_id, team_id){
         try{
             const matchingList = await this.modMatching.findMatchingList(user_id, team_id).then();

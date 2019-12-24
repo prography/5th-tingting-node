@@ -30,7 +30,7 @@ const Belong = db.define(
         }
     },
     {
-        tableName: "belong",
+        tableName: "belongs",
         freezeTableName: true,
         underscored: true,
         timestamps: false
