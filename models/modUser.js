@@ -14,6 +14,8 @@ class ModelUser {
         });
     }
     async findUserInfo(id) {
+
+        //promise then
         const userData = await User.findAll({
             where: {
                 id

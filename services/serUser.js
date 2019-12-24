@@ -11,6 +11,7 @@ class serUser {
         this.modMatching = new ModelMatching();
     }
 
+    //나의 개별 팀 찾기
     async findMyTeamList(user_id) {
         try {
             const teamList_owner = await this.modTeam

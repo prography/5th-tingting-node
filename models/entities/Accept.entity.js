@@ -1,8 +1,8 @@
 const Sequelize = require("sequelize");
 const db = require("../../loaders/dbLoader");
 
-const Belong = db.define(
-    "belongs",
+const Accept = db.define(
+    "accept",
     {
         id: {
             type: Sequelize.INTEGER,
@@ -10,11 +10,11 @@ const Belong = db.define(
             primaryKey: true,
             autoIncrement: true
         },
-        team_id: {
+        accepter_id: {
             type: Sequelize.INTEGER,
             allowNull: false
         },
-        user_id: {
+        matching_id: {
             type: Sequelize.INTEGER,
             allowNull: false
         },
@@ -30,10 +30,10 @@ const Belong = db.define(
         }
     },
     {
-        tableName: "belongs",
+        tableName: "accept",
         freezeTableName: true,
         underscored: true,
         timestamps: false
     }
 );
-module.exports = Belong;
+module.exports = Accept;

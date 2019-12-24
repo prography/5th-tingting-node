@@ -16,20 +16,7 @@ const getUserInfo = async(req, res) =>{
     });
 }
 
-const getMatchingList = async(req, res) => {
-    const UserService = new serUser();
-    const matchingList = await UserService.findMatchingList(req.params.id, req.params.team).then();
-    console.log(matchingList);
-    console.log(req.params.team);
-    res.send({matchingList});
-};
-
-const updateUserInfo = async(req,res) =>{
-    //추후 개발
-}
-
 module.exports = {
     getTeamList,
     getUserInfo,
-    getMatchingList,
 }

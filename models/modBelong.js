@@ -1,6 +1,7 @@
 import Belong from "./entities/Belong.entity";
 
 class ModelBelong {
+    //나의 개별 팀 리스트 찾기
     async findMyTeamList(user_id) {
         const teamList = [];
         await Belong.findAll({

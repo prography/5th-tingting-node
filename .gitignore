@@ -1,3 +1,5 @@
+middlewares/passport/
+
 # Logs
 logs
 *.log

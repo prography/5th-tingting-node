@@ -1,22 +1,14 @@
 const Sequelize = require("sequelize");
 const db = require("../../loaders/dbLoader");
 
-const Belong = db.define(
-    "belongs",
+const Apply = db.define(
+    "apply",
     {
         id: {
             type: Sequelize.INTEGER,
             allowNull: false,
             primaryKey: true,
             autoIncrement: true
-        },
-        team_id: {
-            type: Sequelize.INTEGER,
-            allowNull: false
-        },
-        user_id: {
-            type: Sequelize.INTEGER,
-            allowNull: false
         },
         created_at: {
             type: Sequelize.DATE,
@@ -27,13 +19,21 @@ const Belong = db.define(
             type: Sequelize.DATE,
             allowNull: false,
             defaultValue: db.literal("CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP")
+        },
+        sender_id: {
+            type: Sequelize.INTEGER,
+            allowNull: false
+        },
+        matching_id: {
+            type: Sequelize.INTEGER,
+            allowNull: false
         }
     },
     {
-        tableName: "belongs",
+        tableName: "apply",
         freezeTableName: true,
         underscored: true,
         timestamps: false
     }
 );
-module.exports = Belong;
+module.exports = Apply;
