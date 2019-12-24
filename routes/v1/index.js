@@ -6,7 +6,7 @@ const authRouter = require("./api/authRouter");
 
 const router = express.Router();
 
-// router.use("/auth", authRouter); //지원
+router.use("/auth", authRouter); //지원
 router.use("/users", userRouter); //지영
 // router.use("/teams", teamRouter);
 // router.use("/candidates", candidateRouter);
