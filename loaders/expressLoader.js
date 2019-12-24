@@ -6,12 +6,12 @@ const express = require("express");
 const logger = require("morgan");
 
 const expressLoader = app => {
-    app.use(api);
     app.set("port", config.PORT);
     app.use(logger("dev"));
     app.use(bodyParser.json());
     app.use(bodyParser.urlencoded({ extended: true }));
     app.use(cookieParser());
+    app.use(api);
 };
 
 module.exports = expressLoader;

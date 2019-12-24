@@ -35,18 +35,5 @@ class serUser {
     }
  };
 
- //이건 망한거
-    async findMatchingList(user_id, team_id){
-        try{
-            const matchingList = await this.modMatching.findMatchingList(user_id, team_id).then();
-            console.log('matchingList:', matchingList);
-            return matchingList;
-        }catch(err){
-            console.log(error);
-        }
-    };
-
-
-
 }
 module.exports = serUser;

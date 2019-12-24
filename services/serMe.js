@@ -5,7 +5,7 @@ class serMe {
     constructor() {
         this.modUser = new ModelUser();
     }
-    //
+
     async findMyInfo(userId){
         try {
         const myInfo = await this.modUser.findUserInfo(userId);
@@ -14,7 +14,5 @@ class serMe {
         console.log(error);
     }
  };
-
-
 }
 module.exports = serMe;

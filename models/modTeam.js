@@ -20,7 +20,7 @@ class ModelTeam {
 
     //인원에 따른 팀 리스트 찾기
 
-    //개별 팀 리스트 찾기
+    //나의 개별 팀 리스트 찾기
     async findMyTeamList(user_id) {
         const teamList = [];
         await Team.findAll({
