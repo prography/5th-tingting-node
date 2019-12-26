@@ -13,6 +13,7 @@ class ModelUser {
             gender: data.gender
         });
     }
+
     async findUserInfo(id) {
 
         //promise then
@@ -24,12 +25,16 @@ class ModelUser {
         console.log("mod_user :", userData);
         return userData;
     }
-    async updateUserInfo(id, img) {
-        const userData = await User.update(
-            { thumbnail: img },
-            { where: id }
-        ).then();
-        return userData;
+
+    async updateMyInfo(data) {
+        await User.update({
+            name: data.name,
+            birth: data.birth,
+            height: data.height,
+            thumbnail: data.thumbnail,
+        },
+        {where: {id : data.id}
+    });
     }
 }
 module.exports = ModelUser;

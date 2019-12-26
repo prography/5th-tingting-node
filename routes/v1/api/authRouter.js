@@ -13,6 +13,4 @@ router.post("/signup", signup);
 // router.post("", postRegister);
 // router.post("".postLogin);
 // router.post("", postLogout);
-
-
 module.exports = router;

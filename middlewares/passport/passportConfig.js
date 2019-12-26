@@ -1,6 +1,6 @@
 const local = require("./localStrategy");
 //To Do : KaKao Strategy 추가
-const { getUserById } = require("../models/modUser"); // 이부분 mod 가져와서 해야됨
+const { getUserById } = require("../../models/modUser"); // 이부분 mod 가져와서 해야됨
 
 module.exports = passport => {
     passport.serializeUser(function(user, done) {
