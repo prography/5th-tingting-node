@@ -27,9 +27,19 @@ class serUser {
             console.log(error);
         }
     }
-    async findUserInfo(userId) {
+    async findUserInfoById(userId) {
         try {
-            const userInfo = await this.modUser.findUserInfo(userId);
+            const userInfo = await this.modUser.findUserInfoById(userId);
+            console.log("userInfo :", userInfo);
+            return userInfo;
+        } catch (error) {
+            console.log(error);
+        }
+    }
+    async findUserInfoByKaKaoId(kakaorId) {
+        //임의로 추가됨
+        try {
+            const userInfo = await this.modUser.findUserInfoByKaKaoId(kakaorId);
             console.log("userInfo :", userInfo);
             return userInfo;
         } catch (error) {
@@ -51,8 +61,8 @@ class serUser {
     async saveUser(data) {
         try {
             await this.modUser.saveUser(data);
-        } catch (err) {
-            console.log(err);
+        } catch (error) {
+            console.log(error);
         }
     }
 }
