@@ -27,6 +27,7 @@ class serUser {
             console.log(error);
         }
     }
+    //프로필 찾기
     async findUserInfo(userId) {
         try {
             const userInfo = await this.modUser.findUserInfo(userId);
@@ -36,18 +37,6 @@ class serUser {
             console.log(error);
         }
     }
-    async findMatchingList(user_id, team_id) {
-        try {
-            const matchingList = await this.modMatching
-                .findMatchingList(user_id, team_id)
-                .then();
-            console.log("matchingList:", matchingList);
-            return matchingList;
-        } catch (err) {
-            console.log(err);
-        }
-    }
-
     async saveUser(data) {
         try {
             await this.modUser.saveUser(data);
