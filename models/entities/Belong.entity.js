@@ -1,39 +1,39 @@
-const Sequelize = require("sequelize");
-const db = require("../../loaders/dbLoader");
+const Sequelize = require('sequelize')
+const db = require('../../loaders/dbLoader')
 
 const Belong = db.define(
-    "belongs",
-    {
-        id: {
-            type: Sequelize.INTEGER,
-            allowNull: false,
-            primaryKey: true,
-            autoIncrement: true
-        },
-        team_id: {
-            type: Sequelize.INTEGER,
-            allowNull: false
-        },
-        user_id: {
-            type: Sequelize.INTEGER,
-            allowNull: false
-        },
-        created_at: {
-            type: Sequelize.DATE,
-            allowNull: false,
-            defaultValue: db.literal("CURRENT_TIMESTAMP")
-        },
-        updated_at: {
-            type: Sequelize.DATE,
-            allowNull: false,
-            defaultValue: db.literal("CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP")
-        }
+  'belongs',
+  {
+    id: {
+      type: Sequelize.INTEGER,
+      allowNull: false,
+      primaryKey: true,
+      autoIncrement: true
     },
-    {
-        tableName: "belongs",
-        freezeTableName: true,
-        underscored: true,
-        timestamps: false
+    team_id: {
+      type: Sequelize.INTEGER,
+      allowNull: false
+    },
+    user_id: {
+      type: Sequelize.INTEGER,
+      allowNull: false
+    },
+    created_at: {
+      type: Sequelize.DATE,
+      allowNull: false,
+      defaultValue: db.literal('CURRENT_TIMESTAMP')
+    },
+    updated_at: {
+      type: Sequelize.DATE,
+      allowNull: false,
+      defaultValue: db.literal('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP')
     }
-);
-module.exports = Belong;
+  },
+  {
+    tableName: 'belongs',
+    freezeTableName: true,
+    underscored: true,
+    timestamps: false
+  }
+)
+module.exports = Belong

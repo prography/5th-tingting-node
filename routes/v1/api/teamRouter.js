@@ -1,9 +1,8 @@
-const express = require("express");
-const { createTeamList } = require("../../../controllers/teamController");
+const express = require('express')
+// const { createTeamList } = require('../../../controllers/teamController')
 
-const router = express.Router();
+const router = express.Router()
 
-//router.post("/", createTeamList);
+// router.post("/", createTeamList);
 
-
-module.exports = router;
+module.exports = router
