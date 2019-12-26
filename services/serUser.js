@@ -27,6 +27,7 @@ class serUser {
             console.log(error);
         }
     }
+
     async findUserInfoById(userId) {
         try {
             const userInfo = await this.modUser.findUserInfoById(userId);
@@ -36,6 +37,7 @@ class serUser {
             console.log(error);
         }
     }
+  
     async findUserInfoByKaKaoId(kakaorId) {
         //임의로 추가됨
         try {
@@ -46,18 +48,7 @@ class serUser {
             console.log(error);
         }
     }
-    async findMatchingList(user_id, team_id) {
-        try {
-            const matchingList = await this.modMatching
-                .findMatchingList(user_id, team_id)
-                .then();
-            console.log("matchingList:", matchingList);
-            return matchingList;
-        } catch (err) {
-            console.log(err);
-        }
-    }
-
+  
     async saveUser(data) {
         try {
             await this.modUser.saveUser(data);

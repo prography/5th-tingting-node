@@ -17,6 +17,7 @@ class ModelUser {
             updated_at: "2019-12-26 05:16:22"
         });
     }
+
     async findUserInfoById(id) {
         //To Do: parameter 수정 필요
         const userData = await User.findAll({
@@ -27,6 +28,7 @@ class ModelUser {
         console.log("mod_user :", userData);
         return userData;
     }
+  
     async findUserInfoByKaKaoId(kakao_id) {
         //To Do: parameter 수정 필요
         const userData = await User.findAll({
@@ -37,12 +39,17 @@ class ModelUser {
         console.log("mod_user :", userData);
         return userData;
     }
-    async updateUserInfo(id, img) {
-        const userData = await User.update(
-            { thumbnail: img },
-            { where: id }
-        ).then();
-        return userData;
+ 
+
+    async updateUserInfo(data) {
+        await User.update({
+            name: data.name,
+            birth: data.birth,
+            height: data.height,
+            thumbnail: data.thumbnail,
+        },
+        {where: {id : data.id}
+    });
     }
 }
 module.exports = ModelUser;

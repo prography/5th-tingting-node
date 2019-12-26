@@ -12,6 +12,14 @@ class serMe {
         } catch (error) {
             console.log(error);
         }
-    }
+    };
+
+    async updateMyInfo(data) {
+        try {
+            await this.modUser.updateUserInfo(data);
+        } catch (error) {
+            console.log(error);
+        }
+    };
 }
 module.exports = serMe;
