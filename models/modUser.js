@@ -26,7 +26,7 @@ class ModelUser {
         return userData;
     }
 
-    async updateMyInfo(data) {
+    async updateUserInfo(data) {
         await User.update({
             name: data.name,
             birth: data.birth,

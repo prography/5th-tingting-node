@@ -11,10 +11,9 @@ const getMyInfo = async(req, res) =>{
     });
 }
 
-const putMyInfo = async(req, res) =>{
+const updateMyInfo = async(req, res) =>{
     const myService = new serMe();
     const id = 1;
-    console.log(req.body);
     const{
         name,
         birth,
@@ -30,7 +29,7 @@ const putMyInfo = async(req, res) =>{
         thumbnail
         });
         res.send({
-            status: 200,
+            status: 202,
         });
     } catch(error) {
         console.log(error);
@@ -40,5 +39,5 @@ const putMyInfo = async(req, res) =>{
 
 module.exports = {
     getMyInfo,
-    putMyInfo,
+    updateMyInfo,
 }

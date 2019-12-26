@@ -17,8 +17,7 @@ class serMe {
 
     async updateMyInfo(data) {
         try {
-            await this.modUser.updateMyInfo(data);
-            console.log("in ser: ", data);
+            await this.modUser.updateUserInfo(data);
         } catch (error) {
             console.log(error);
         }
