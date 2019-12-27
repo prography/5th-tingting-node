@@ -1,7 +1,9 @@
 const ModelUser = require('../models/modUser')
+const ModelTeam = require('../models/modTeam')
+const ModelBelong = require('../models/modBelog')
 
 class serUser {
-  constructor() {
+  constructor () {
     this.modUser = new ModelUser()
     this.modTeam = new ModelTeam()
     this.modBelong = new ModelBelong()
@@ -9,7 +11,7 @@ class serUser {
   }
 
   // 나의 개별 팀 찾기
-  async findMyTeamList(userId) {
+  async findMyTeamList (userId) {
     try {
       const teamListOwner = await this.modTeam.findMyTeamList(userId).then()
       const teamListId = await this.modBelong.findMyTeamList(userId).then()
@@ -21,7 +23,7 @@ class serUser {
     }
   }
 
-  async findUserInfoById(userId) {
+  async findUserInfoById (userId) {
     try {
       const userInfo = await this.modUser.findUserInfoById(userId)
       return userInfo
@@ -30,7 +32,7 @@ class serUser {
     }
   }
 
-  async findUserInfoByKaKaoId(kakaorId) {
+  async findUserInfoByKaKaoId (kakaorId) {
     // 임의로 추가됨
     try {
       const userInfo = await this.modUser.findUserInfoByKaKaoId(kakaorId)
@@ -41,7 +43,7 @@ class serUser {
     }
   }
 
-  async saveUser(data) {
+  async saveUser (data) {
     try {
       await this.modUser.saveUser(data)
     } catch (error) {
@@ -49,7 +51,7 @@ class serUser {
     }
   }
 
-  async findUserIdByName(name) {
+  async findUserIdByName (name) {
     try {
       const user = await this.modUser.findUserIdByName(name)
       return user.id

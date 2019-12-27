@@ -2,8 +2,8 @@ const SerMe = require('../services/serMe')
 
 const getMyInfo = async (req, res) => {
   const myService = new SerMe()
-  //const myInfo = await myService.findMyInfo(req.token.id)
-  //const myTeamList = await myService.findMyTeamList(req.token.id)
+  // const myInfo = await myService.findMyInfo(req.token.id)
+  // const myTeamList = await myService.findMyTeamList(req.token.id)
   const myInfo = await myService.findMyInfo(1)
   const myTeamList = await myService.findMyTeamList(1)
   res.json({

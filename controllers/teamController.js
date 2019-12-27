@@ -1,13 +1,12 @@
 const SerTeam = require('../services/serTeam')
-//전체 팀 리스트
-const getTeamList = async (req,res)=>{
+// 전체 팀 리스트
+const getTeamList = async (req, res) => {
   const serTeam = new SerTeam()
-  const teamList = await serTeam.findAllTeamListWithoutMe(1)//token
+  const teamList = await serTeam.findAllTeamListWithoutMe(1)// token
   res.json({
-    data : teamList
+    data: teamList
   })
 }
-
 
 // 팀 생성
 const createTeam = async (req, res, next) => {

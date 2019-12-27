@@ -4,7 +4,7 @@ const crypto = require('crypto')
 class AuthService {
   //  constructor () {}
 
-  makeToken(userInfo) {
+  makeToken (userInfo) {
     const token = jwt.sign(
       {
         id: userInfo[0].dataValues.id
