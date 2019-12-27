@@ -10,14 +10,6 @@ const User = db.define(
       primaryKey: true,
       autoIncrement: true
     },
-    password: {
-      type: Sequelize.STRING(200),
-      allowNull: false
-    },
-    salt: {
-      type: Sequelize.STRING(200),
-      allowNull: false
-    },
     kakao_id: {
       type: Sequelize.STRING(180),
       allowNull: false
@@ -55,9 +47,7 @@ const User = db.define(
     updated_at: {
       type: Sequelize.DATE,
       allowNull: false,
-      defaultValue: db.literal(
-        'CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'
-      )
+      defaultValue: db.literal('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP')
     },
     is_deleted: {
       type: Sequelize.INTEGER(1),

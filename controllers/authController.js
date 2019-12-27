@@ -6,7 +6,6 @@ const signup = async (req, res, next) => {
   const authService = new AuthService()
   const {
     kakao_id,
-    password,
     name,
     birth,
     height,
@@ -20,12 +19,8 @@ const signup = async (req, res, next) => {
       res.status(403).json('이미 가입된 사용자입니다.')
       // redirect로 바꿔야되나?
     } else {
-      const encryptInfo = await authService.encryptPassword(password)
-      console.log('encryptInfo: ', encryptInfo)
       await userService.saveUser({
         kakao_id,
-        password: encryptInfo.encryptedpassword,
-        salt: encryptInfo.salt,
         name,
         birth,
         height,
@@ -44,10 +39,10 @@ const signup = async (req, res, next) => {
 const login = async (req, res) => {
   const userService = new UserService()
   const authService = new AuthService()
-  // To Do: req.body 부분 및 token의 parameter 수정 -> password 추가
+  // To Do: req.body 부분 및 token의 parameter 수정
   const { kakao_id } = req.body
   try {
-    // 유저 맞는지 확인 필요 (1.id 있는지 2.password confirm)
+    // 유저 맞는지 확인 필요 (1.id 있는지)
     const userInfo = await userService.findUserInfoByKaKaoId(kakao_id)
     const token = authService.makeToken(userInfo)
     console.log('Issued token: ', token)

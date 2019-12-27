@@ -4,7 +4,7 @@ const crypto = require('crypto')
 class AuthService {
   //  constructor () {}
 
-  makeToken (userInfo) {
+  makeToken(userInfo) {
     const token = jwt.sign(
       {
         id: userInfo[0].dataValues.id
@@ -16,20 +16,6 @@ class AuthService {
       }
     )
     return token
-  }
-
-  encryptPassword (password) {
-    try {
-      const buf = crypto.randomBytes(64)
-      const key = crypto.pbkdf2Sync(password, buf, 100000, 64, 'sha512')
-      const encryptInfo = {
-        salt: buf.toString('base64'),
-        encryptedpassword: key.toString('base64')
-      }
-      return encryptInfo
-    } catch (error) {
-      console.log(error)
-    }
   }
 }
 
