@@ -2,8 +2,10 @@ const SerTeam = require('../services/serTeam')
 //전체 팀 리스트
 const getTeamList = async (req,res)=>{
   const serTeam = new SerTeam()
-  const TeamList = await serTeam.findAllTeamListWithoutMe(1)//token
-  res.json({TeamList})
+  const teamList = await serTeam.findAllTeamListWithoutMe(1)//token
+  res.json({
+    data : teamList
+  })
 }
 
 
