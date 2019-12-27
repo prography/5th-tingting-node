@@ -53,7 +53,8 @@ const Team = db.define(
     updated_at: {
       type: Sequelize.DATE,
       allowNull: false,
-      defaultValue: db.literal('CURRENT_TIMESTAMP')
+      defaultValue: db.literal('CURRENT_TIMESTAMP'),
+      onUpdate: db.literal('CURRENT_TIMESTAMP')
     },
     is_deleted: {
       type: Sequelize.INTEGER(1),
@@ -69,8 +70,7 @@ const Team = db.define(
     tableName: 'team',
     freezeTableName: true,
     underscored: true,
-    timestamps: false,
-    updated_at: 'updateTimestamp'
+    timestamps: false
   }
 )
 module.exports = Team

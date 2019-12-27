@@ -1,17 +1,27 @@
 const SerTeam = require('../services/serTeam')
+// 전체 팀 리스트
+const getTeamList = async (req, res) => {
+  const serTeam = new SerTeam()
+  const teamList = await serTeam.findAllTeamListWithoutMe(1)// token
+  res.json({
+    data: teamList
+  })
+}
 
 // 팀 생성
 const createTeam = async (req, res, next) => {
   const serTeam = new SerTeam()
   const {
-    name,
-    chat_address,
-    owner_id,
-    intro,
-    gender,
-    password,
-    max_member_number
-  } = req.body
+    body: {
+      name,
+      chat_address,
+      owner_id,
+      intro,
+      gender,
+      password,
+      max_member_number
+    }
+  } = req
   try {
     await serTeam.saveTeam({
       name,
@@ -29,34 +39,37 @@ const createTeam = async (req, res, next) => {
 }
 
 // 팀 수정
-const updateMyTeam = async(req,res)=>{
+const updateMyTeam = async (req, res) => {
   const serTeam = new SerTeam()
   const id = 5
   const {
-    name,
-    chat_address,
-    owner_id,
-    intro,
-    password,
-    max_member_number
-  }= req.body
-  try{
+    body: {
+      name,
+      chat_address,
+      owner_id,
+      intro,
+      password,
+      max_member_number
+    }
+  } = req
+  try {
     await serTeam.updateMyTeam({
-    id,
-    name,
-    chat_address,
-    owner_id,
-    intro,
-    password,
-    max_member_number
+      id,
+      name,
+      chat_address,
+      owner_id,
+      intro,
+      password,
+      max_member_number
     })
     res.status(202).json('팀 수정 성공')
-  }catch(error){
+  } catch (error) {
     console.log(error)
   }
 }
 
 module.exports = {
+  getTeamList,
   createTeam,
   updateMyTeam
 }

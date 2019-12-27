@@ -1,7 +1,7 @@
 import User from './entities/User.entity'
 
 class ModelUser {
-  async saveUser(data) {
+  async saveUser (data) {
     await User.create({
       // To Do: parameter 수정 필요
       kakao_id: data.kakao_id,
@@ -16,7 +16,7 @@ class ModelUser {
     })
   }
 
-  async findUserInfoById(id) {
+  async findUserInfoById (id) {
     // To Do: parameter 수정 필요
     const userData = await User.findAll({
       where: {
@@ -27,7 +27,7 @@ class ModelUser {
     return userData
   }
 
-  async findUserInfoByKaKaoId(kakao_id) {
+  async findUserInfoByKaKaoId (kakao_id) {
     // To Do: parameter 수정 필요
     const userData = await User.findAll({
       where: {
@@ -38,7 +38,7 @@ class ModelUser {
     return userData
   }
 
-  async updateUserInfo(data) {
+  async updateUserInfo (data) {
     await User.update(
       {
         name: data.name,
@@ -50,7 +50,7 @@ class ModelUser {
     )
   }
 
-  async findUserIdByName(name) {
+  async findUserIdByName (name) {
     const userId = await User.findOne({
       attributes: ['id'],
       where: {

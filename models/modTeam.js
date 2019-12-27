@@ -1,10 +1,24 @@
 import Team from './entities/Team.entity'
+const Sequelize = require('sequelize')
+const Op = Sequelize.Op
 
 class ModelTeam {
-  // 전체 팀 리스트 보기
+  // 전체 팀 리스트 찾기(User is not owner)
+  async findTeamListIsNotOwner (userId) {
+    const teamList = []
+    await Team.findAll({
+      attributes: ['id'],
+      where: {
+        owner_id: { [Op.ne]: userId }
+      }
+    }).then(teams => {
+      teams.map(team => teamList.push(team.dataValues.id))
+    })
+    return teamList
+  }
 
   // 팀 생성
-  async saveTeam(data) {
+  async saveTeam (data) {
     await Team.create({
       name: data.name,
       chat_address: data.chat_address,
@@ -16,10 +30,8 @@ class ModelTeam {
     })
   }
 
-  // 인원에 따른 팀 리스트 찾기
-
   // 나의 개별 팀 리스트 찾기
-  async findMyTeamList(userId) {
+  async findMyTeamList (userId) {
     const teamList = []
     await Team.findAll({
       attributes: ['id'],
@@ -35,7 +47,7 @@ class ModelTeam {
   // 나의 개별 팀 보기
 
   // 나의 팀 정보 수정
-  async updateUserTeam(data) {
+  async updateUserTeam (data) {
     await Team.update({
       name: data.name,
       chat_address: data.chat_address,
@@ -46,7 +58,6 @@ class ModelTeam {
     },
     { where: { id: data.id } })
   }
-
 
   // 팀 떠나기
 
