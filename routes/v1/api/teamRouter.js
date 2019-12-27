@@ -1,8 +1,9 @@
 const express = require('express')
-// const { createTeamList } = require('../../../controllers/teamController')
+const { createTeam,updateMyTeam } = require('../../../controllers/teamController')
 
 const router = express.Router()
 
-// router.post("/", createTeamList);
+router.post('/', createTeam)
+router.patch('/', updateMyTeam)
 
 module.exports = router

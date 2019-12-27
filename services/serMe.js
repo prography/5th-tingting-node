@@ -16,7 +16,7 @@ class serMe {
     } catch (error) {
       console.log(error)
     }
-  };
+  }
 
   async findMyTeamList (userId) {
     try {
@@ -35,6 +35,6 @@ class serMe {
     } catch (error) {
       console.log(error)
     }
-  };
+  }
 }
 module.exports = serMe

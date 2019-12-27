@@ -4,23 +4,22 @@ class ModelTeam {
   // 전체 팀 리스트 보기
 
   // 팀 생성
-  async createTeam (team_id, teamname, chat_address, gender, owner_id, team_member_number, intro, verified_at) {
+  async saveTeam(data) {
     await Team.create({
-      id: team_id,
-      teamname: teamname,
-      chat_address: chat_address,
-      gender: gender,
-      owner_id: owner_id,
-      team_member_number: team_member_number,
-      intro: intro,
-      verified_at: verified_at
+      name: data.name,
+      chat_address: data.chat_address,
+      owner_id: data.owner_id,
+      intro: data.intro,
+      gender: data.gender,
+      password: data.password,
+      max_member_number: data.max_member_number
     })
   }
 
   // 인원에 따른 팀 리스트 찾기
 
   // 나의 개별 팀 리스트 찾기
-  async findMyTeamList (userId) {
+  async findMyTeamList(userId) {
     const teamList = []
     await Team.findAll({
       attributes: ['id'],
@@ -36,6 +35,18 @@ class ModelTeam {
   // 나의 개별 팀 보기
 
   // 나의 팀 정보 수정
+  async updateUserTeam(data) {
+    await Team.update({
+      name: data.name,
+      chat_address: data.chat_address,
+      owner_id: data.owner_id,
+      intro: data.intro,
+      password: data.password,
+      max_member_number: data.max_member_number
+    },
+    { where: { id: data.id } })
+  }
+
 
   // 팀 떠나기
 

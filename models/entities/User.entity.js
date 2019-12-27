@@ -10,14 +10,6 @@ const User = db.define(
       primaryKey: true,
       autoIncrement: true
     },
-    password: {
-      type: Sequelize.STRING(200),
-      allowNull: false
-    },
-    salt: {
-      type: Sequelize.STRING(200),
-      allowNull: false
-    },
     kakao_id: {
       type: Sequelize.STRING(180),
       allowNull: false
