@@ -1,7 +1,4 @@
-const ModelTeam = require('../models/modTeam')
-const ModelBelong = require('../models/modBelong')
 const ModelUser = require('../models/modUser')
-// const ModelMatching = require('../models/modMatching')
 
 class serUser {
   constructor() {
@@ -27,7 +24,6 @@ class serUser {
   async findUserInfoById(userId) {
     try {
       const userInfo = await this.modUser.findUserInfoById(userId)
-      console.log('userInfo :', userInfo)
       return userInfo
     } catch (error) {
       console.log(error)
