@@ -1,8 +1,12 @@
 const ModelUser = require('../models/modUser')
+const ModelTeam = require('../models/modTeam')
+const ModelBelong = require('../models/modBelong')
 
 class serMe {
   constructor () {
     this.modUser = new ModelUser()
+    this.modTeam = new ModelTeam()
+    this.modBelong = new ModelBelong()
   }
 
   async findMyInfo (userId) {
@@ -13,6 +17,17 @@ class serMe {
       console.log(error)
     }
   };
+
+  async findMyTeamList (userId) {
+    try {
+      const teamListOwner = await this.modTeam.findMyTeamList(userId).then()
+      const teamListId = await this.modBelong.findMyTeamList(userId).then()
+      const teamList = teamListOwner.concat(teamListId)
+      return teamList
+    } catch (error) {
+      console.log(error)
+    }
+  }
 
   async updateMyInfo (data) {
     try {
