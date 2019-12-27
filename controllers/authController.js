@@ -5,14 +5,16 @@ const signup = async (req, res, next) => {
   const userService = new UserService()
   const authService = new AuthService()
   const {
-    kakao_id,
-    name,
-    birth,
-    height,
-    thumbnail,
-    authenticated_address,
-    gender
-  } = req.body
+    body: {
+      kakao_id,
+      name,
+      birth,
+      height,
+      thumbnail,
+      authenticated_address,
+      gender
+    }
+  } = req
   try {
     const exUser = await userService.findUserInfoByKaKaoId(kakao_id) // To Do: parameter 수정 필요
     if (exUser === []) {
@@ -64,8 +66,22 @@ const logout = (req, res) => {
   res.redirect('/')
 }
 
+const checkDuplicateName = async (req, res) => {
+  const userService = new UserService()
+  const {
+    query: { name }
+  } = req
+  const isDuplicatedName = await userService.findUserIdByName(name)
+  console.log(isDuplicatedName)
+  if (isDuplicatedName) {
+    return res.status(403).json('이미 존재하는 이름입니다.')
+  }
+  return res.status(200).json('중복된 이름이 없습니다.')
+}
+
 module.exports = {
   signup,
   login,
-  logout
+  logout,
+  checkDuplicateName
 }

@@ -49,5 +49,15 @@ class ModelUser {
       { where: { id: data.id } }
     )
   }
+
+  async findUserIdByName(name) {
+    const userId = await User.findOne({
+      attributes: ['id'],
+      where: {
+        name
+      }
+    })
+    return userId
+  }
 }
 module.exports = ModelUser
