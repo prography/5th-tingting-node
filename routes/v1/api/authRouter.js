@@ -3,13 +3,17 @@ const {
   signup,
   login,
   logout,
-  checkDuplicateName
+  checkDuplicateName,
+  checkValidSchool,
+  confirmEmailToken
 } = require('../../../controllers/authController')
 const router = express.Router()
 
 router.post('/signup', signup)
 router.post('/login', login)
-router.get('', logout)
-router.get('/duplicate-name', checkDuplicateName)
+router.get('/logout', logout)
+router.post('/duplicate-name', checkDuplicateName)
+router.post('/school', checkValidSchool)
+router.post('/school/confirm', confirmEmailToken)
 
 module.exports = router

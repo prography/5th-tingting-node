@@ -53,7 +53,8 @@ const Team = db.define(
     updated_at: {
       type: Sequelize.DATE,
       allowNull: false,
-      defaultValue: db.literal('CURRENT_TIMESTAMP')
+      defaultValue: db.literal('CURRENT_TIMESTAMP'),
+      onUpdate: db.literal('CURRENT_TIMESTAMP')
     },
     is_deleted: {
       type: Sequelize.INTEGER(1),

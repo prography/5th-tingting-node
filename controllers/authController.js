@@ -48,13 +48,13 @@ const login = async (req, res) => {
     const userInfo = await userService.findUserInfoByKaKaoId(kakao_id)
     const token = authService.makeToken(userInfo)
     console.log('Issued token: ', token)
-    return res.status(200).json({
+    res.status(200).json({
       code: 200,
       message: '로그인 & 토큰 발행'
     })
   } catch (error) {
     console.log(error)
-    return res.status(400).json({
+    res.status(400).json({
       code: 400,
       message: '로그인 실패'
     })
@@ -67,21 +67,49 @@ const logout = (req, res) => {
 }
 
 const checkDuplicateName = async (req, res) => {
-  const userService = new UserService()
+  const authService = new AuthService()
   const {
     query: { name }
   } = req
-  const isDuplicatedName = await userService.findUserIdByName(name)
-  console.log(isDuplicatedName)
-  if (isDuplicatedName) {
-    return res.status(403).json('이미 존재하는 이름입니다.')
+  const isDuplicateName = await authService.findUserNameByName(name)
+  if (isDuplicateName) {
+    res.status(403).json('이미 존재하는 이름입니다.')
+  } else {
+    await authService.saveName(name)
+    res.status(200).json('사용 가능한 이름입니다.')
   }
-  return res.status(200).json('중복된 이름이 없습니다.')
+}
+
+const checkValidSchool = async (req, res) => {
+  const authService = new AuthService()
+  const {
+    body: { email }
+  } = req
+  const isValidSchool = await authService.findSchoolByEmail(email)
+  const isDuplicateEmail = await authService.findAuthenticatedEmailByEmail(
+    email
+  )
+  if (isDuplicateEmail) {
+    res.status(404).json('이미 가입된 이메일입니다.')
+  } else if (!isValidSchool) {
+    res.status(404).json('가입이 불가능한 이메일입니다.')
+  } else {
+    await authService.sendEmail(email)
+    res.status(202).json('이메일에 인증번호를 전송했습니다.')
+  }
+}
+
+const confirmEmailToken = async (req, res) => {
+  const {
+    params: { token }
+  } = req
 }
 
 module.exports = {
   signup,
   login,
   logout,
-  checkDuplicateName
+  checkDuplicateName,
+  checkValidSchool,
+  confirmEmailToken
 }

@@ -1,4 +1,6 @@
 const ModelUser = require('../models/modUser')
+const ModelTeam = require('../models/modTeam')
+const ModelBelong = require('../models/modBelong')
 
 class serUser {
   constructor() {
@@ -44,15 +46,6 @@ class serUser {
   async saveUser(data) {
     try {
       await this.modUser.saveUser(data)
-    } catch (error) {
-      console.log(error)
-    }
-  }
-
-  async findUserIdByName(name) {
-    try {
-      const user = await this.modUser.findUserIdByName(name)
-      return user.id
     } catch (error) {
       console.log(error)
     }
