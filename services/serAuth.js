@@ -67,6 +67,7 @@ class AuthService {
       const token = this.makeEmailToken(email)
       const splitHtml = html.split('token=')
       const htmlEnd = splitHtml[0] + 'token=' + token + splitHtml[1]
+      console.log(token)
       const message = {
         from: process.env.EMAIL_USEREMAIL,
         to: email,
@@ -75,6 +76,23 @@ class AuthService {
       }
       const transporter = nodemailer.createTransport(mailConfig)
       transporter.sendMail(message)
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  async saveNameAndAuthenticatedEmail(name, email) {
+    try {
+      await this.modAuth.saveNameAndAuthenticatedEmail(name, email)
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  async saveIsAuthenticated(token) {
+    try {
+      const { email } = token
+      await this.modAuth.saveIsAuthenticated(email)
     } catch (error) {
       console.log(error)
     }
@@ -93,14 +111,6 @@ class AuthService {
     try {
       const authData = await this.modAuth.findUserIdByName(name)
       return authData
-    } catch (error) {
-      console.log(error)
-    }
-  }
-
-  async saveName(name) {
-    try {
-      await this.modAuth.saveName(name)
     } catch (error) {
       console.log(error)
     }

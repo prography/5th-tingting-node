@@ -1,10 +1,24 @@
 import Auth from './entities/Auth.entity'
 
 class ModelAuth {
-  async saveName(name) {
+  async saveNameAndAuthenticatedEmail(name, email) {
     await Auth.create({
-      user_name: name
+      user_name: name,
+      authenticated_email: email
     })
+  }
+
+  async saveIsAuthenticated(email) {
+    await Auth.update(
+      {
+        is_authenticated: 1
+      },
+      {
+        where: {
+          authenticated_email: email
+        }
+      }
+    )
   }
 
   async findAuthenticatedEmailByEmail(email) {

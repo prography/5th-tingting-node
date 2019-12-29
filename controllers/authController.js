@@ -75,15 +75,14 @@ const checkDuplicateName = async (req, res) => {
   if (isDuplicateName) {
     res.status(403).json('이미 존재하는 이름입니다.')
   } else {
-    await authService.saveName(name)
     res.status(200).json('사용 가능한 이름입니다.')
   }
 }
 
-const checkValidSchool = async (req, res) => {
+const checkValidEmail = async (req, res) => {
   const authService = new AuthService()
   const {
-    body: { email }
+    body: { email, name }
   } = req
   const isValidSchool = await authService.findSchoolByEmail(email)
   const isDuplicateEmail = await authService.findAuthenticatedEmailByEmail(
@@ -94,15 +93,22 @@ const checkValidSchool = async (req, res) => {
   } else if (!isValidSchool) {
     res.status(404).json('가입이 불가능한 이메일입니다.')
   } else {
+    await authService.saveNameAndAuthenticatedEmail(name, email)
     await authService.sendEmail(email)
     res.status(202).json('이메일에 인증번호를 전송했습니다.')
   }
 }
 
 const confirmEmailToken = async (req, res) => {
-  const {
-    params: { token }
-  } = req
+  const authServcie = new AuthService()
+  const { token } = req
+  try {
+    await authServcie.saveIsAuthenticated(token)
+    res.status(202).json('이메일 인증이 완료되었습니다.')
+  } catch (error) {
+    console.log(error)
+    res.status(403).json('이메일 인증에 실패하였습니다.')
+  }
 }
 
 module.exports = {
@@ -110,6 +116,6 @@ module.exports = {
   login,
   logout,
   checkDuplicateName,
-  checkValidSchool,
+  checkValidEmail,
   confirmEmailToken
 }
