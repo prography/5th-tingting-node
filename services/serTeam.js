@@ -29,5 +29,23 @@ class SerTeam {
       console.log(error)
     }
   }
+
+  async findTeamInfo (teamId) {
+    try {
+      const teamInfo = await this.modTeam.findUserTeamInfo(teamId)
+      return teamInfo
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  async findTeamMemberList (teamId) {
+    try {
+      const belongMember = await this.modBelong.findTeamMemberWhoBelongto(teamId)
+      return belongMember
+    } catch (error) {
+      console.log(error)
+    }
+  }
 }
 module.exports = SerTeam
