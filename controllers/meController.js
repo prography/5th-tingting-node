@@ -14,13 +14,13 @@ const getMyInfo = async (req, res) => {
       }
     })
   } catch (error) {
-    res.status(400).json({errorMessage:'내정보 불러오기 실패'})
+    res.status(400).json({ errorMessage: '내정보 불러오기 실패' })
   }
 }
 
 const updateMyInfo = async (req, res) => {
   const myService = new SerMe()
-  const id = 1 //user id token
+  const id = 1 // user id token
   const { name, birth, height, thumbnail } = req.body
   try {
     await myService.updateMyInfo({
@@ -33,14 +33,14 @@ const updateMyInfo = async (req, res) => {
     const updateMyInfo = await myService.findMyInfo(id)
     const updatemyTeamList = await myService.findMyTeamList(id)
     res.status(202).json({
-      data:{
-      updateMyInfo,
-      updatemyTeamList
-    }
+      data: {
+        updateMyInfo,
+        updatemyTeamList
+      }
     })
   } catch (error) {
     console.log(error)
-    res.status(401).json({errorMessage:'내 정보 수정 실패'})
+    res.status(401).json({ errorMessage: '내 정보 수정 실패' })
     // res 401: Unauthorized
   }
 }
@@ -73,14 +73,14 @@ const updateMyTeam = async (req, res) => {
         max_member_number
       })
       res.status(202).json({
-        data:{
-          //수정 팀 data
+        data: {
+          // 수정 팀 data
         }
       })
-    } else { res.status(401).json({errorMessage:'수정하고자 하는 팀에 속해있지 않음'}) }
+    } else { res.status(401).json({ errorMessage: '수정하고자 하는 팀에 속해있지 않음' }) }
   } catch (error) {
     console.log(error)
-    res.status(404).json({errorMessage:'팀 수정 실패'})
+    res.status(404).json({ errorMessage: '팀 수정 실패' })
   }
 }
 
