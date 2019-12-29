@@ -1,10 +1,8 @@
-const SerMe = require('../services/serMe')
-const SerTeam = require('../services/serTeam')
+const MeService = require('../services/MeService')
+const TeamService = require('../services/TeamService')
 
 const getMyInfo = async (req, res) => {
-  const myService = new SerMe()
-  // const myInfo = await myService.findMyInfo(req.token.id)
-  // const myTeamList = await myService.findMyTeamList(req.token.id)
+  const myService = new MeService()
   try {
     const myInfo = await myService.findMyInfo(1)
     const myTeamList = await myService.findMyTeamList(1)
@@ -21,7 +19,7 @@ const getMyInfo = async (req, res) => {
 }
 
 const updateMyInfo = async (req, res) => {
-  const myService = new SerMe()
+  const myService = new MeService()
   const id = 1 // user id token
   const { name, birth, height, thumbnail } = req.body
   try {
@@ -47,8 +45,8 @@ const updateMyInfo = async (req, res) => {
   }
 }
 const getMyTeamInfo = async (req, res) => {
-  const myService = new SerMe()
-  const teamService = new SerTeam()
+  const myService = new MeService()
+  const teamService = new TeamService()
   try {
     const userTeamList = await myService.findMyTeamList(2) // userid token
     req.params.id = parseInt(req.params.id)
@@ -74,7 +72,7 @@ const getMyTeamInfo = async (req, res) => {
 
 // 팀 수정
 const updateMyTeam = async (req, res) => {
-  const myService = new SerMe()
+  const myService = new MeService()
   const id = req.params.id // team id
   const {
     body: { name, chat_address, owner_id, intro, password, max_member_number }

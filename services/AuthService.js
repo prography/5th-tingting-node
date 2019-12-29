@@ -1,16 +1,16 @@
 const jwt = require('jsonwebtoken')
 const nodemailer = require('nodemailer')
-const ModelAvailableEmail = require('../models/modAvailableEmail')
-const ModelAuth = require('../models/modAuth.js')
-const ModelUser = require('../models/modUser.js')
+const AvailableEmailModel = require('../models/AvailableEmailModel')
+const AuthModel = require('../models/AuthModel.js')
+const UserModel = require('../models/UserModel.js')
 const fs = require('fs')
 const path = require('path')
 
 class AuthService {
   constructor () {
-    this.modAvailableEmail = new ModelAvailableEmail()
-    this.modAuth = new ModelAuth()
-    this.modUser = new ModelUser()
+    this.availableEmailModel = new AvailableEmailModel()
+    this.authModel = new AuthModel()
+    this.userModel = new UserModel()
   }
 
   makeToken (userInfo) {
@@ -44,7 +44,7 @@ class AuthService {
   async findSchoolByEmail (email) {
     try {
       const domain = email.split('@')[1] // 'hanyang.ac.kr'
-      const school = await this.modAvailableEmail.findSchoolByDomain(domain)
+      const school = await this.availableEmailModel.findSchoolByDomain(domain)
       return school
     } catch (error) {
       console.log(error)
@@ -85,7 +85,7 @@ class AuthService {
 
   async findExistingNameByName (name) {
     try {
-      const existingName = await this.modUser.findNameByName(name)
+      const existingName = await this.userModel.findNameByName(name)
       return existingName
     } catch (error) {
       console.log(error)
@@ -94,7 +94,7 @@ class AuthService {
 
   async findExistingAuthenticatedAddressByEmail (email) {
     try {
-      const ExistingEmail = await this.modUser.findAuthenticatedAddressByEmail(
+      const ExistingEmail = await this.userModel.findAuthenticatedAddressByEmail(
         email
       )
       console.log(ExistingEmail)
@@ -106,7 +106,7 @@ class AuthService {
 
   async saveNameAndAuthenticatedEmail (name, email) {
     try {
-      await this.modAuth.saveNameAndAuthenticatedEmail(name, email)
+      await this.authModel.saveNameAndAuthenticatedEmail(name, email)
     } catch (error) {
       console.log(error)
     }
@@ -115,7 +115,7 @@ class AuthService {
   async saveIsAuthenticated (token) {
     try {
       const { email } = token
-      await this.modAuth.saveIsAuthenticated(email)
+      await this.authModel.saveIsAuthenticated(email)
     } catch (error) {
       console.log(error)
     }
@@ -123,7 +123,7 @@ class AuthService {
 
   async checkIsAuthenticatedByEmail (email) {
     try {
-      const isAuthenticated = await this.modAuth.findIsAuthenticatedByEmail(
+      const isAuthenticated = await this.authModel.findIsAuthenticatedByEmail(
         email
       )
       return isAuthenticated

@@ -1,5 +1,5 @@
-const UserService = require('../services/serUser')
-const AuthService = require('../services/serAuth')
+const UserService = require('../services/UserService')
+const AuthService = require('../services/AuthService')
 
 const signup = async (req, res, next) => {
   const userService = new UserService()

@@ -1,13 +1,13 @@
-const ModelUser = require('../models/modUser')
+const UserModel = require('../models/UserModel')
 
-class serUser {
+class UserService {
   constructor () {
-    this.modUser = new ModelUser()
+    this.userModel = new UserModel()
   }
 
   async findUserInfoById (userId) {
     try {
-      const userInfo = await this.modUser.findUserInfoById(userId)
+      const userInfo = await this.userModel.findUserInfoById(userId)
       return userInfo
     } catch (error) {
       console.log(error)
@@ -17,8 +17,7 @@ class serUser {
   async findUserInfoByKaKaoId (kakaorId) {
     // 임의로 추가됨
     try {
-      const userInfo = await this.modUser.findUserInfoByKaKaoId(kakaorId)
-      console.log('userInfo :', userInfo)
+      const userInfo = await this.userModel.findUserInfoByKaKaoId(kakaorId)
       return userInfo
     } catch (error) {
       console.log(error)
@@ -27,7 +26,7 @@ class serUser {
 
   async saveUser (data) {
     try {
-      await this.modUser.saveUser(data)
+      await this.userModel.saveUser(data)
     } catch (error) {
       console.log(error)
     }
@@ -35,11 +34,12 @@ class serUser {
 
   async findUserIdByName (name) {
     try {
-      const user = await this.modUser.findUserIdByName(name)
+      const user = await this.userModel.findUserIdByName(name)
       return user.id
     } catch (error) {
       console.log(error)
     }
   }
 }
-module.exports = serUser
+
+module.exports = UserService

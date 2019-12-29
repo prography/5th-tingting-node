@@ -1,6 +1,6 @@
 import AvailableEmail from './entities/AvailableEmail.entity'
 
-class ModelAvailableEmail {
+class AvailableEmailModel {
   async findSchoolByDomain (domain) {
     const school = await AvailableEmail.findOne({
       where: {
@@ -11,4 +11,4 @@ class ModelAvailableEmail {
   }
 }
 
-module.exports = ModelAvailableEmail
+module.exports = AvailableEmailModel

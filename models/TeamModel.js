@@ -2,7 +2,7 @@ import Team from './entities/Team.entity'
 const Sequelize = require('sequelize')
 const Op = Sequelize.Op
 
-class ModelTeam {
+class TeamModel {
   // 전체 팀 리스트 찾기(User is not owner)
   async findTeamListIsNotOwner (userId) {
     const teamList = []
@@ -74,4 +74,4 @@ class ModelTeam {
 
   // 팀 합류하기
 }
-module.exports = ModelTeam
+module.exports = TeamModel

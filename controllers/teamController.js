@@ -1,8 +1,9 @@
-const SerTeam = require('../services/serTeam')
+const TeamService = require('../services/TeamService')
+
 // 전체 팀 리스트
 const getTeamList = async (req, res) => {
-  const serTeam = new SerTeam()
-  const teamList = await serTeam.findAllTeamListWithoutMe(1) // token
+  const teamService = new TeamService()
+  const teamList = await teamService.findAllTeamListWithoutMe(1) // token
   res.status(200).json({
     data: teamList
   })
@@ -11,7 +12,7 @@ const getTeamList = async (req, res) => {
 
 // 팀 생성  -> name 중복 체크 추가
 const createTeam = async (req, res, next) => {
-  const serTeam = new SerTeam()
+  const teamService = new TeamService()
   const {
     body: {
       name,
@@ -24,7 +25,7 @@ const createTeam = async (req, res, next) => {
     }
   } = req
   try {
-    await serTeam.saveTeam({
+    await teamService.saveTeam({
       name,
       chat_address,
       owner_id,
@@ -46,10 +47,10 @@ const createTeam = async (req, res, next) => {
 }
 // 개별 팀 정보 보기
 const getTeamInfo = async (req, res) => {
-  const serTeam = new SerTeam()
+  const teamService = new TeamService()
   try {
-    const teamInfo = await serTeam.findTeamInfo(req.params.id)
-    const teamMember = await serTeam.findTeamMemberList(req.params.id)
+    const teamInfo = await teamService.findTeamInfo(req.params.id)
+    const teamMember = await teamService.findTeamMemberList(req.params.id)
     res.status(200).json({
       data: {
         teamInfo,

@@ -1,6 +1,6 @@
 import Auth from './entities/Auth.entity'
 
-class ModelAuth {
+class AuthModel {
   async saveNameAndAuthenticatedEmail (name, email) {
     await Auth.create({
       user_name: name,
@@ -32,4 +32,4 @@ class ModelAuth {
   }
 }
 
-module.exports = ModelAuth
+module.exports = AuthModel

@@ -2,7 +2,7 @@ import Belong from './entities/Belong.entity'
 const Sequelize = require('sequelize')
 const Op = Sequelize.Op
 
-class ModelBelong {
+class BelongModel {
   // 전체 팀 리스트 찾기(user is not belong)
   async findTeamListIsNotBelong (userId) {
     const teamList = []
@@ -44,4 +44,4 @@ class ModelBelong {
   }
 }
 
-module.exports = ModelBelong
+module.exports = BelongModel

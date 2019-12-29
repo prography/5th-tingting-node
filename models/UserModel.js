@@ -1,6 +1,6 @@
 import User from './entities/User.entity'
 
-class ModelUser {
+class UserModel {
   async saveUser (data) {
     await User.create({
       kakao_id: data.kakao_id,
@@ -80,4 +80,4 @@ class ModelUser {
     return userId
   }
 }
-module.exports = ModelUser
+module.exports = UserModel

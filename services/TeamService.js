@@ -1,15 +1,15 @@
-const ModelTeam = require('../models/modTeam')
-const ModelBelong = require('../models/modBelong')
+const TeamModel = require('../models/TeamModel')
+const BelongModel = require('../models/BelongModel')
 
-class SerTeam {
+class TeamService {
   constructor () {
-    this.modTeam = new ModelTeam()
-    this.modBelong = new ModelBelong()
+    this.teamModel = new TeamModel()
+    this.belongModel = new BelongModel()
   }
 
   async saveTeam (data) {
     try {
-      await this.modTeam.saveTeam(data)
+      await this.teamModel.saveTeam(data)
     } catch (error) {
       console.log(error)
     }
@@ -17,8 +17,8 @@ class SerTeam {
 
   async findAllTeamListWithoutMe (userId) {
     try {
-      const ListIsNotOwner = await this.modTeam.findTeamListIsNotOwner(userId)
-      const ListIsNotBelong = await this.modBelong.findTeamListIsNotBelong(
+      const ListIsNotOwner = await this.teamModel.findTeamListIsNotOwner(userId)
+      const ListIsNotBelong = await this.belongModel.findTeamListIsNotBelong(
         userId
       )
       const teamList = ListIsNotOwner.filter(list =>
@@ -32,7 +32,7 @@ class SerTeam {
 
   async findTeamInfo (teamId) {
     try {
-      const teamInfo = await this.modTeam.findUserTeamInfo(teamId)
+      const teamInfo = await this.teamModel.findUserTeamInfo(teamId)
       return teamInfo
     } catch (error) {
       console.log(error)
@@ -41,11 +41,11 @@ class SerTeam {
 
   async findTeamMemberList (teamId) {
     try {
-      const belongMember = await this.modBelong.findTeamMemberWhoBelongto(teamId)
+      const belongMember = await this.belongModel.findTeamMemberWhoBelongto(teamId)
       return belongMember
     } catch (error) {
       console.log(error)
     }
   }
 }
-module.exports = SerTeam
+module.exports = TeamService
