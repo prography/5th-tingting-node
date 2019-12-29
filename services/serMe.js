@@ -12,6 +12,7 @@ class serMe {
   async findMyInfo (userId) {
     try {
       const myInfo = await this.modUser.findUserInfoById(userId)
+      // 학교 이름 제공
       return myInfo
     } catch (error) {
       console.log(error)

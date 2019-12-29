@@ -11,6 +11,7 @@ const getMyInfo = async (req, res) => {
       data: {
         myInfo,
         myTeamList
+        // 학교 이름 제공
       }
     })
   } catch (error) {

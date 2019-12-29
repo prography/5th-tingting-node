@@ -17,6 +17,18 @@ class ModelBelong {
     return teamList
   }
 
+  // 개별 팀 팀원 리스트
+  async findTeamMemberWhoBelongto (team_id) {
+    const belongs = await Belong.findAll({
+      attributes: ['user_id'],
+      where: {
+        team_id
+      }
+    })
+    const teamMemberList = belongs.map(member => member.dataValues.user_id)
+    return teamMemberList
+  }
+
   // 나의 개별 팀 리스트 찾기
   async findMyTeamList (userId) {
     const teamList = []
