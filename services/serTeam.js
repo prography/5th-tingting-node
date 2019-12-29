@@ -7,21 +7,24 @@ class SerTeam {
     this.modBelong = new ModelBelong()
   }
 
-  async findAllTeamListWithoutMe (userId) {
+  async saveTeam (data) {
     try {
-      const ListIsNotOwner = await this.modTeam.findTeamListIsNotOwner(userId)
-      const ListIsNotBelong = await this.modBelong.findTeamListIsNotBelong(userId)
-      const teamList = ListIsNotOwner.filter(list => ListIsNotBelong.includes(list))
-      return teamList
+      await this.modTeam.saveTeam(data)
     } catch (error) {
       console.log(error)
     }
   }
 
-  async saveTeam (data) {
+  async findAllTeamListWithoutMe (userId) {
     try {
-      console.log(data)
-      await this.modTeam.saveTeam(data)
+      const ListIsNotOwner = await this.modTeam.findTeamListIsNotOwner(userId)
+      const ListIsNotBelong = await this.modBelong.findTeamListIsNotBelong(
+        userId
+      )
+      const teamList = ListIsNotOwner.filter(list =>
+        ListIsNotBelong.includes(list)
+      )
+      return teamList
     } catch (error) {
       console.log(error)
     }

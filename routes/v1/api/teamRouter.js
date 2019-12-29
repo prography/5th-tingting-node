@@ -1,4 +1,5 @@
 const express = require('express')
+
 const { getTeamList, createTeam, getTeamInfo } = require('../../../controllers/teamController')
 
 const router = express.Router()

@@ -14,8 +14,8 @@ const AvailableEmail = db.define(
       type: Sequelize.STRING(45),
       allowNull: false
     },
-    email: {
-      type: Sequelize.STRING(45),
+    domain: {
+      type: Sequelize.STRING(150),
       allowNull: false
     },
     is_university: {
@@ -24,7 +24,7 @@ const AvailableEmail = db.define(
     }
   },
   {
-    tableName: 'availableEmail',
+    tableName: 'available_email',
     freezeTableName: true,
     underscored: true,
     timestamps: false

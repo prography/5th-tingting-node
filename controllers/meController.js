@@ -75,16 +75,9 @@ const getMyTeamInfo = async (req, res) => {
 // 팀 수정
 const updateMyTeam = async (req, res) => {
   const myService = new SerMe()
-  const id = req.params.id// team id
+  const id = req.params.id // team id
   const {
-    body: {
-      name,
-      chat_address,
-      owner_id,
-      intro,
-      password,
-      max_member_number
-    }
+    body: { name, chat_address, owner_id, intro, password, max_member_number }
   } = req
   try {
     const userTeamList = await myService.findMyTeamList(2) // userid token
@@ -104,10 +97,14 @@ const updateMyTeam = async (req, res) => {
           // 수정 팀 data
         }
       })
-    } else { res.status(401).json({ errorMessage: '수정하고자 하는 팀에 속해있지 않음' }) }
+    } else {
+      res
+        .status(401)
+        .json({ errorMessage: '수정하고자 하는 팀에 속해있지 않음' })
+    }
   } catch (error) {
     console.log(error)
-    res.status(404).json({ errorMessage: '팀 수정 실패' })
+    res.status(400).json({ errorMessage: '팀 수정 실패' })
   }
 }
 

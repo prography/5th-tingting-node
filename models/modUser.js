@@ -3,16 +3,13 @@ import User from './entities/User.entity'
 class ModelUser {
   async saveUser (data) {
     await User.create({
-      // To Do: parameter 수정 필요
       kakao_id: data.kakao_id,
       name: data.name,
       birth: data.birth,
       height: data.height,
       thumbnail: data.thumbnail,
       authenticated_address: data.authenticated_address,
-      gender: data.gender,
-      // created_at: '2019-12-26 05:16:14',
-      updated_at: '2019-12-26 05:16:22'
+      gender: data.gender
     })
   }
 
@@ -49,6 +46,28 @@ class ModelUser {
       },
       { where: { id: data.id } }
     )
+  }
+
+  async findNameByName (name) {
+    const ExistingName = await User.findOne({
+      where: {
+        name,
+        is_deleted: 0
+      },
+      attributes: ['name']
+    })
+    return ExistingName
+  }
+
+  async findAuthenticatedAddressByEmail (email) {
+    const ExistingEmail = await User.findOne({
+      where: {
+        authenticated_address: email,
+        is_deleted: 0
+      },
+      attributes: ['authenticated_address']
+    })
+    return ExistingEmail
   }
 
   async findUserIdByName (name) {

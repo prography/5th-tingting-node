@@ -2,7 +2,7 @@ const SerTeam = require('../services/serTeam')
 // 전체 팀 리스트
 const getTeamList = async (req, res) => {
   const serTeam = new SerTeam()
-  const teamList = await serTeam.findAllTeamListWithoutMe(1)// token
+  const teamList = await serTeam.findAllTeamListWithoutMe(1) // token
   res.status(200).json({
     data: teamList
   })
@@ -33,6 +33,7 @@ const createTeam = async (req, res, next) => {
       password,
       max_member_number
     })
+
     res.status(201).json({
       data: {
         // 생성된 팀 정보(name) name으로 id 찾아서 정보 반환 --> 기능 찾아서 추가

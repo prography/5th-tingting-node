@@ -10,13 +10,15 @@ const Auth = db.define(
       primaryKey: true,
       autoIncrement: true
     },
-    authenticated_email: {
-      type: Sequelize.STRING(45),
+    user_name: {
+      type: Sequelize.STRING(24),
       allowNull: false
     },
+    authenticated_email: {
+      type: Sequelize.STRING(45)
+    },
     is_authenticated: {
-      type: Sequelize.INTEGER(1),
-      allowNull: false
+      type: Sequelize.INTEGER(1)
     },
     created_at: {
       type: Sequelize.DATE,
@@ -26,9 +28,8 @@ const Auth = db.define(
     updated_at: {
       type: Sequelize.DATE,
       allowNull: false,
-      defaultValue: db.literal(
-        'CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'
-      )
+      defaultValue: db.literal('CURRENT_TIMESTAMP'),
+      onUpdate: db.literal('CURRENT_TIMESTAMP')
     }
   },
   {
