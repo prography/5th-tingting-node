@@ -19,15 +19,13 @@ class ModelBelong {
 
   // 개별 팀 팀원 리스트
   async findTeamMemberWhoBelongto (team_id) {
-    const teamMemberList = []
-    await Belong.findAll({
+    const belongs = await Belong.findAll({
       attributes: ['user_id'],
       where: {
         team_id
       }
-    }).then(belongs => {
-      belongs.map(member => teamMemberList.push(member.dataValues.user_id))
     })
+    const teamMemberList = belongs.map(member => member.dataValues.user_id)
     return teamMemberList
   }
 

@@ -35,12 +35,12 @@ const createTeam = async (req, res, next) => {
     })
     res.status(201).json({
       data: {
-        // 생성된 팀 정보(name) name으로 id 찾아서 정보 반환
+        // 생성된 팀 정보(name) name으로 id 찾아서 정보 반환 --> 기능 찾아서 추가
       }
     })
   } catch (error) {
     console.log(error)
-    res.status(404).json({ errorMessage: '팀 생성 실패' })
+    res.status(400).json({ errorMessage: '팀 생성 실패' })
   }
 }
 // 개별 팀 정보 보기
