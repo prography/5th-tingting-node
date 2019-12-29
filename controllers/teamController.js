@@ -6,7 +6,7 @@ const getTeamList = async (req, res) => {
   res.status(200).json({
     data: teamList
   })
-  //res 401: Unauthorized
+  // res 401: Unauthorized
 }
 
 // 팀 생성
@@ -39,9 +39,7 @@ const createTeam = async (req, res, next) => {
   }
 }
 
-
-
 module.exports = {
   getTeamList,
-  createTeam,
+  createTeam
 }

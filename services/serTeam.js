@@ -26,6 +26,5 @@ class SerTeam {
       console.log(error)
     }
   }
-
 }
 module.exports = SerTeam

@@ -6,7 +6,7 @@ const getUserInfo = async (req, res) => {
   res.status(200).json({
     userInfo: userInfo
   })
-  //res 404: Not Found
+  // res 404: Not Found
 }
 
 module.exports = {

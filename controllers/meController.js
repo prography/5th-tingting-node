@@ -4,15 +4,18 @@ const getMyInfo = async (req, res) => {
   const myService = new SerMe()
   // const myInfo = await myService.findMyInfo(req.token.id)
   // const myTeamList = await myService.findMyTeamList(req.token.id)
-  const myInfo = await myService.findMyInfo(1)
-  const myTeamList = await myService.findMyTeamList(1)
-  res.status(200).json({
-    data: {
-      myInfo,
-      myTeamList
-    }
-  })
-  //400 res
+  try {
+    const myInfo = await myService.findMyInfo(1)
+    const myTeamList = await myService.findMyTeamList(1)
+    res.status(200).json({
+      data: {
+        myInfo,
+        myTeamList
+      }
+    })
+  } catch (error) {
+    res.status(400).json('내정보 불러오기 실패')
+  }
 }
 
 const updateMyInfo = async (req, res) => {
@@ -31,14 +34,14 @@ const updateMyInfo = async (req, res) => {
   } catch (error) {
     console.log(error)
     res.status(401).json('내 정보 수정 실패')
-    //res 401: Unauthorized
+    // res 401: Unauthorized
   }
 }
 
 // 팀 수정
 const updateMyTeam = async (req, res) => {
-  const myService= new SerMe()
-  const id = req.params.id//team id
+  const myService = new SerMe()
+  const id = req.params.id// team id
   const {
     body: {
       name,
@@ -50,24 +53,24 @@ const updateMyTeam = async (req, res) => {
     }
   } = req
   try {
-    //user의 팀이 맞는지 확인 필요
-    const userTeamList = await myService.findMyTeamList(2) //userid token
+    // user의 팀이 맞는지 확인 필요
+    const userTeamList = await myService.findMyTeamList(2) // userid token
     const isUsersTeam = userTeamList.filter(list => id.includes(list))
-    if(isUsersTeam == id){
-    await myService.updateMyTeam({
-      id,
-      name,
-      chat_address,
-      owner_id,
-      intro,
-      password,
-      max_member_number
-    })
-    res.status(202).json('팀 수정 성공')
-  }
+    if (isUsersTeam == id) {
+      await myService.updateMyTeam({
+        id,
+        name,
+        chat_address,
+        owner_id,
+        intro,
+        password,
+        max_member_number
+      })
+      res.status(202).json('팀 수정 성공')
+    } else { res.status(401).json('수정하고자 하는 팀에 속해있지 않음') }
   } catch (error) {
     console.log(error)
-    res.status(401).json('팀 수정 실패')
+    res.status(404).json('팀 수정 실패')
   }
 }
 
