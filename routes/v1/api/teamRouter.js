@@ -1,5 +1,5 @@
 const express = require('express')
-const { createTeam,updateMyTeam } = require('../../../controllers/teamController')
+const { createTeam, updateMyTeam } = require('../../../controllers/teamController')
 
 const router = express.Router()
 

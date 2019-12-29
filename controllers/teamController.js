@@ -29,7 +29,7 @@ const createTeam = async (req, res, next) => {
 }
 
 // 팀 수정
-const updateMyTeam = async(req,res)=>{
+const updateMyTeam = async (req, res) => {
   const serTeam = new SerTeam()
   const id = 5
   const {
@@ -39,19 +39,19 @@ const updateMyTeam = async(req,res)=>{
     intro,
     password,
     max_member_number
-  }= req.body
-  try{
+  } = req.body
+  try {
     await serTeam.updateMyTeam({
-    id,
-    name,
-    chat_address,
-    owner_id,
-    intro,
-    password,
-    max_member_number
+      id,
+      name,
+      chat_address,
+      owner_id,
+      intro,
+      password,
+      max_member_number
     })
     res.status(202).json('팀 수정 성공')
-  }catch(error){
+  } catch (error) {
     console.log(error)
   }
 }

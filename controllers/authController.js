@@ -3,7 +3,6 @@ const AuthService = require('../services/serAuth')
 
 const signup = async (req, res, next) => {
   const userService = new UserService()
-  const authService = new AuthService()
   const {
     body: {
       kakao_id,
@@ -71,7 +70,7 @@ const checkDuplicateName = async (req, res) => {
   const {
     query: { name }
   } = req
-  const isDuplicateName = await authService.findUserNameByName(name)
+  const isDuplicateName = await authService.findExistingNameByName(name)
   if (isDuplicateName) {
     res.status(403).json('이미 존재하는 이름입니다.')
   } else {
@@ -85,9 +84,10 @@ const checkValidEmail = async (req, res) => {
     body: { email, name }
   } = req
   const isValidSchool = await authService.findSchoolByEmail(email)
-  const isDuplicateEmail = await authService.findAuthenticatedEmailByEmail(
+  const isDuplicateEmail = await authService.findExistingAuthenticatedAddressByEmail(
     email
   )
+  console.log(isDuplicateEmail)
   if (isDuplicateEmail) {
     res.status(404).json('이미 가입된 이메일입니다.')
   } else if (!isValidSchool) {

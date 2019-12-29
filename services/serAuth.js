@@ -2,16 +2,18 @@ const jwt = require('jsonwebtoken')
 const nodemailer = require('nodemailer')
 const ModelAvailableEmail = require('../models/modAvailableEmail')
 const ModelAuth = require('../models/modAuth.js')
+const ModelUser = require('../models/modUser.js')
 const fs = require('fs')
 const path = require('path')
 
 class AuthService {
-  constructor() {
+  constructor () {
     this.modAvailableEmail = new ModelAvailableEmail()
     this.modAuth = new ModelAuth()
+    this.modUser = new ModelUser()
   }
 
-  makeToken(userInfo) {
+  makeToken (userInfo) {
     const token = jwt.sign(
       {
         id: userInfo[0].dataValues.id
@@ -25,7 +27,7 @@ class AuthService {
     return token
   }
 
-  makeEmailToken(email) {
+  makeEmailToken (email) {
     const token = jwt.sign(
       {
         email
@@ -39,7 +41,7 @@ class AuthService {
     return token
   }
 
-  async findSchoolByEmail(email) {
+  async findSchoolByEmail (email) {
     try {
       const domain = email.split('@')[1] // 'hanyang.ac.kr'
       const school = await this.modAvailableEmail.findSchoolByDomain(domain)
@@ -49,7 +51,7 @@ class AuthService {
     }
   }
 
-  async sendEmail(email) {
+  async sendEmail (email) {
     const mailConfig = {
       service: 'Naver',
       host: 'smtp.naver.com',
@@ -81,7 +83,28 @@ class AuthService {
     }
   }
 
-  async saveNameAndAuthenticatedEmail(name, email) {
+  async findExistingNameByName (name) {
+    try {
+      const existingName = await this.modUser.findNameByName(name)
+      return existingName
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  async findExistingAuthenticatedAddressByEmail (email) {
+    try {
+      const ExistingEmail = await this.modUser.findAuthenticatedAddressByEmail(
+        email
+      )
+      console.log(ExistingEmail)
+      return ExistingEmail
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  async saveNameAndAuthenticatedEmail (name, email) {
     try {
       await this.modAuth.saveNameAndAuthenticatedEmail(name, email)
     } catch (error) {
@@ -89,7 +112,7 @@ class AuthService {
     }
   }
 
-  async saveIsAuthenticated(token) {
+  async saveIsAuthenticated (token) {
     try {
       const { email } = token
       await this.modAuth.saveIsAuthenticated(email)
@@ -98,30 +121,12 @@ class AuthService {
     }
   }
 
-  async checkIsAuthenticatedByEmail(email) {
+  async checkIsAuthenticatedByEmail (email) {
     try {
       const isAuthenticated = await this.modAuth.findIsAuthenticatedByEmail(
         email
       )
       return isAuthenticated
-    } catch (error) {
-      console.log(error)
-    }
-  }
-
-  async findAuthenticatedEmailByEmail(email) {
-    try {
-      const authData = await this.modAuth.findAuthenticatedEmailByEmail(email)
-      return authData
-    } catch (error) {
-      console.log(error)
-    }
-  }
-
-  async findUserNameByName(name) {
-    try {
-      const authData = await this.modAuth.findUserIdByName(name)
-      return authData
     } catch (error) {
       console.log(error)
     }
