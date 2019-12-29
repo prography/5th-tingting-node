@@ -6,4 +6,5 @@ const router = express.Router()
 router.get('/', getTeamList)
 router.post('/', createTeam)
 router.get('/:id', getTeamInfo)
+
 module.exports = router
