@@ -11,7 +11,7 @@ class AuthService {
     this.modAuth = new ModelAuth()
   }
 
-  makeToken(userInfo) {
+  makeToken (userInfo) {
     const token = jwt.sign(
       {
         id: userInfo[0].dataValues.id

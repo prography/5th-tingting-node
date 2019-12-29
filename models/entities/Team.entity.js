@@ -70,8 +70,7 @@ const Team = db.define(
     tableName: 'team',
     freezeTableName: true,
     underscored: true,
-    timestamps: false,
-    updated_at: 'updateTimestamp'
+    timestamps: false
   }
 )
 module.exports = Team

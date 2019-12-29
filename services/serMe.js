@@ -36,5 +36,13 @@ class serMe {
       console.log(error)
     }
   }
+
+  async updateMyTeam (data) {
+    try {
+      await this.modTeam.updateUserTeam(data)
+    } catch (error) {
+      console.log(error)
+    }
+  }
 }
 module.exports = serMe
