@@ -6,12 +6,13 @@ const getMyInfo = async (req, res) => {
   // const myTeamList = await myService.findMyTeamList(req.token.id)
   const myInfo = await myService.findMyInfo(1)
   const myTeamList = await myService.findMyTeamList(1)
-  res.json({
+  res.status(200).json({
     data: {
       myInfo,
       myTeamList
     }
   })
+  //400 res
 }
 
 const updateMyInfo = async (req, res) => {
@@ -26,16 +27,52 @@ const updateMyInfo = async (req, res) => {
       height,
       thumbnail
     })
-    res.json({
-      status: 202
-    })
+    res.status(202).json('내 정보 수정 성공')
   } catch (error) {
     console.log(error)
-    res.json(error)
+    res.status(401).json('내 정보 수정 실패')
+    //res 401: Unauthorized
+  }
+}
+
+// 팀 수정
+const updateMyTeam = async (req, res) => {
+  const myService= new SerMe()
+  const id = req.params.id//team id
+  const {
+    body: {
+      name,
+      chat_address,
+      owner_id,
+      intro,
+      password,
+      max_member_number
+    }
+  } = req
+  try {
+    //user의 팀이 맞는지 확인 필요
+    const userTeamList = await myService.findMyTeamList(2) //userid token
+    const isUsersTeam = userTeamList.filter(list => id.includes(list))
+    if(isUsersTeam == id){
+    await myService.updateMyTeam({
+      id,
+      name,
+      chat_address,
+      owner_id,
+      intro,
+      password,
+      max_member_number
+    })
+    res.status(202).json('팀 수정 성공')
+  }
+  } catch (error) {
+    console.log(error)
+    res.status(401).json('팀 수정 실패')
   }
 }
 
 module.exports = {
   getMyInfo,
-  updateMyInfo
+  updateMyInfo,
+  updateMyTeam
 }
