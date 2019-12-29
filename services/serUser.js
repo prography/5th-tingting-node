@@ -1,6 +1,4 @@
 const ModelUser = require('../models/modUser')
-const ModelTeam = require('../models/modTeam')
-const ModelBelong = require('../models/modBelong')
 
 class serUser {
   constructor () {

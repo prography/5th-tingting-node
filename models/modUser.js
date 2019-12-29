@@ -59,7 +59,6 @@ class ModelUser {
   }
 
   async findAuthenticatedAddressByEmail (email) {
-    console.log(email)
     const ExistingEmail = await User.findOne({
       where: {
         authenticated_address: email,

@@ -17,7 +17,7 @@ const signup = async (req, res, next) => {
   try {
     const exUser = await userService.findUserInfoByKaKaoId(kakao_id) // To Do: parameter 수정 필요
     if (exUser === []) {
-      res.status(403).json('이미 가입된 사용자입니다.')
+      res.status(403).json({ errorMessage: '이미 가입된 사용자입니다.' })
       // redirect로 바꿔야되나?
     } else {
       await userService.saveUser({
@@ -29,11 +29,11 @@ const signup = async (req, res, next) => {
         authenticated_address,
         gender
       })
-      res.status(201).json('회원가입 성공')
+      res.status(201).json({ data: '회원가입 성공' })
     }
   } catch (error) {
     console.log(error)
-    res.status(400).json('회원가입 실패')
+    res.status(400).json({ errorMessage: '회원가입 실패' })
   }
 }
 
@@ -48,14 +48,12 @@ const login = async (req, res) => {
     const token = authService.makeToken(userInfo)
     console.log('Issued token: ', token)
     res.status(200).json({
-      code: 200,
-      message: '로그인 & 토큰 발행'
+      data: '로그인 & 토큰 발행'
     })
   } catch (error) {
     console.log(error)
     res.status(400).json({
-      code: 400,
-      message: '로그인 실패'
+      errorMessage: '로그인 실패'
     })
   }
 }
@@ -72,9 +70,9 @@ const checkDuplicateName = async (req, res) => {
   } = req
   const isDuplicateName = await authService.findExistingNameByName(name)
   if (isDuplicateName) {
-    res.status(403).json('이미 존재하는 이름입니다.')
+    res.status(403).json({ errorMessage: '이미 존재하는 이름입니다.' })
   } else {
-    res.status(200).json('사용 가능한 이름입니다.')
+    res.status(200).json({ data: '사용 가능한 이름입니다.' })
   }
 }
 
@@ -89,13 +87,13 @@ const checkValidEmail = async (req, res) => {
   )
   console.log(isDuplicateEmail)
   if (isDuplicateEmail) {
-    res.status(404).json('이미 가입된 이메일입니다.')
+    res.status(403).json({ errorMessage: '이미 가입된 이메일입니다.' })
   } else if (!isValidSchool) {
-    res.status(404).json('가입이 불가능한 이메일입니다.')
+    res.status(404).json({ errorMessage: '가입이 불가능한 이메일입니다.' })
   } else {
     await authService.saveNameAndAuthenticatedEmail(name, email)
     await authService.sendEmail(email)
-    res.status(202).json('이메일에 인증번호를 전송했습니다.')
+    res.status(202).json({ data: '이메일에 인증번호를 전송했습니다.' })
   }
 }
 
@@ -104,10 +102,10 @@ const confirmEmailToken = async (req, res) => {
   const { token } = req
   try {
     await authServcie.saveIsAuthenticated(token)
-    res.status(202).json('이메일 인증이 완료되었습니다.')
+    res.status(202).json({ data: '이메일 인증이 완료되었습니다.' })
   } catch (error) {
     console.log(error)
-    res.status(403).json('이메일 인증에 실패하였습니다.')
+    res.status(403).json({ errorMessage: '이메일 인증에 실패하였습니다.' })
   }
 }
 
@@ -119,9 +117,9 @@ const checkEmailAuth = async (req, res) => {
   try {
     const isAuthenticated = await authServcie.checkIsAuthenticatedByEmail(email)
     if (isAuthenticated) {
-      res.status(200).json('인증이 완료된 이메일입니다.')
+      res.status(200).json({ data: '인증이 완료된 이메일입니다.' })
     } else {
-      res.status(403).json('인증이 필요한 이메일입니다.')
+      res.status(403).json({ data: '인증이 필요한 이메일입니다.' })
     }
   } catch (error) {
     console.log(error)

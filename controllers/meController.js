@@ -77,7 +77,7 @@ const updateMyTeam = async (req, res) => {
     }
   } catch (error) {
     console.log(error)
-    res.status(404).json({ errorMessage: '팀 수정 실패' })
+    res.status(400).json({ errorMessage: '팀 수정 실패' })
   }
 }
 

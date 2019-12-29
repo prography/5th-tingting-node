@@ -9,7 +9,6 @@ class SerTeam {
 
   async saveTeam (data) {
     try {
-      console.log(data)
       await this.modTeam.saveTeam(data)
     } catch (error) {
       console.log(error)

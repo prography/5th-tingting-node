@@ -33,7 +33,7 @@ const createTeam = async (req, res, next) => {
       password,
       max_member_number
     })
-    res.status(201).json('팀 만들기 성공')
+    res.status(201).json({ data: '팀 만들기 성공' })
   } catch (error) {
     console.log(error)
   }
