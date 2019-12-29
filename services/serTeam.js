@@ -1,11 +1,13 @@
 const ModelTeam = require('../models/modTeam')
+const ModelBelong = require('../models/modBelong')
 
 class SerTeam {
-  constructor () {
+  constructor() {
     this.modTeam = new ModelTeam()
+    this.modBelong = new ModelBelong()
   }
 
-  async saveTeam (data) {
+  async saveTeam(data) {
     try {
       console.log(data)
       await this.modTeam.saveTeam(data)
@@ -14,9 +16,16 @@ class SerTeam {
     }
   }
 
-  async updateMyTeam (data) {
+  async findAllTeamListWithoutMe(userId) {
     try {
-      await this.modTeam.updateUserTeam(data)
+      const ListIsNotOwner = await this.modTeam.findTeamListIsNotOwner(userId)
+      const ListIsNotBelong = await this.modBelong.findTeamListIsNotBelong(
+        userId
+      )
+      const teamList = ListIsNotOwner.filter(list =>
+        ListIsNotBelong.includes(list)
+      )
+      return teamList
     } catch (error) {
       console.log(error)
     }

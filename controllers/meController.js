@@ -4,19 +4,23 @@ const getMyInfo = async (req, res) => {
   const myService = new SerMe()
   // const myInfo = await myService.findMyInfo(req.token.id)
   // const myTeamList = await myService.findMyTeamList(req.token.id)
-  const myInfo = await myService.findMyInfo(1)
-  const myTeamList = await myService.findMyTeamList(1)
-  res.json({
-    data: {
-      myInfo,
-      myTeamList
-    }
-  })
+  try {
+    const myInfo = await myService.findMyInfo(1)
+    const myTeamList = await myService.findMyTeamList(1)
+    res.status(200).json({
+      data: {
+        myInfo,
+        myTeamList
+      }
+    })
+  } catch (error) {
+    res.status(400).json({ errorMessage: '내정보 불러오기 실패' })
+  }
 }
 
 const updateMyInfo = async (req, res) => {
   const myService = new SerMe()
-  const id = 1
+  const id = 1 // user id token
   const { name, birth, height, thumbnail } = req.body
   try {
     await myService.updateMyInfo({
@@ -26,16 +30,59 @@ const updateMyInfo = async (req, res) => {
       height,
       thumbnail
     })
-    res.json({
-      status: 202
+    const updateMyInfo = await myService.findMyInfo(id)
+    const updatemyTeamList = await myService.findMyTeamList(id)
+    res.status(202).json({
+      data: {
+        updateMyInfo,
+        updatemyTeamList
+      }
     })
   } catch (error) {
     console.log(error)
-    res.json(error)
+    res.status(401).json({ errorMessage: '내 정보 수정 실패' })
+    // res 401: Unauthorized
+  }
+}
+
+// 팀 수정
+const updateMyTeam = async (req, res) => {
+  const myService = new SerMe()
+  const id = req.params.id // team id
+  const {
+    body: { name, chat_address, owner_id, intro, password, max_member_number }
+  } = req
+  try {
+    const userTeamList = await myService.findMyTeamList(2) // userid token
+    const isUsersTeam = userTeamList.includes(id)
+    if (isUsersTeam) {
+      await myService.updateMyTeam({
+        id,
+        name,
+        chat_address,
+        owner_id,
+        intro,
+        password,
+        max_member_number
+      })
+      res.status(202).json({
+        data: {
+          // 수정 팀 data
+        }
+      })
+    } else {
+      res
+        .status(401)
+        .json({ errorMessage: '수정하고자 하는 팀에 속해있지 않음' })
+    }
+  } catch (error) {
+    console.log(error)
+    res.status(404).json({ errorMessage: '팀 수정 실패' })
   }
 }
 
 module.exports = {
   getMyInfo,
-  updateMyInfo
+  updateMyInfo,
+  updateMyTeam
 }

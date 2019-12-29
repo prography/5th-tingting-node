@@ -1,7 +1,21 @@
 import Team from './entities/Team.entity'
+const Sequelize = require('sequelize')
+const Op = Sequelize.Op
 
 class ModelTeam {
-  // 전체 팀 리스트 보기
+  // 전체 팀 리스트 찾기(User is not owner)
+  async findTeamListIsNotOwner (userId) {
+    const teamList = []
+    await Team.findAll({
+      attributes: ['id'],
+      where: {
+        owner_id: { [Op.ne]: userId }
+      }
+    }).then(teams => {
+      teams.map(team => teamList.push(team.dataValues.id))
+    })
+    return teamList
+  }
 
   // 팀 생성
   async saveTeam (data) {
@@ -15,8 +29,6 @@ class ModelTeam {
       max_member_number: data.max_member_number
     })
   }
-
-  // 인원에 따른 팀 리스트 찾기
 
   // 나의 개별 팀 리스트 찾기
   async findMyTeamList (userId) {
