@@ -1,0 +1,47 @@
+{
+    "name": "5th-tingting-node",
+    "version": "1.0.0",
+    "description": "",
+    "main": "app.js",
+    "scripts": {
+        "start": "nodemon --exec babel-node app.js",
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "author": "jiwon-yang",
+    "license": "ISC",
+    "dependencies": {
+        "bcrypt": "^3.0.6",
+        "body-parser": "^1.19.0",
+        "cookie-parser": "^1.4.4",
+        "crypto": "^1.0.1",
+        "dotenv": "^8.2.0",
+        "express": "^4.17.1",
+        "express-mysql-session": "^2.1.0",
+        "express-session": "^1.17.0",
+        "ipaddr": "0.0.9",
+        "jsonwebtoken": "^8.5.1",
+        "logger": "0.0.1",
+        "morgan": "^1.9.1",
+        "mysql": "^2.17.1",
+        "mysql2": "^2.0.0",
+        "nodemailer": "^6.4.2",
+        "passport": "^0.4.0",
+        "passport-local": "^1.0.0",
+        "sequelize": "^5.21.2",
+        "sequelize-auto": "^0.4.29",
+        "session": "^0.1.0"
+    },
+    "devDependencies": {
+        "@babel/cli": "^7.6.4",
+        "@babel/core": "^7.6.4",
+        "@babel/node": "^7.6.3",
+        "@babel/preset-env": "^7.6.3",
+        "eslint": "^6.8.0",
+        "eslint-config-standard": "^14.1.0",
+        "eslint-plugin-import": "^2.19.1",
+        "eslint-plugin-node": "^11.0.0",
+        "eslint-plugin-promise": "^4.2.1",
+        "eslint-plugin-standard": "^4.0.1",
+        "nodemon": "^1.19.4"
+    }
+}
