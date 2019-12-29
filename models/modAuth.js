@@ -21,6 +21,16 @@ class ModelAuth {
     )
   }
 
+  async findIsAuthenticatedByEmail(email) {
+    const isAuthenticated = await Auth.findOne({
+      where: {
+        authenticated_email: email
+      },
+      attributes: ['is_authenticated']
+    })
+    return isAuthenticated
+  }
+
   async findAuthenticatedEmailByEmail(email) {
     const authData = await Auth.findOne({
       where: {

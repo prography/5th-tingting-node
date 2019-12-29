@@ -98,6 +98,17 @@ class AuthService {
     }
   }
 
+  async checkIsAuthenticatedByEmail(email) {
+    try {
+      const isAuthenticated = await this.modAuth.findIsAuthenticatedByEmail(
+        email
+      )
+      return isAuthenticated
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
   async findAuthenticatedEmailByEmail(email) {
     try {
       const authData = await this.modAuth.findAuthenticatedEmailByEmail(email)

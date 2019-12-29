@@ -5,7 +5,8 @@ const {
   logout,
   checkDuplicateName,
   checkValidEmail,
-  confirmEmailToken
+  confirmEmailToken,
+  checkEmailAuth
 } = require('../../../controllers/authController')
 const { verifyEmailToken } = require('../../../middlewares/auth')
 const router = express.Router()
@@ -16,5 +17,6 @@ router.get('/logout', logout)
 router.post('/duplicate-name', checkDuplicateName)
 router.post('/school', checkValidEmail)
 router.post('/school/confirm', verifyEmailToken, confirmEmailToken)
+router.get('/school/complete', checkEmailAuth)
 
 module.exports = router

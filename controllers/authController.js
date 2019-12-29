@@ -111,11 +111,29 @@ const confirmEmailToken = async (req, res) => {
   }
 }
 
+const checkEmailAuth = async (req, res) => {
+  const authServcie = new AuthService()
+  const {
+    query: { email }
+  } = req
+  try {
+    const isAuthenticated = await authServcie.checkIsAuthenticatedByEmail(email)
+    if (isAuthenticated) {
+      res.status(200).json('인증이 완료된 이메일입니다.')
+    } else {
+      res.status(403).json('인증이 필요한 이메일입니다.')
+    }
+  } catch (error) {
+    console.log(error)
+  }
+}
+
 module.exports = {
   signup,
   login,
   logout,
   checkDuplicateName,
   checkValidEmail,
-  confirmEmailToken
+  confirmEmailToken,
+  checkEmailAuth
 }
