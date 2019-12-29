@@ -1,4 +1,5 @@
 const SerMe = require('../services/serMe')
+const SerTeam = require('../services/serTeam')
 
 const getMyInfo = async (req, res) => {
   const myService = new SerMe()
@@ -45,6 +46,31 @@ const updateMyInfo = async (req, res) => {
     // res 401: Unauthorized
   }
 }
+const getMyTeamInfo = async (req, res) => {
+  const myService = new SerMe()
+  const teamService = new SerTeam()
+  try {
+    const userTeamList = await myService.findMyTeamList(2) // userid token
+    req.params.id = parseInt(req.params.id)
+    const isUsersTeam = userTeamList.includes(req.params.id)
+    if (isUsersTeam) {
+      const teamInfo = await teamService.findTeamInfo(req.params.id)
+      const teamMember = await teamService.findTeamMemberList(req.params.id)
+      res.status(200).json({
+        data: {
+          teamInfo,
+          teamMember
+          // 매칭 정보
+        }
+      })
+    } else {
+      res.status(401).json({ errorMessage: '팀에 속해있지 않음' })
+    }
+  } catch (error) {
+    console.log(error)
+    res.status(404).json({ errorMessage: '팀 정보 없음' })
+  }
+}
 
 // 팀 수정
 const updateMyTeam = async (req, res) => {
@@ -88,5 +114,6 @@ const updateMyTeam = async (req, res) => {
 module.exports = {
   getMyInfo,
   updateMyInfo,
-  updateMyTeam
+  updateMyTeam,
+  getMyTeamInfo
 }
