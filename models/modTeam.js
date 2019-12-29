@@ -30,6 +30,18 @@ class ModelTeam {
     })
   }
 
+  // 개별 팀 정보 보기
+  async findUserTeamInfo (id) {
+    const teamData = await Team.findAll({
+      attributes: ['name', 'chat_address', 'owner_id', 'intro', 'gender', 'password', 'max_member_number', 'is_verified'],
+      where: {
+        id
+      }
+    })
+    console.log('mod_Team:', teamData)
+    return teamData
+  }
+
   // 나의 개별 팀 리스트 찾기
   async findMyTeamList (userId) {
     const teamList = []

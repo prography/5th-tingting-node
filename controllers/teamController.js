@@ -9,7 +9,7 @@ const getTeamList = async (req, res) => {
   // res 401: Unauthorized
 }
 
-// 팀 생성
+// 팀 생성  -> name 중복 체크 추가
 const createTeam = async (req, res, next) => {
   const serTeam = new SerTeam()
   const {
@@ -33,13 +33,37 @@ const createTeam = async (req, res, next) => {
       password,
       max_member_number
     })
-    res.status(201).json('팀 만들기 성공')
+    res.status(201).json({
+      data: {
+        // 생성된 팀 정보(name) name으로 id 찾아서 정보 반환
+      }
+    })
   } catch (error) {
     console.log(error)
+    res.status(404).json({ errorMessage: '팀 생성 실패' })
+  }
+}
+// 개별 팀 정보 보기
+const getTeamInfo = async (req, res) => {
+  const serTeam = new SerTeam()
+  try {
+    const teamInfo = await serTeam.findTeamInfo(req.params.id)
+    const teamMember = await serTeam.findTeamMemberList(req.params.id)
+    res.status(200).json({
+      data: {
+        teamInfo,
+        teamMember
+        // 매칭 정보
+      }
+    })
+  } catch (error) {
+    console.log(error)
+    res.status(404).json({ errorMessage: '팀 정보 없음' })
   }
 }
 
 module.exports = {
   getTeamList,
-  createTeam
+  createTeam,
+  getTeamInfo
 }

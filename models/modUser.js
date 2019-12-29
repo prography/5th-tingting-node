@@ -19,6 +19,7 @@ class ModelUser {
   async findUserInfoById (id) {
     // To Do: parameter 수정 필요
     const userData = await User.findAll({
+      attributes: ['name', 'birth', 'height', 'thumbnail', 'gender', 'is_deleted'],
       where: {
         id
       }
