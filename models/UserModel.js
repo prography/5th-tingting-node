@@ -1,5 +1,5 @@
 import User from './entities/User.entity'
-
+// is deleted 추가
 class UserModel {
   async saveUser (data) {
     await User.create({
@@ -18,7 +18,8 @@ class UserModel {
     const userData = await User.findAll({
       attributes: ['name', 'birth', 'height', 'thumbnail', 'gender', 'is_deleted'],
       where: {
-        id
+        id,
+        is_deleted: 0
       }
     })
     console.log('mod_user :', userData)

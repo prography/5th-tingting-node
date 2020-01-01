@@ -9,7 +9,9 @@ class TeamModel {
     await Team.findAll({
       attributes: ['id'],
       where: {
-        owner_id: { [Op.ne]: userId }
+        owner_id: { [Op.ne]: userId },
+        is_verified: 0,
+        is_deleted: 0
       }
     }).then(teams => {
       teams.map(team => teamList.push(team.dataValues.id))
@@ -35,7 +37,8 @@ class TeamModel {
     const teamData = await Team.findOne({
       attributes: ['name', 'chat_address', 'owner_id', 'intro', 'gender', 'password', 'max_member_number', 'is_verified'],
       where: {
-        id
+        id,
+        is_deleted: 0
       }
     })
     return teamData
@@ -47,15 +50,14 @@ class TeamModel {
     await Team.findAll({
       attributes: ['id'],
       where: {
-        owner_id: userId
+        owner_id: userId,
+        is_deleted: 0
       }
     }).then(teams => {
       teams.map(team => teamList.push(team.dataValues.id))
     })
     return teamList
   }
-
-  // 나의 개별 팀 보기
 
   // 나의 팀 정보 수정
   async updateUserTeam (data) {
@@ -71,6 +73,46 @@ class TeamModel {
   }
 
   // 팀 떠나기
+
+  // is gatherd? = is_verified ?  1:0
+  async isGathered (id) {
+    const gathered = await Team.findOne({
+      attributes: ['is_verified'],
+      where: {
+        id,
+        is_deleted: 0
+      }
+    })
+    const isGather = JSON.stringify(gathered)
+    return isGather
+  }
+
+  async isOwner (data) {
+    const owner = await Team.findOne({
+      attributes: ['owner_id'],
+      where: {
+        id: data.teamId,
+        owner_id: data.userId,
+        is_deleted: 0
+      }
+    })
+    const teamowner = JSON.stringify(owner)
+    return teamowner
+  }
+
+  async deleteUserTeam (id) {
+    await Team.update({
+      is_deleted: 1
+    },
+    { where: { id } })
+  }
+
+  async updateTeamVerify (data) {
+    await Team.update({
+      is_verified: data.verify
+    },
+    { where: { id: data.teamId } })
+  }
 
   // 팀 합류하기
 }

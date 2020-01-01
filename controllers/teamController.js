@@ -2,12 +2,17 @@ const TeamService = require('../services/TeamService')
 
 // 전체 팀 리스트
 const getTeamList = async (req, res) => {
-  const teamService = new TeamService()
-  const teamList = await teamService.findAllTeamListWithoutMe(1) // token
-  res.status(200).json({
-    data: teamList
-  })
-  // res 401: Unauthorized
+  try {
+    const teamService = new TeamService()
+    const teamList = await teamService.findAllTeamListWithoutMe(2) // token
+    res.status(200).json({
+      data: teamList
+    })
+  } catch (error) {
+    console.log(error)
+    res.status(404).json({ errorMessage: '전체 팀 리스트를 찾지 못함' })
+  }
+  // res 401: Unauthorized ,403
 }
 
 // 팀 생성  -> name 중복 체크 추가

@@ -2,13 +2,16 @@ const UserService = require('../services/UserService')
 
 const getUserInfo = async (req, res) => {
   const userService = new UserService()
-  const userInfo = await userService.findUserInfoById(req.params.id).then()
-  res.status(200).json({
-    data: {
-      userInfo: userInfo
-    }
-  })
-  // res 404: Not Found
+  try {
+    const userInfo = await userService.findUserInfoById(req.params.id).then()
+    res.status(200).json({
+      data: {
+        userInfo: userInfo
+      }
+    })
+  } catch (error) {
+    res.status(404).json({ errorMessage: '사용자를 찾을 수 없음' })
+  }
 }
 
 module.exports = {

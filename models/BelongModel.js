@@ -42,6 +42,23 @@ class BelongModel {
     })
     return teamList
   }
+
+  async deleteBelongByTeamId (team_id) {
+    await Belong.destroy({
+      where: {
+        team_id
+      }
+    })
+  }
+
+  async deleteBelongByUserId (data) {
+    await Belong.destroy({
+      where: {
+        team_id: data.teamId,
+        user_id: data.userId
+      }
+    })
+  }
 }
 
 module.exports = BelongModel

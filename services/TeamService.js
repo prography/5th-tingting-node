@@ -47,5 +47,15 @@ class TeamService {
       console.log(error)
     }
   }
+
+  async isGathered (teamId) {
+    try {
+      const gathered = await this.teamModel.isGathered(teamId)
+      const isgathered = gathered.includes(1)
+      return isgathered
+    } catch (error) {
+      console.log(error)
+    }
+  }
 }
 module.exports = TeamService
