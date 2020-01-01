@@ -16,12 +16,18 @@ class UserModel {
   async findUserInfoById (id) {
     // To Do: parameter 수정 필요
     const userData = await User.findAll({
-      attributes: ['name', 'birth', 'height', 'thumbnail', 'gender', 'is_deleted'],
+      attributes: [
+        'name',
+        'birth',
+        'height',
+        'thumbnail',
+        'gender',
+        'is_deleted'
+      ],
       where: {
         id
       }
     })
-    console.log('mod_user :', userData)
     return userData
   }
 
@@ -32,7 +38,6 @@ class UserModel {
         kakao_id
       }
     })
-    console.log('mod_user :', userData)
     return userData
   }
 

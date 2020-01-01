@@ -3,6 +3,8 @@ const TeamService = require('../services/TeamService')
 
 const getMyInfo = async (req, res) => {
   const myService = new MeService()
+  // const myInfo = await myService.findMyInfo(req.token.id)
+  // const myTeamList = await myService.findMyTeamList(req.token.id)
   try {
     const myInfo = await myService.findMyInfo(1)
     const myTeamList = await myService.findMyTeamList(1)
@@ -40,7 +42,7 @@ const updateMyInfo = async (req, res) => {
     })
   } catch (error) {
     console.log(error)
-    res.status(401).json({ errorMessage: '내 정보 수정 실패' })
+    res.status(401).json({ errorMessage: '내 정보 수정하기 실패' })
     // res 401: Unauthorized
   }
 }
