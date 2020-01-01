@@ -48,9 +48,8 @@ class MeService {
 
   async isOwner (data) {
     try {
-      const ownerId = await this.teamModel.isOwner(data)
-      const isUserOwner = ownerId.includes(data.userId)
-      return isUserOwner
+      const isOwner = await this.teamModel.checkIsOnwer(data)
+      return isOwner
     } catch (error) {
       console.log(error)
     }
@@ -61,7 +60,7 @@ class MeService {
     // team table deleted 1
     try {
       await this.belongModel.deleteBelongByTeamId(teamId)
-      await this.teamModel.deleteUserTeam(teamId)
+      await this.teamModel.deleteTeam(teamId)
     } catch (error) {
       console.log(error)
     }
@@ -69,12 +68,12 @@ class MeService {
 
   async removeMeFromTeam (data) {
     // belong table delete by userId,teamId
-    const verify = 0
+    const is_verified = 0
     const teamId = data.teamId
     // team is_verifiied false
     try {
-      await this.belongModel.deleteBelongByUserId(data)
-      await this.teamModel.updateTeamVerify({ teamId, verify })
+      await this.belongModel.deleteBelongByUserIdAndTeamId(data)
+      await this.teamModel.updateTeamVerify({ teamId, is_verified })
     } catch (error) {
       console.log(error)
     }

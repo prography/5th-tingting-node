@@ -4,18 +4,16 @@ const Op = Sequelize.Op
 
 class BelongModel {
   // 전체 팀 리스트 찾기(user is not belong)
-  async findTeamListIsNotBelong (userId) {
-    const teamList = []
-    await Belong.findAll({
-      attributes: ['team_id'],
-      where: {
-        user_id: { [Op.ne]: userId }
-      }
-    }).then(belongs => {
-      belongs.map(belong => teamList.push(belong.dataValues.team_id))
-    })
-    return teamList
-  }
+  // async findTeamListIsNotBelong(userId) {
+  //   const teamsNotBelong = await Belong.findAll({
+  //     attributes: ['team_id'],
+  //     where: {
+  //       user_id: { [Op.ne]: userId }
+  //     }
+  //   })
+  //   const teamList = teamsNotBelong.map(team => team.dataValues.team_id)
+  //   return teamList
+  // }
 
   // 개별 팀 팀원 리스트
   async findTeamMemberWhoBelongto (team_id) {
@@ -30,16 +28,14 @@ class BelongModel {
   }
 
   // 나의 개별 팀 리스트 찾기
-  async findMyTeamList (userId) {
-    const teamList = []
-    await Belong.findAll({
+  async findMyTeamList (user_id) {
+    const teams = await Belong.findAll({
       attributes: ['team_id'],
       where: {
-        user_id: userId
+        user_id
       }
-    }).then(belongs => {
-      belongs.map(belong => teamList.push(belong.dataValues.team_id))
     })
+    const teamList = teams.map(belong => belong.dataValues.team_id)
     return teamList
   }
 
@@ -51,12 +47,19 @@ class BelongModel {
     })
   }
 
-  async deleteBelongByUserId (data) {
+  async deleteBelongByUserIdAndTeamId (data) {
     await Belong.destroy({
       where: {
         team_id: data.teamId,
         user_id: data.userId
       }
+    })
+  }
+
+  async createBelongByUserIdAndTeamId (data) {
+    await Belong.create({
+      team_id: data.teamId,
+      user_id: data.userId
     })
   }
 }

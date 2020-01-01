@@ -3,10 +3,10 @@ const UserService = require('../services/UserService')
 const getUserInfo = async (req, res) => {
   const userService = new UserService()
   try {
-    const userInfo = await userService.findUserInfoById(req.params.id).then()
+    const userInfo = await userService.findUserInfoById(req.params.id)
     res.status(200).json({
       data: {
-        userInfo: userInfo
+        userInfo
       }
     })
   } catch (error) {

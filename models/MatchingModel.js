@@ -4,29 +4,32 @@ const Op = Sequelize.Op
 
 class MatchingModel {
   // is matchig? = receive_accept_all? 1:0
-  async isMatched (teamId) {
+  async checkIsMatched (teamId) {
     const accepts = await Matching.findAll({
       attributes: ['receive_accept_all'],
       where: {
-        receive_team_id: teamId
+        receive_team_id: teamId,
+        receive_accept_all: 1,
+        is_deleted: 0
       }
     })
-    const acceptList = accepts.map(x => x.dataValues.receive_accept_all)
-    return acceptList
+    const isMatched = (accepts.length !== 0)
+    return isMatched
   }
 
-  async findMatchingIdByTeam (teamId) {
-    const matchingId = await Matching.findAll({
+  async findMatchingIdsByTeamId (teamId) {
+    const matchingIds = await Matching.findAll({
       attributes: ['id'],
       where: {
-        [Op.or]: [{ send_team_id: teamId }, { receive_team_id: teamId }]
+        [Op.or]: [{ send_team_id: teamId }, { receive_team_id: teamId }],
+        is_deleted: 0
       }
     })
-    const matchingIdList = matchingId.map(matching => matching.dataValues.id)
+    const matchingIdList = matchingIds.map(matching => matching.dataValues.id)
     return matchingIdList
   }
 
-  async deleteMatchingTeam (teamId) {
+  async deleteMatchingByTeamId (teamId) {
     await Matching.update({
       is_deleted: 1
     }, {

@@ -54,24 +54,28 @@ const getMyTeamInfo = async (req, res) => {
   const teamService = new TeamService()
   try {
     const userTeamList = await myService.findMyTeamList(2) // req.token.id
-    req.params.id = parseInt(req.params.id)
-    const isUsersTeam = userTeamList.includes(req.params.id)
-    if (isUsersTeam) {
-      const teamInfo = await teamService.findTeamInfo(req.params.id)
-      const teamMember = await teamService.findTeamMemberList(req.params.id)
-      res.status(200).json({
-        data: {
-          teamInfo,
-          teamMember
-          // 매칭 정보
-        }
-      })
+    if (userTeamList.length !== 0) {
+      req.params.id = parseInt(req.params.id)
+      const isUsersTeam = userTeamList.includes(req.params.id)
+      if (isUsersTeam) {
+        const teamInfo = await teamService.findTeamInfo(req.params.id)
+        const teamMember = await teamService.findTeamMemberList(req.params.id)
+        res.status(200).json({
+          data: {
+            teamInfo,
+            teamMember
+            // 매칭 정보
+          }
+        })
+      } else {
+        res.status(403).json({ errorMessage: '팀에 속해있지 않음' })
+      }
     } else {
-      res.status(401).json({ errorMessage: '팀에 속해있지 않음' })
+      res.status(404).json({ errorMessage: '팀 정보 없음' })
     }
   } catch (error) {
     console.log(error)
-    res.status(404).json({ errorMessage: '팀 정보 없음' })
+    res.status(500).json({ errorMessage: '팀 불러오기 실패' })
   }
 }
 
@@ -95,20 +99,21 @@ const updateMyTeam = async (req, res) => {
         password,
         max_member_number
       })
-      res.status(202).json({
+      res.status(201).json({
         data: {
           // 수정 팀 data
         }
       })
     } else {
-      res.status(401).json({ errorMessage: '수정하고자 하는 팀에 속해있지 않음' })
+      res.status(403).json({ errorMessage: '수정하고자 하는 팀에 속해있지 않음' })
     }
   } catch (error) {
     console.log(error)
-    res.status(400).json({ errorMessage: '팀 수정 실패' })
+    res.status(500).json({ errorMessage: '팀 수정 실패' })
   }
 }
 
+// 수정 : 삭제 시 deleted_at update
 const leaveMyTeam = async (req, res) => {
   const myService = new MeService()
   const teamService = new TeamService()
@@ -144,17 +149,15 @@ const leaveMyTeam = async (req, res) => {
           await myService.removeMeFromTeam({ userId, teamId })
           res.status(204).json({ data: { message: '팀원 나가기 완료(매칭 채널)' } })
         }
-      } else if (isMatched) {
-        // else로?
-        // 음.. 음......에러인가?
+      } else {
         res.status(403).json({ errorMessage: '이미 매칭 된 팀, 나가기 불가' })
       }
     } else {
-      res.status(401).json({ errorMessage: '나가고자 하는 팀에 속해있지 않음' })
+      res.status(403).json({ errorMessage: '나가고자 하는 팀에 속해있지 않음' })
     }
   } catch (error) {
     console.log(error)
-    res.status(400).json({ errorMessage: '팀 삭제 오류' })
+    res.status(500).json({ errorMessage: '팀 삭제 오류' })
   }
 }
 
