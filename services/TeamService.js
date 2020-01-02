@@ -44,7 +44,7 @@ class TeamService {
     }
   }
 
-  async isGathered (teamId) {
+  async checkIsGathered (teamId) {
     try {
       const isGathered = await this.teamModel.checkIsGathered(teamId)
       return isGathered
@@ -58,7 +58,7 @@ class TeamService {
       const is_verified = 1
       const teamId = data.teamId
       // create belong
-      await this.belongModel.createBelongByUserIdAndTeamId(data) // or saveUser
+      await this.belongModel.createTeamMember(data)
 
       // if length == maxnumber -> update is verified = 1 //controller로 가야할까?
       const belongMember = await this.belongModel.findTeamMemberWhoBelongto(teamId)
@@ -69,10 +69,6 @@ class TeamService {
     } catch (error) {
       console.log(error)
     }
-  }
-
-  catch (error) {
-    console.log(error)
   }
 
   async getTeamGender (teamId) {

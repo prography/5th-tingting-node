@@ -122,9 +122,9 @@ const leaveMyTeam = async (req, res) => {
   const teamId = parseInt(req.params.id)
   const userId = 3 // req.token.id
 
-  const isGathered = await teamService.isGathered(teamId)
-  const isMatched = await matchingService.isMatched(teamId)
-  const isOwner = await myService.isOwner({ userId, teamId })
+  const isGathered = await teamService.checkIsGathered(teamId)
+  const isMatched = await matchingService.checkIsMatched(teamId)
+  const isOwner = await myService.checkIsOwner({ userId, teamId })
   try {
     const userTeamList = await myService.findMyTeamList(userId)
     const isUsersTeam = userTeamList.includes(teamId)
@@ -150,7 +150,7 @@ const leaveMyTeam = async (req, res) => {
           res.status(204).json({ data: { message: '팀원 나가기 완료(매칭 채널)' } })
         }
       } else {
-        res.status(403).json({ errorMessage: '이미 매칭 된 팀, 나가기 불가' })
+        res.status(400).json({ errorMessage: '이미 매칭 된 팀, 나가기 불가' })
       }
     } else {
       res.status(403).json({ errorMessage: '나가고자 하는 팀에 속해있지 않음' })

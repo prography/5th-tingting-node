@@ -1,7 +1,7 @@
 const TeamService = require('../services/TeamService')
 const UserService = require('../services/UserService')
 
-// 전체 팀 리스트
+// 전체 팀 리스트 //수정 : 성별 필터 추가
 const getTeamList = async (req, res) => {
   try {
     const teamService = new TeamService()
@@ -86,13 +86,13 @@ const joinTeam = async (req, res) => {
   try {
     const teamList = await teamService.findAllTeamListWithoutMe(userId)
     if (teamList.length !== 0) {
-      const isUsersTeam = teamList.includes(teamId)
-      if (isUsersTeam) {
+      const isNotUsersTeam = teamList.includes(teamId)
+      if (isNotUsersTeam) {
         const userGender = await userService.getUserGender(userId)
         const teamGender = await teamService.getTeamGender(teamId)
         if (userGender === teamGender) {
           await teamService.joinTeamToBelong({ teamId, userId })
-          res.status(201).json({
+          res.status(204).json({
             data: { message: '합류 성공' }
           })
         } else {

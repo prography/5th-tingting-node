@@ -46,7 +46,7 @@ class MeService {
     }
   }
 
-  async isOwner (data) {
+  async checkIsOwner (data) {
     try {
       const isOwner = await this.teamModel.checkIsOnwer(data)
       return isOwner

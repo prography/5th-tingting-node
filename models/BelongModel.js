@@ -56,7 +56,7 @@ class BelongModel {
     })
   }
 
-  async createBelongByUserIdAndTeamId (data) {
+  async createTeamMember (data) {
     await Belong.create({
       team_id: data.teamId,
       user_id: data.userId
