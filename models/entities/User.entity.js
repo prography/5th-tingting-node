@@ -10,9 +10,17 @@ const User = db.define(
       primaryKey: true,
       autoIncrement: true
     },
+    local_id: {
+      type: Sequelize.STRING(45)
+    },
+    password: {
+      type: Sequelize.STRING(200)
+    },
+    salt: {
+      type: Sequelize.STRING(200)
+    },
     kakao_id: {
-      type: Sequelize.STRING(180),
-      allowNull: false
+      type: Sequelize.STRING(180)
     },
     name: {
       type: Sequelize.STRING(24),

@@ -29,7 +29,7 @@ const getAccessTokenByKakaoCode = async (req, res) => {
   }
 }
 
-const signup = async (req, res, next) => {
+const kakaoSignup = async (req, res, next) => {
   const userService = new UserService()
   const authServcie = new AuthService()
   try {
@@ -61,19 +61,38 @@ const signup = async (req, res, next) => {
   }
 }
 
-const login = async (req, res) => {
+const localLogin = async (req, res) => {
   const userService = new UserService()
   const authService = new AuthService()
-  // To Do: req.body 부분 및 token의 parameter 수정
-  const { kakao_id } = req.body
+  const {
+    body: { local_id, password }
+  } = req
   try {
-    // 유저 맞는지 확인 필요 (1.id 있는지)
-    const userInfo = await userService.findUserInfoByKaKaoId(kakao_id)
-    const token = authService.makeToken(userInfo)
-    console.log('Issued token: ', token)
-    res.status(200).json({
-      data: '로그인 & 토큰 발행'
-    })
+    const authInfo = await userService.findAuthInfoByLocalId(local_id)
+    if (authInfo) {
+      // local_id, password 일치 확인
+      const isCorrectPassword = authService.verifyPassword(
+        authInfo.salt,
+        authInfo.password,
+        password
+      )
+      if (isCorrectPassword) {
+        // Token 만들기
+        const token = authService.makeToken(authInfo.id)
+        console.log('Issued token: ', token)
+        res.status(200).json({
+          data: '로그인에 성공했습니다. & 토큰이 발행되었습니다.'
+        })
+      } else {
+        res.status(401).json({
+          data: '비밀번호가 틀렸습니다.'
+        })
+      }
+    } else {
+      res.status(401).json({
+        errorMessage: '존재하지 않는 아이디입니다.'
+      })
+    }
   } catch (error) {
     console.log(error)
     res.status(400).json({
@@ -82,9 +101,64 @@ const login = async (req, res) => {
   }
 }
 
+const localSignup = async (req, res) => {
+  const userService = new UserService()
+  const authService = new AuthService()
+  const {
+    body: {
+      local_id,
+      password,
+      name,
+      birth,
+      height,
+      thumbnail,
+      authenticated_address,
+      gender
+    }
+  } = req
+  try {
+    const exUserId = await userService.findUserIdByLocalId(local_id)
+    if (exUserId) {
+      res.status(403).json({ data: { message: '이미 가입된 사용자입니다.' } })
+    } else {
+      const encryptInfo = await authService.encryptPassword(password)
+      await userService.saveUserByLocal({
+        local_id,
+        password: encryptInfo.encryptedpassword,
+        salt: encryptInfo.salt,
+        name,
+        birth,
+        height,
+        thumbnail,
+        authenticated_address,
+        gender
+      })
+      res.status(201).json({ data: { message: '회원가입 성공' } })
+    }
+  } catch (error) {
+    console.log(error)
+    res.status(500).json({ data: { message: '회원가입에 실패하였습니다.' } })
+  }
+}
+
 const logout = (req, res) => {
   req.logout()
   res.redirect('/')
+}
+
+const checkDuplicateLocalId = async (req, res) => {
+  const authService = new AuthService()
+  const {
+    query: { local_id }
+  } = req
+  const isDuplicateLocalId = await authService.findExistingLocalIdByLocalId(
+    local_id
+  )
+  if (isDuplicateLocalId) {
+    res.status(400).json({ errorMessage: '이미 존재하는 아이디입니다.' })
+  } else {
+    res.status(200).json({ data: { message: '사용 가능한 아이디입니다.' } })
+  }
 }
 
 const checkDuplicateName = async (req, res) => {
@@ -152,9 +226,11 @@ const checkEmailAuth = async (req, res) => {
 module.exports = {
   kakaoLogin,
   getAccessTokenByKakaoCode,
-  signup,
-  login,
+  kakaoSignup,
+  localLogin,
+  localSignup,
   logout,
+  checkDuplicateLocalId,
   checkDuplicateName,
   checkValidEmail,
   confirmEmailToken,

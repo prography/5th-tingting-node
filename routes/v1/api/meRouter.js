@@ -1,6 +1,11 @@
 const express = require('express')
 const { verifyToken } = require('../../../middlewares/auth')
-const { getMyInfo, updateMyInfo, getMyTeamInfo, updateMyTeam } = require('../../../controllers/meController')
+const {
+  getMyInfo,
+  updateMyInfo,
+  getMyTeamInfo,
+  updateMyTeam
+} = require('../../../controllers/meController')
 
 const router = express.Router()
 

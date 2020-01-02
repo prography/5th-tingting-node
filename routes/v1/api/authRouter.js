@@ -2,9 +2,11 @@ const express = require('express')
 const {
   kakaoLogin,
   getAccessTokenByKakaoCode,
-  signup,
-  login,
+  kakaoSignup,
+  localLogin,
+  localSignup,
   logout,
+  checkDuplicateLocalId,
   checkDuplicateName,
   checkValidEmail,
   confirmEmailToken,
@@ -13,11 +15,13 @@ const {
 const { verifyEmailToken } = require('../../../middlewares/auth')
 const router = express.Router()
 
-router.get('/kakao', kakaoLogin) // 여기 post로 바꿔야될 수도 있음
+router.get('/kakao/login', kakaoLogin)
 router.get('/kakao/callback', getAccessTokenByKakaoCode)
-router.post('/signup', signup)
-router.post('/login', login)
+router.post('/kakao/signup', kakaoSignup)
+router.post('/local/login', localLogin)
+router.post('/local/signup', localSignup)
 router.get('/logout', logout)
+router.post('/duplicate-id', checkDuplicateLocalId)
 router.post('/duplicate-name', checkDuplicateName)
 router.post('/school', checkValidEmail)
 router.post('/school/confirm', verifyEmailToken, confirmEmailToken)

@@ -1,9 +1,11 @@
 import User from './entities/User.entity'
 
 class UserModel {
-  async saveUser (data) {
+  async saveUserByLocal(data) {
     await User.create({
-      kakao_id: data.kakao_id,
+      local_id: data.local_id,
+      password: data.password,
+      salt: data.salt,
       name: data.name,
       birth: data.birth,
       height: data.height,
@@ -13,7 +15,7 @@ class UserModel {
     })
   }
 
-  async findUserInfoById (id) {
+  async findUserInfoById(id) {
     // To Do: parameter 수정 필요
     const userData = await User.findAll({
       attributes: [
@@ -31,9 +33,8 @@ class UserModel {
     return userData
   }
 
-  async findUserInfoByKaKaoId (kakao_id) {
-    // To Do: parameter 수정 필요
-    const userData = await User.findAll({
+  async findUserInfoByKaKaoId(kakao_id) {
+    const userData = await User.findOne({
       where: {
         kakao_id
       }
@@ -41,7 +42,40 @@ class UserModel {
     return userData
   }
 
-  async updateUserInfo (data) {
+  async findUserIdByLocalId(local_id) {
+    const userId = await User.findOne({
+      where: {
+        local_id
+      },
+      attributes: ['id'],
+      raw: true
+    })
+    return userId
+  }
+
+  async findLocalIdByLocalId(local_id) {
+    const localId = await User.findOne({
+      where: {
+        local_id
+      },
+      attributes: ['local_id'],
+      raw: true
+    })
+    return localId
+  }
+
+  async findAuthInfoByLocalId(local_id) {
+    const authData = await User.findOne({
+      where: {
+        local_id
+      },
+      attributes: ['id', 'salt', 'password'],
+      raw: true
+    })
+    return authData
+  }
+
+  async updateUserInfo(data) {
     await User.update(
       {
         name: data.name,
@@ -53,7 +87,7 @@ class UserModel {
     )
   }
 
-  async findNameByName (name) {
+  async findNameByName(name) {
     const ExistingName = await User.findOne({
       where: {
         name,
@@ -64,7 +98,7 @@ class UserModel {
     return ExistingName
   }
 
-  async findAuthenticatedAddressByEmail (email) {
+  async findAuthenticatedAddressByEmail(email) {
     const ExistingEmail = await User.findOne({
       where: {
         authenticated_address: email,
@@ -75,7 +109,7 @@ class UserModel {
     return ExistingEmail
   }
 
-  async findUserIdByName (name) {
+  async findUserIdByName(name) {
     const userId = await User.findOne({
       attributes: ['id'],
       where: {
