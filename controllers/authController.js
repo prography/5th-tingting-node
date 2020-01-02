@@ -81,7 +81,11 @@ const checkValidEmail = async (req, res) => {
   const {
     body: { email, name }
   } = req
+  console.log(req)
+  console.log(req.body)
+  console.log(email)
   const isValidSchool = await authService.findSchoolByEmail(email)
+  console.log(isValidSchool)
   const isDuplicateEmail = await authService.findExistingAuthenticatedAddressByEmail(
     email
   )

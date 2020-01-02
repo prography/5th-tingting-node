@@ -62,7 +62,7 @@ class AuthService {
       }
     }
     const html = fs.readFileSync(
-      path.resolve(__dirname, 'authMail.html'),
+      path.resolve(__dirname, '../public/html/authMail.html'),
       'utf8'
     )
     try {
