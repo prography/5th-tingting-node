@@ -45,5 +45,38 @@ class MeService {
       console.log(error)
     }
   }
+
+  async checkIsOwner (data) {
+    try {
+      const isOwner = await this.teamModel.checkIsOnwer(data)
+      return isOwner
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  async deleteMyTeam (teamId) {
+    // belong table delete all by teamId
+    // team table deleted 1
+    try {
+      await this.belongModel.deleteBelongByTeamId(teamId)
+      await this.teamModel.deleteTeam(teamId)
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  async removeMeFromTeam (data) {
+    // belong table delete by userId,teamId
+    const is_verified = 0
+    const teamId = data.teamId
+    // team is_verifiied false
+    try {
+      await this.belongModel.deleteBelongByUserIdAndTeamId(data)
+      await this.teamModel.updateTeamVerify({ teamId, is_verified })
+    } catch (error) {
+      console.log(error)
+    }
+  }
 }
 module.exports = MeService
