@@ -1,5 +1,6 @@
 const TeamService = require('../services/TeamService')
 const UserService = require('../services/UserService')
+const MeService = require('../services/MeService')
 
 // 전체 팀 리스트 //수정 : 성별 필터 추가
 const getTeamList = async (req, res) => {
@@ -23,33 +24,29 @@ const getTeamList = async (req, res) => {
 // 팀 생성
 const createTeam = async (req, res) => {
   const teamService = new TeamService()
+  const meService = new MeService()
   const {
-    body: {
-      name,
-      chat_address,
-      owner_id,
-      intro,
-      gender,
-      password,
-      max_member_number
-    }
+    token: { id }
+  } = req
+  const {
+    body: { name, chat_address, intro, password, max_member_number }
   } = req
   try {
+    const gender = await meService.findMyGender(id)
     await teamService.saveTeam({
       name,
       chat_address,
-      owner_id,
+      owner_id: id,
       intro,
       gender,
       password,
       max_member_number
     })
-
     res.status(201).json({
       data: {
-        // 생성된 팀 정보(name) name으로 id 찾아서 정보 반환 --> 기능 찾아서 추가
+        message: '팀 생성 성공'
       }
-    })
+    }) // 생성된 팀 정보(name) name으로 id 찾아서 정보 반환 --> 기능 찾아서 추가
   } catch (error) {
     console.log(error)
     res.status(500).json({ errorMessage: '팀 생성 실패' })

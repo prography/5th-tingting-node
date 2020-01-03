@@ -9,13 +9,13 @@ const path = require('path')
 const axios = require('axios')
 
 class AuthService {
-  constructor () {
+  constructor() {
     this.availableEmailModel = new AvailableEmailModel()
     this.authModel = new AuthModel()
     this.userModel = new UserModel()
   }
 
-  async getKakaoId (accessToken) {
+  async getKakaoId(accessToken) {
     try {
       const kakaoUserInfo = await axios({
         method: 'post',
@@ -37,21 +37,21 @@ class AuthService {
     }
   }
 
-  makeToken (id) {
+  makeToken(id) {
     const token = jwt.sign(
       {
         id
       },
       process.env.JWT_SECRET,
       {
-        expiresIn: 60 * 60 * 1000, // 1시간
+        expiresIn: 24 * 60 * 60 * 1000, // 1일
         issuer: 'tingting'
       }
     )
     return token
   }
 
-  makeEmailToken (email) {
+  makeEmailToken(email) {
     const token = jwt.sign(
       {
         email
@@ -65,7 +65,7 @@ class AuthService {
     return token
   }
 
-  encryptPassword (password) {
+  encryptPassword(password) {
     try {
       const salt = crypto.randomBytes(64).toString('base64')
       const encryptedpassword = crypto
@@ -81,7 +81,7 @@ class AuthService {
     }
   }
 
-  verifyPassword (salt, password, passwordToVerify) {
+  verifyPassword(salt, password, passwordToVerify) {
     try {
       const encryptedPasswordToVerify = crypto
         .pbkdf2Sync(passwordToVerify, salt, 100000, 64, 'sha512')
@@ -96,7 +96,7 @@ class AuthService {
     }
   }
 
-  async findSchoolByEmail (email) {
+  async findSchoolByEmail(email) {
     try {
       const domain = email.split('@')[1] // 'hanyang.ac.kr'
       const school = await this.availableEmailModel.findSchoolByDomain(domain)
@@ -106,7 +106,7 @@ class AuthService {
     }
   }
 
-  async sendEmail (email) {
+  async sendEmail(email) {
     const mailConfig = {
       service: 'Naver',
       host: 'smtp.naver.com',
@@ -138,7 +138,7 @@ class AuthService {
     }
   }
 
-  async checkIsDuplicateLocalIdByLocalId (localId) {
+  async checkIsDuplicateLocalIdByLocalId(localId) {
     try {
       const existingLocalId = await this.userModel.findLocalIdByLocalId(localId)
       if (existingLocalId) {
@@ -151,7 +151,7 @@ class AuthService {
     }
   }
 
-  async checkIsDuplicateNameByName (name) {
+  async checkIsDuplicateNameByName(name) {
     try {
       const existingName = await this.userModel.findNameByName(name)
       if (existingName) {
@@ -164,7 +164,7 @@ class AuthService {
     }
   }
 
-  async checkIsDuplicateAuthenticatedAddressByEmail (email) {
+  async checkIsDuplicateAuthenticatedAddressByEmail(email) {
     try {
       const ExistingEmail = await this.userModel.findAuthenticatedAddressByEmail(
         email
@@ -179,7 +179,7 @@ class AuthService {
     }
   }
 
-  async saveNameAndAuthenticatedEmail (name, email) {
+  async saveNameAndAuthenticatedEmail(name, email) {
     try {
       await this.authModel.saveNameAndAuthenticatedEmail(name, email)
     } catch (error) {
@@ -187,7 +187,7 @@ class AuthService {
     }
   }
 
-  async saveIsAuthenticated (token) {
+  async saveIsAuthenticated(token) {
     try {
       const { email } = token
       await this.authModel.saveIsAuthenticated(email)
@@ -196,7 +196,7 @@ class AuthService {
     }
   }
 
-  async checkIsAuthenticatedByEmail (email) {
+  async checkIsAuthenticatedByEmail(email) {
     try {
       const isAuthenticated = await this.authModel.findIsAuthenticatedByEmail(
         email

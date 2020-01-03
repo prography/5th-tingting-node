@@ -1,7 +1,7 @@
 import User from './entities/User.entity'
 // is deleted 추가
 class UserModel {
-  async saveUserByLocal (data) {
+  async saveUserByLocal(data) {
     await User.create({
       local_id: data.local_id,
       password: data.password,
@@ -15,7 +15,7 @@ class UserModel {
     })
   }
 
-  async saveUserByKako (data) {
+  async saveUserByKako(data) {
     await User.create({
       kakao_id: data.kakao_id,
       name: data.name,
@@ -27,7 +27,7 @@ class UserModel {
     })
   }
 
-  async findUserInfoById (id) {
+  async findUserInfoById(id) {
     // To Do: parameter 수정 필요// attributes: { exclude: ['baz'] } 적용?
     const userData = await User.findAll({
       attributes: [
@@ -46,7 +46,18 @@ class UserModel {
     return userData
   }
 
-  async findUserIdByKaKaoId (kakao_id) {
+  async findUserGenderById(id) {
+    const gender = await User.findOne({
+      where: {
+        id
+      },
+      attributes: ['gender'],
+      raw: true
+    })
+    return gender
+  }
+
+  async findUserIdByKaKaoId(kakao_id) {
     const userData = await User.findOne({
       where: {
         kakao_id
@@ -57,10 +68,17 @@ class UserModel {
     return userData
   }
 
-  async findUserInfoByKaKaoId (kakao_id) {
+  async findUserInfoByKaKaoId(kakao_id) {
     // To Do: parameter 수정 필요
     const userData = await User.findAll({
-      attributes: ['name', 'birth', 'height', 'thumbnail', 'gender', 'is_deleted'],
+      attributes: [
+        'name',
+        'birth',
+        'height',
+        'thumbnail',
+        'gender',
+        'is_deleted'
+      ],
       where: {
         kakao_id,
         is_deleted: 0
@@ -69,7 +87,7 @@ class UserModel {
     return userData
   }
 
-  async findUserIdByLocalId (local_id) {
+  async findUserIdByLocalId(local_id) {
     const userId = await User.findOne({
       where: {
         local_id
@@ -80,7 +98,7 @@ class UserModel {
     return userId
   }
 
-  async findLocalIdByLocalId (local_id) {
+  async findLocalIdByLocalId(local_id) {
     const localId = await User.findOne({
       where: {
         local_id
@@ -91,7 +109,7 @@ class UserModel {
     return localId
   }
 
-  async findAuthInfoByLocalId (local_id) {
+  async findAuthInfoByLocalId(local_id) {
     const authData = await User.findOne({
       where: {
         local_id
@@ -102,7 +120,7 @@ class UserModel {
     return authData
   }
 
-  async updateUserInfo (data) {
+  async updateUserInfo(data) {
     await User.update(
       {
         name: data.name,
@@ -114,7 +132,7 @@ class UserModel {
     )
   }
 
-  async findNameByName (name) {
+  async findNameByName(name) {
     const ExistingName = await User.findOne({
       where: {
         name,
@@ -125,7 +143,7 @@ class UserModel {
     return ExistingName
   }
 
-  async findAuthenticatedAddressByEmail (email) {
+  async findAuthenticatedAddressByEmail(email) {
     const ExistingEmail = await User.findOne({
       where: {
         authenticated_address: email,
@@ -136,7 +154,7 @@ class UserModel {
     return ExistingEmail
   }
 
-  async findUserIdByName (name) {
+  async findUserIdByName(name) {
     const userId = await User.findOne({
       attributes: ['id'],
       where: {
@@ -147,7 +165,7 @@ class UserModel {
     return userId
   }
 
-  async findUserGender (id) {
+  async findUserGender(id) {
     const genderOfUser = await User.findOne({
       attributes: ['gender'],
       where: {

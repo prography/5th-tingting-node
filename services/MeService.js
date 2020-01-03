@@ -3,13 +3,13 @@ const TeamModel = require('../models/TeamModel')
 const BelongModel = require('../models/BelongModel')
 
 class MeService {
-  constructor () {
+  constructor() {
     this.userModel = new UserModel()
     this.teamModel = new TeamModel()
     this.belongModel = new BelongModel()
   }
 
-  async findMyInfo (userId) {
+  async findMyInfo(userId) {
     try {
       const myInfo = await this.userModel.findUserInfoById(userId)
       // 학교 이름 제공
@@ -19,7 +19,16 @@ class MeService {
     }
   }
 
-  async findMyTeamList (userId) {
+  async findMyGender(userId) {
+    try {
+      const myGender = await this.userModel.findUserGenderById(userId)
+      return myGender.gender
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  async findMyTeamList(userId) {
     try {
       const teamListOwner = await this.teamModel.findMyTeamList(userId).then()
       const teamListId = await this.belongModel.findMyTeamList(userId).then()
@@ -30,7 +39,7 @@ class MeService {
     }
   }
 
-  async updateMyInfo (data) {
+  async updateMyInfo(data) {
     try {
       await this.userModel.updateUserInfo(data)
     } catch (error) {
@@ -38,7 +47,7 @@ class MeService {
     }
   }
 
-  async updateMyTeam (data) {
+  async updateMyTeam(data) {
     try {
       await this.teamModel.updateUserTeam(data)
     } catch (error) {
@@ -46,7 +55,7 @@ class MeService {
     }
   }
 
-  async checkIsOwner (data) {
+  async checkIsOwner(data) {
     try {
       const isOwner = await this.teamModel.checkIsOnwer(data)
       return isOwner
@@ -55,7 +64,7 @@ class MeService {
     }
   }
 
-  async deleteMyTeam (teamId) {
+  async deleteMyTeam(teamId) {
     // belong table delete all by teamId
     // team table deleted 1
     try {
@@ -66,7 +75,7 @@ class MeService {
     }
   }
 
-  async removeMeFromTeam (data) {
+  async removeMeFromTeam(data) {
     // belong table delete by userId,teamId
     const is_verified = 0
     const teamId = data.teamId
