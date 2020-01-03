@@ -2,12 +2,12 @@ const TeamModel = require('../models/TeamModel')
 const BelongModel = require('../models/BelongModel')
 
 class TeamService {
-  constructor() {
+  constructor () {
     this.teamModel = new TeamModel()
     this.belongModel = new BelongModel()
   }
 
-  async saveTeam(data) {
+  async saveTeam (data) {
     try {
       await this.teamModel.saveTeam(data)
     } catch (error) {
@@ -15,7 +15,7 @@ class TeamService {
     }
   }
 
-  async checkIsDuplicateTeamNameByName(name) {
+  async checkIsDuplicateTeamNameByName (name) {
     try {
       const teamName = await this.teamModel.findNameByName(name)
       if (teamName) {
@@ -28,7 +28,7 @@ class TeamService {
     }
   }
 
-  async findAllTeamListWithoutMe(userId) {
+  async findAllTeamListWithoutMe (userId) {
     try {
       const ListIsNotOwner = await this.teamModel.findTeamListIsNotOwner(userId)
       const ListIsBelong = await this.belongModel.findMyTeamList(userId)
@@ -41,7 +41,7 @@ class TeamService {
     }
   }
 
-  async findTeamInfo(teamId) {
+  async findTeamInfo (teamId) {
     try {
       const teamInfo = await this.teamModel.findUserTeamInfo(teamId)
       return teamInfo
@@ -50,7 +50,7 @@ class TeamService {
     }
   }
 
-  async findTeamMemberList(teamId) {
+  async findTeamMemberList (teamId) {
     try {
       const belongMember = await this.belongModel.findTeamMemberWhoBelongto(
         teamId
@@ -61,7 +61,7 @@ class TeamService {
     }
   }
 
-  async checkIsGathered(teamId) {
+  async checkIsGathered (teamId) {
     try {
       const isGathered = await this.teamModel.checkIsGathered(teamId)
       return isGathered
@@ -70,7 +70,7 @@ class TeamService {
     }
   }
 
-  async joinTeamToBelong(data) {
+  async joinTeamToBelong (data) {
     try {
       const is_verified = 1
       const teamId = data.teamId
@@ -90,7 +90,7 @@ class TeamService {
     }
   }
 
-  async getTeamGender(teamId) {
+  async getTeamGender (teamId) {
     try {
       const teamGender = await this.teamModel.findTeamGender(teamId)
       return teamGender
