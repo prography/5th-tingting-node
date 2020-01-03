@@ -21,7 +21,7 @@ const kakaoSignup = async (req, res, next) => {
       if (exUserId) {
         res.status(403).json({ errorMessage: '이미 가입된 사용자입니다.' })
       } else {
-        await userService.saveUser({
+        await userService.saveUserByKakao({
           kakao_id: kakaoId,
           name,
           birth,
@@ -35,7 +35,7 @@ const kakaoSignup = async (req, res, next) => {
         console.log('Issued token: ', token)
         res
           .status(201)
-          .json({ data: { message: '회원가입에 성공했습니다.' }, token })
+          .json({ data: { message: '회원가입에 성공했습니다.', token } })
       }
     }
   } catch (error) {
@@ -65,8 +65,10 @@ const localLogin = async (req, res) => {
         const token = authService.makeToken(authInfo.id)
         console.log('Issued token: ', token)
         res.status(202).json({
-          data: { message: '로그인에 성공했습니다. & 토큰이 발행되었습니다.' },
-          token
+          data: {
+            message: '로그인에 성공했습니다. & 토큰이 발행되었습니다.',
+            token
+          }
         })
       } else {
         res.status(401).json({
@@ -120,10 +122,10 @@ const localSignup = async (req, res) => {
         gender
       })
       const id = await userService.findUserIdByLocalId(local_id)
-      const token = authServcie.makeToken(id)
+      const token = authService.makeToken(id)
       res
         .status(201)
-        .json({ data: { message: '회원가입에 성공했습니다.' }, token })
+        .json({ data: { message: '회원가입에 성공했습니다.', token } })
     }
   } catch (error) {
     console.log(error)

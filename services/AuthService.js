@@ -7,7 +7,6 @@ const UserModel = require('../models/UserModel.js')
 const fs = require('fs')
 const path = require('path')
 const axios = require('axios')
-const qs = require('querystring')
 
 class AuthService {
   constructor() {
