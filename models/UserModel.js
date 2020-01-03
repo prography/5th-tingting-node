@@ -1,7 +1,21 @@
 import User from './entities/User.entity'
 // is deleted 추가
 class UserModel {
-  async saveUser (data) {
+  async saveUserByLocal (data) {
+    await User.create({
+      local_id: data.local_id,
+      password: data.password,
+      salt: data.salt,
+      name: data.name,
+      birth: data.birth,
+      height: data.height,
+      thumbnail: data.thumbnail,
+      authenticated_address: data.authenticated_address,
+      gender: data.gender
+    })
+  }
+
+  async saveUserByKako (data) {
     await User.create({
       kakao_id: data.kakao_id,
       name: data.name,
@@ -16,11 +30,29 @@ class UserModel {
   async findUserInfoById (id) {
     // To Do: parameter 수정 필요// attributes: { exclude: ['baz'] } 적용?
     const userData = await User.findAll({
-      attributes: ['name', 'birth', 'height', 'thumbnail', 'gender', 'is_deleted'],
+      attributes: [
+        'name',
+        'birth',
+        'height',
+        'thumbnail',
+        'gender',
+        'is_deleted'
+      ],
       where: {
         id,
         is_deleted: 0
       }
+    })
+    return userData
+  }
+
+  async findUserIdByKaKaoId (kakao_id) {
+    const userData = await User.findOne({
+      where: {
+        kakao_id
+      },
+      attributes: ['id'],
+      raw: true
     })
     return userData
   }
@@ -35,6 +67,39 @@ class UserModel {
       }
     })
     return userData
+  }
+
+  async findUserIdByLocalId (local_id) {
+    const userId = await User.findOne({
+      where: {
+        local_id
+      },
+      attributes: ['id'],
+      raw: true
+    })
+    return userId
+  }
+
+  async findLocalIdByLocalId (local_id) {
+    const localId = await User.findOne({
+      where: {
+        local_id
+      },
+      attributes: ['local_id'],
+      raw: true
+    })
+    return localId
+  }
+
+  async findAuthInfoByLocalId (local_id) {
+    const authData = await User.findOne({
+      where: {
+        local_id
+      },
+      attributes: ['id', 'salt', 'password'],
+      raw: true
+    })
+    return authData
   }
 
   async updateUserInfo (data) {

@@ -1,10 +1,12 @@
 const jwt = require('jsonwebtoken')
+const crypto = require('crypto')
 const nodemailer = require('nodemailer')
 const AvailableEmailModel = require('../models/AvailableEmailModel')
 const AuthModel = require('../models/AuthModel.js')
 const UserModel = require('../models/UserModel.js')
 const fs = require('fs')
 const path = require('path')
+const axios = require('axios')
 
 class AuthService {
   constructor () {
@@ -13,10 +15,32 @@ class AuthService {
     this.userModel = new UserModel()
   }
 
-  makeToken (userInfo) {
+  async getKakaoId (accessToken) {
+    try {
+      const kakaoUserInfo = await axios({
+        method: 'post',
+        url: 'https://kapi.kakao.com/v2/user/me',
+        headers: { Authorization: `Bearer ${accessToken}` }
+      })
+      if (kakaoUserInfo.data.id) {
+        return kakaoUserInfo.data.id
+      } else {
+        return null
+        // 유효하지 않은 토큰인 경우에 다양한 에러메시지를 전달해줌 -> 이걸 리턴해서 errorMessage에 띄워주는게 나으려나?
+        //   {
+        //     "msg": "this access token does not exist", //토큰 길이가 너무 길다 등등
+        //     "code": -401
+        //   }
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  makeToken (id) {
     const token = jwt.sign(
       {
-        id: userInfo[0].dataValues.id
+        id
       },
       process.env.JWT_SECRET,
       {
@@ -41,6 +65,37 @@ class AuthService {
     return token
   }
 
+  encryptPassword (password) {
+    try {
+      const salt = crypto.randomBytes(64).toString('base64')
+      const encryptedpassword = crypto
+        .pbkdf2Sync(password, salt, 100000, 64, 'sha512')
+        .toString('base64')
+      const encryptInfo = {
+        salt,
+        encryptedpassword
+      }
+      return encryptInfo
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  verifyPassword (salt, password, passwordToVerify) {
+    try {
+      const encryptedPasswordToVerify = crypto
+        .pbkdf2Sync(passwordToVerify, salt, 100000, 64, 'sha512')
+        .toString('base64')
+      if (encryptedPasswordToVerify === password) {
+        return true
+      } else {
+        return false
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
   async findSchoolByEmail (email) {
     try {
       const domain = email.split('@')[1] // 'hanyang.ac.kr'
@@ -62,18 +117,18 @@ class AuthService {
       }
     }
     const html = fs.readFileSync(
-      path.resolve(__dirname, 'authMail.html'),
+      path.resolve(__dirname, '../public/html/authMail.html'),
       'utf8'
     )
     try {
       const token = this.makeEmailToken(email)
       const splitHtml = html.split('token=')
       const htmlEnd = splitHtml[0] + 'token=' + token + splitHtml[1]
-      console.log(token)
+      // console.log(token)
       const message = {
         from: process.env.EMAIL_USEREMAIL,
         to: email,
-        subject: '[tingting] 이메일 인증 요청',
+        subject: '[팅팅] 이메일 인증 요청',
         html: htmlEnd
       }
       const transporter = nodemailer.createTransport(mailConfig)
@@ -83,22 +138,42 @@ class AuthService {
     }
   }
 
-  async findExistingNameByName (name) {
+  async checkIsDuplicateLocalIdByLocalId (localId) {
     try {
-      const existingName = await this.userModel.findNameByName(name)
-      return existingName
+      const existingLocalId = await this.userModel.findLocalIdByLocalId(localId)
+      if (existingLocalId) {
+        return true
+      } else {
+        return false
+      }
     } catch (error) {
       console.log(error)
     }
   }
 
-  async findExistingAuthenticatedAddressByEmail (email) {
+  async checkIsDuplicateNameByName (name) {
+    try {
+      const existingName = await this.userModel.findNameByName(name)
+      if (existingName) {
+        return true
+      } else {
+        return false
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  async checkIsDuplicateAuthenticatedAddressByEmail (email) {
     try {
       const ExistingEmail = await this.userModel.findAuthenticatedAddressByEmail(
         email
       )
-      console.log(ExistingEmail)
-      return ExistingEmail
+      if (ExistingEmail) {
+        return true
+      } else {
+        return false
+      }
     } catch (error) {
       console.log(error)
     }
