@@ -1,8 +1,8 @@
 const UserService = require('../services/UserService')
 const AuthService = require('../services/AuthService')
 
-// 카카오 회원가입
-const kakaoSignup = async (req, res, next) => {
+// 카카오 로그인 및 회원가입
+const kakaoLogin = async (req, res, next) => {
   const userService = new UserService()
   const authServcie = new AuthService()
   try {
@@ -17,10 +17,15 @@ const kakaoSignup = async (req, res, next) => {
     } else {
       const exUserId = await userService.findUserIdByKaKaoId(kakaoId)
       // findUserInfoByKakaoId 는 토큰을 점검하는 역할도 하기 때문에, 토큰이 유효하지 않은 경우에 대한 예외처리도 해줘야 해!! --> 이부분 잘 이해안감!
-
       if (exUserId) {
-        res.status(403).json({ errorMessage: '이미 가입된 사용자입니다.' })
+        // 이미 로그인된 경우
+        const token = authServcie.makeToken(exUserId)
+        console.log('Issued token: ', token)
+        res
+          .status(200)
+          .json({ data: { message: '로그인에 성공했습니다.', token } })
       } else {
+        // 회원가입하는 경우
         await userService.saveUserByKakao({
           kakao_id: kakaoId,
           name,
@@ -40,7 +45,9 @@ const kakaoSignup = async (req, res, next) => {
     }
   } catch (error) {
     console.log(error)
-    res.status(500).json({ errorMessage: '회원가입에 실패했습니다.' })
+    res
+      .status(500)
+      .json({ errorMessage: '로그인 혹은 회원가입에 실패했습니다.' })
   }
 }
 
@@ -145,7 +152,7 @@ const checkDuplicateLocalId = async (req, res) => {
   if (isDuplicateLocalId) {
     res.status(400).json({ errorMessage: '이미 존재하는 아이디입니다.' })
   } else {
-    res.status(202).json({ data: { message: '사용 가능한 아이디입니다.' } })
+    res.status(200).json({ data: { message: '사용 가능한 아이디입니다.' } })
   }
 }
 
@@ -159,7 +166,7 @@ const checkDuplicateName = async (req, res) => {
   if (isDuplicateName) {
     res.status(400).json({ errorMessage: '이미 존재하는 이름입니다.' })
   } else {
-    res.status(202).json({ data: { message: '사용 가능한 이름입니다.' } })
+    res.status(200).json({ data: { message: '사용 가능한 이름입니다.' } })
   }
 }
 
@@ -173,7 +180,6 @@ const checkValidEmail = async (req, res) => {
   const isDuplicateEmail = await authService.checkIsDuplicateAuthenticatedAddressByEmail(
     email
   )
-  console.log('Duplicate: ', isDuplicateEmail)
   if (isDuplicateEmail) {
     res.status(400).json({ errorMessage: '이미 가입된 이메일입니다.' })
   } else if (!isValidSchool) {
@@ -217,7 +223,7 @@ const checkEmailAuth = async (req, res) => {
 }
 
 module.exports = {
-  kakaoSignup,
+  kakaoLogin,
   localLogin,
   localSignup,
   checkDuplicateLocalId,

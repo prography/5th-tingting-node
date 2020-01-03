@@ -1,6 +1,6 @@
 const express = require('express')
 const {
-  kakaoSignup,
+  kakaoLogin,
   localLogin,
   localSignup,
   checkDuplicateLocalId,
@@ -12,7 +12,7 @@ const {
 const { verifyEmailToken } = require('../../../middlewares/auth')
 const router = express.Router()
 
-router.post('/kakao/signup', kakaoSignup)
+router.post('/kakao/login', kakaoLogin)
 router.post('/local/login', localLogin)
 router.post('/local/signup', localSignup)
 router.post('/duplicate-id', checkDuplicateLocalId)
