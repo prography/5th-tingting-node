@@ -15,11 +15,26 @@ class TeamService {
     }
   }
 
+  async checkIsDuplicateTeamNameByName (name) {
+    try {
+      const teamName = await this.teamModel.findNameByName(name)
+      if (teamName) {
+        return true
+      } else {
+        return false
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
   async findAllTeamListWithoutMe (userId) {
     try {
       const ListIsNotOwner = await this.teamModel.findTeamListIsNotOwner(userId)
       const ListIsBelong = await this.belongModel.findMyTeamList(userId)
-      const teamList = ListIsNotOwner.filter(list => !ListIsBelong.includes(list))
+      const teamList = ListIsNotOwner.filter(
+        list => !ListIsBelong.includes(list)
+      )
       return teamList
     } catch (error) {
       console.log(error)
@@ -37,7 +52,9 @@ class TeamService {
 
   async findTeamMemberList (teamId) {
     try {
-      const belongMember = await this.belongModel.findTeamMemberWhoBelongto(teamId)
+      const belongMember = await this.belongModel.findTeamMemberWhoBelongto(
+        teamId
+      )
       return belongMember
     } catch (error) {
       console.log(error)
@@ -61,9 +78,11 @@ class TeamService {
       await this.belongModel.createTeamMember(data)
 
       // if length == maxnumber -> update is verified = 1 //controller로 가야할까?
-      const belongMember = await this.belongModel.findTeamMemberWhoBelongto(teamId)
+      const belongMember = await this.belongModel.findTeamMemberWhoBelongto(
+        teamId
+      )
       const maxMember = await this.teamModel.findTeamMaxMemberNum(teamId)
-      if ((belongMember.length) + 1 === maxMember) {
+      if (belongMember.length + 1 === maxMember) {
         await this.teamModel.updateTeamIsVerified({ teamId, is_verified })
       }
     } catch (error) {

@@ -30,10 +30,29 @@ class TeamModel {
     })
   }
 
+  // 팀 이름 존재하는지 찾기
+  async findNameByName (name) {
+    const teamName = await Team.findOne({
+      where: { name },
+      attributes: ['name'],
+      raw: true
+    })
+    return teamName
+  }
+
   // 개별 팀 정보 보기
   async findUserTeamInfo (id) {
     const teamData = await Team.findOne({
-      attributes: ['name', 'chat_address', 'owner_id', 'intro', 'gender', 'password', 'max_member_number', 'is_verified'],
+      attributes: [
+        'name',
+        'chat_address',
+        'owner_id',
+        'intro',
+        'gender',
+        'password',
+        'max_member_number',
+        'is_verified'
+      ],
       where: {
         id,
         is_deleted: 0
@@ -57,15 +76,17 @@ class TeamModel {
 
   // 나의 팀 정보 수정
   async updateUserTeam (data) {
-    await Team.update({
-      name: data.name,
-      chat_address: data.chat_address,
-      owner_id: data.owner_id,
-      intro: data.intro,
-      password: data.password,
-      max_member_number: data.max_member_number
-    },
-    { where: { id: data.id } })
+    await Team.update(
+      {
+        name: data.name,
+        chat_address: data.chat_address,
+        owner_id: data.owner_id,
+        intro: data.intro,
+        password: data.password,
+        max_member_number: data.max_member_number
+      },
+      { where: { id: data.id } }
+    )
   }
 
   // 팀 떠나기
@@ -81,7 +102,7 @@ class TeamModel {
       }
     })
     // const isGather = JSON.stringify(gathered)
-    const isGathered = (gathered.length !== 0)
+    const isGathered = gathered.length !== 0
     return isGathered
   }
 
@@ -94,22 +115,26 @@ class TeamModel {
         is_deleted: 0
       }
     })
-    const isOwner = (owner.length !== 0)
+    const isOwner = owner.length !== 0
     return isOwner
   }
 
   async deleteTeam (id) {
-    await Team.update({
-      is_deleted: 1
-    },
-    { where: { id } })
+    await Team.update(
+      {
+        is_deleted: 1
+      },
+      { where: { id } }
+    )
   }
 
   async updateTeamIsVerified (data) {
-    await Team.update({
-      is_verified: data.is_verified
-    },
-    { where: { id: data.teamId } })
+    await Team.update(
+      {
+        is_verified: data.is_verified
+      },
+      { where: { id: data.teamId } }
+    )
   }
 
   // 팀 합류하기
