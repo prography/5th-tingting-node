@@ -1,28 +1,28 @@
 const UserService = require('../services/UserService')
 const AuthService = require('../services/AuthService')
 
-// 카카오 로그인 및 회원가입
+// 카카오 회원가입
 const kakaoSignup = async (req, res, next) => {
   const userService = new UserService()
   const authServcie = new AuthService()
   try {
     const schema = req.headers.authorization
     const accessToken = schema.replace('Bearer ', '')
-    //id -->
-    const kakao_id = await authServcie.getKakaoId(accessToken)
+    const kakaoId = await authServcie.getKakaoId(accessToken)
     const {
       body: { name, birth, height, thumbnail, authenticated_address, gender }
     } = req
-
-    if (!kakao_id) {
-      res.status(401).json({ errorMeesage: '토큰이 유효하지 않음' })
+    if (!kakaoId) {
+      res.status(401).json({ errorMeesage: '유효하지 않은 토큰입니다.' })
     } else {
-      const exUser = await userService.findUserInfoByKaKaoId(kakao_id)
-      if (exUser) {
+      const exUserId = await userService.findUserIdByKaKaoId(kakaoId)
+      // findUserInfoByKakaoId 는 토큰을 점검하는 역할도 하기 때문에, 토큰이 유효하지 않은 경우에 대한 예외처리도 해줘야 해!! --> 이부분 잘 이해안감!
+
+      if (exUserId) {
         res.status(403).json({ errorMessage: '이미 가입된 사용자입니다.' })
       } else {
         await userService.saveUser({
-          kakao_id,
+          kakao_id: kakaoId,
           name,
           birth,
           height,
@@ -30,11 +30,12 @@ const kakaoSignup = async (req, res, next) => {
           authenticated_address,
           gender
         })
-        // const token = authService.makeToken(authInfo.id)
-        // console.log('Issued token: ', token)
+        const id = await userService.findUserIdByKaKaoId(kakaoId)
+        const token = authServcie.makeToken(id)
+        console.log('Issued token: ', token)
         res
           .status(201)
-          .json({ data: { message: '회원가입에 성공했습니다.' }, token }) //To Do: 토큰 수정
+          .json({ data: { message: '회원가입에 성공했습니다.' }, token })
       }
     }
   } catch (error) {
@@ -118,7 +119,11 @@ const localSignup = async (req, res) => {
         authenticated_address,
         gender
       })
-      res.status(201).json({ data: { message: '회원가입에 성공했습니다.' } })
+      const id = await userService.findUserIdByLocalId(local_id)
+      const token = authServcie.makeToken(id)
+      res
+        .status(201)
+        .json({ data: { message: '회원가입에 성공했습니다.' }, token })
     }
   } catch (error) {
     console.log(error)
@@ -210,12 +215,9 @@ const checkEmailAuth = async (req, res) => {
 }
 
 module.exports = {
-  kakaoLogin,
-  getAccessTokenByKakaoCode,
   kakaoSignup,
   localLogin,
   localSignup,
-  logout,
   checkDuplicateLocalId,
   checkDuplicateName,
   checkValidEmail,

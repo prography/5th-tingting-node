@@ -1,11 +1,11 @@
 const UserModel = require('../models/UserModel')
 
 class UserService {
-  constructor () {
+  constructor() {
     this.userModel = new UserModel()
   }
 
-  async findUserInfoById (userId) {
+  async findUserInfoById(userId) {
     try {
       const userInfo = await this.userModel.findUserInfoById(userId)
       return userInfo
@@ -14,25 +14,25 @@ class UserService {
     }
   }
 
-  async findUserInfoByKaKaoId (kakaoId) {
+  async findUserIdByKaKaoId(kakaoId) {
     try {
-      const userInfo = await this.userModel.findUserInfoByKaKaoId(kakaoId)
-      return userInfo
+      const userId = await this.userModel.findUserIdByKaKaoId(kakaoId)
+      return userId
     } catch (error) {
       console.log(error)
     }
   }
 
-  async findUserIdByLocalId (localId) {
+  async findUserIdByLocalId(localId) {
     try {
-      const userInfo = await this.userModel.findUserIdByLocalId(localId)
-      return userInfo
+      const userId = await this.userModel.findUserIdByLocalId(localId)
+      return userId
     } catch (error) {
       console.log(error)
     }
   }
 
-  async findAuthInfoByLocalId (localId) {
+  async findAuthInfoByLocalId(localId) {
     try {
       const authInfo = await this.userModel.findAuthInfoByLocalId(localId)
       return authInfo
@@ -41,7 +41,7 @@ class UserService {
     }
   }
 
-  async saveUserByLocal (data) {
+  async saveUserByLocal(data) {
     try {
       await this.userModel.saveUserByLocal(data)
     } catch (error) {
@@ -49,7 +49,7 @@ class UserService {
     }
   }
 
-  async findUserIdByName (name) {
+  async findUserIdByName(name) {
     try {
       const user = await this.userModel.findUserIdByName(name)
       return user.id

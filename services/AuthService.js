@@ -18,18 +18,18 @@ class AuthService {
 
   async getKakaoId(accessToken) {
     try {
-      const response = await axios({
+      const kakaoUserInfo = await axios({
         method: 'post',
         url: 'https://kapi.kakao.com/v2/user/me',
         headers: { Authorization: `Bearer ${accessToken}` }
       })
-      if (response.data) {
-        return response.data.id
+      if (kakaoUserInfo.data.id) {
+        return kakaoUserInfo.data.id
       } else {
-        return response.msg
-        // To Do : 점검 필요
+        return null
+        // 유효하지 않은 토큰인 경우에 다양한 에러메시지를 전달해줌 -> 이걸 리턴해서 errorMessage에 띄워주는게 나으려나?
         //   {
-        //     "msg": "this access token does not exist",
+        //     "msg": "this access token does not exist", //토큰 길이가 너무 길다 등등
         //     "code": -401
         //   }
       }
