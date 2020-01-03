@@ -2,7 +2,9 @@ const jwt = require('jsonwebtoken')
 
 const verifyToken = (req, res, next) => {
   try {
-    req.token = jwt.verify(req.headers.authorization, process.env.JWT_SECRET)
+    const schema = req.headers.authorization
+    const token = schema.replace('Bearer ', '')
+    req.token = jwt.verify(token, process.env.JWT_SECRET)
     return next()
   } catch (error) {
     if (error.name === 'TokenExpiredError') {

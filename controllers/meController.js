@@ -3,11 +3,11 @@ const TeamService = require('../services/TeamService')
 
 const getMyInfo = async (req, res) => {
   const myService = new MeService()
-  // const myInfo = await myService.findMyInfo(req.token.id)
-  // const myTeamList = await myService.findMyTeamList(req.token.id)
   try {
-    const myInfo = await myService.findMyInfo(1)
-    const myTeamList = await myService.findMyTeamList(1)
+    const myInfo = await myService.findMyInfo(req.token.id)
+    const myTeamList = await myService.findMyTeamList(req.token.id)
+    // const myInfo = await myService.findMyInfo(1)
+    // const myTeamList = await myService.findMyTeamList(1)
     res.status(200).json({
       data: {
         myInfo,
