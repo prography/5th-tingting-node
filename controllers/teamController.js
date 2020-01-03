@@ -1,5 +1,6 @@
 const TeamService = require('../services/TeamService')
 const UserService = require('../services/UserService')
+const MeService = require('../services/MeService')
 
 // 전체 팀 리스트 조회 // 수정 : 성별 필터 추가
 const getTeamList = async (req, res) => {
@@ -22,21 +23,19 @@ const getTeamList = async (req, res) => {
 // 팀 생성
 const createTeam = async (req, res) => {
   const teamService = new TeamService()
-  const userId = req.token.id
+  const meService = new MeService()
   const {
-    body: {
-      name,
-      chat_address,
-      intro,
-      password,
-      max_member_number
-    }
+    token: { id }
+  } = req
+  const {
+    body: { name, chat_address, intro, password, max_member_number }
   } = req
   try {
+    const gender = await meService.findMyGender(id)
     await teamService.saveTeam({
       name,
       chat_address,
-      owner_id: userId,
+      owner_id: id,
       intro,
       password,
       max_member_number
@@ -58,9 +57,7 @@ const checkDuplicateTeamName = async (req, res) => {
   const {
     query: { name }
   } = req
-  const isDuplicated = await teamService.checkIsDuplicatedTeamName(
-    name
-  )
+  const isDuplicated = await teamService.checkIsDuplicatedTeamName(name)
   if (isDuplicated) {
     res.status(400).json({ errorMessage: '이미 존재하는 팀명입니다.' })
   } else {

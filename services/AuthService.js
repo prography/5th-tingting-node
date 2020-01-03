@@ -9,13 +9,13 @@ const path = require('path')
 const axios = require('axios')
 
 class AuthService {
-  constructor () {
+  constructor() {
     this.availableEmailModel = new AvailableEmailModel()
     this.authModel = new AuthModel()
     this.userModel = new UserModel()
   }
 
-  async getKakaoId (accessToken) {
+  async getKakaoId(accessToken) {
     try {
       const kakaoUserInfo = await axios({
         method: 'post',
@@ -38,21 +38,29 @@ class AuthService {
     }
   }
 
-  makeToken (id) {
+  makeToken(id) {
     const token = jwt.sign(
       {
         id
       },
       process.env.JWT_SECRET,
       {
+<<<<<<< HEAD
         expiresIn: 365 * 24 * 60 * 60 * 1000, // 1년
+=======
+        expiresIn: 24 * 60 * 60 * 1000, // 1일
+>>>>>>> 토큰 수정 및 createTaem
         issuer: 'tingting'
       }
     )
     return token
   }
 
+<<<<<<< HEAD
   _makeEmailToken (email) {
+=======
+  makeEmailToken(email) {
+>>>>>>> 토큰 수정 및 createTaem
     const token = jwt.sign(
       {
         email
@@ -66,7 +74,7 @@ class AuthService {
     return token
   }
 
-  encryptPassword (password) {
+  encryptPassword(password) {
     try {
       const salt = crypto.randomBytes(64).toString('base64')
       const encryptedpassword = crypto
@@ -83,7 +91,7 @@ class AuthService {
     }
   }
 
-  verifyPassword (salt, password, passwordToVerify) {
+  verifyPassword(salt, password, passwordToVerify) {
     try {
       const encryptedPasswordToVerify = crypto
         .pbkdf2Sync(passwordToVerify, salt, 100000, 64, 'sha512')
@@ -99,6 +107,7 @@ class AuthService {
     }
   }
 
+<<<<<<< HEAD
   async checkIsAuthenticatedByEmail (email) {
     try {
       const auth = await this.authModel.findLastAuthByEmail(email)
@@ -111,6 +120,9 @@ class AuthService {
   }
 
   async checkValidityOfEmail (email) {
+=======
+  async findSchoolByEmail(email) {
+>>>>>>> 토큰 수정 및 createTaem
     try {
       const domain = email.split('@')[1] // 'hanyang.ac.kr'
       const school = await this.availableEmailModel.findSchoolByDomain(domain)
@@ -122,7 +134,7 @@ class AuthService {
     }
   }
 
-  async sendEmail (email) {
+  async sendEmail(email) {
     const mailConfig = {
       service: 'Naver',
       host: 'smtp.naver.com',
@@ -154,7 +166,11 @@ class AuthService {
     }
   }
 
+<<<<<<< HEAD
   async checkIsDuplicatedLocalId (localId) {
+=======
+  async checkIsDuplicateLocalIdByLocalId(localId) {
+>>>>>>> 토큰 수정 및 createTaem
     try {
       const user = await this.userModel.findUserByLocalId(localId)
       const isDuplicated = user && true
@@ -165,7 +181,11 @@ class AuthService {
     }
   }
 
+<<<<<<< HEAD
   async checkIsDuplicatedName (name) {
+=======
+  async checkIsDuplicateNameByName(name) {
+>>>>>>> 토큰 수정 및 createTaem
     try {
       const user = await this.userModel.findUserByName(name)
       const isDuplicated = user && true
@@ -176,7 +196,11 @@ class AuthService {
     }
   }
 
+<<<<<<< HEAD
   async checkIsDuplicatedEmail (email) {
+=======
+  async checkIsDuplicateAuthenticatedAddressByEmail(email) {
+>>>>>>> 토큰 수정 및 createTaem
     try {
       const user = await this.userModel.findUserByAuthenticatedAddress(
         email
@@ -189,7 +213,7 @@ class AuthService {
     }
   }
 
-  async saveNameAndAuthenticatedEmail (name, email) {
+  async saveNameAndAuthenticatedEmail(name, email) {
     try {
       await this.authModel.saveNameAndAuthenticatedEmail(name, email)
     } catch (error) {
@@ -198,10 +222,28 @@ class AuthService {
     }
   }
 
+<<<<<<< HEAD
   async setIsAuthenticatedOfAuth (token) {
     try {
       const { email } = token
       await this.authModel.setIsAuthenticatedByEmail(email)
+=======
+  async saveIsAuthenticated(token) {
+    try {
+      const { email } = token
+      await this.authModel.saveIsAuthenticated(email)
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  async checkIsAuthenticatedByEmail(email) {
+    try {
+      const isAuthenticated = await this.authModel.findIsAuthenticatedByEmail(
+        email
+      )
+      return isAuthenticated
+>>>>>>> 토큰 수정 및 createTaem
     } catch (error) {
       console.log(error)
       throw new Error(error)
