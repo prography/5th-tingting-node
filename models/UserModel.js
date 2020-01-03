@@ -1,5 +1,5 @@
 import User from './entities/User.entity'
-
+// is deleted 추가
 class UserModel {
   async saveUserByLocal (data) {
     await User.create({
@@ -28,7 +28,7 @@ class UserModel {
   }
 
   async findUserInfoById (id) {
-    // To Do: parameter 수정 필요
+    // To Do: parameter 수정 필요// attributes: { exclude: ['baz'] } 적용?
     const userData = await User.findAll({
       attributes: [
         'name',
@@ -39,7 +39,8 @@ class UserModel {
         'is_deleted'
       ],
       where: {
-        id
+        id,
+        is_deleted: 0
       }
     })
     return userData
@@ -52,6 +53,18 @@ class UserModel {
       },
       attributes: ['id'],
       raw: true
+    })
+    return userData
+  }
+
+  async findUserInfoByKaKaoId (kakao_id) {
+    // To Do: parameter 수정 필요
+    const userData = await User.findAll({
+      attributes: ['name', 'birth', 'height', 'thumbnail', 'gender', 'is_deleted'],
+      where: {
+        kakao_id,
+        is_deleted: 0
+      }
     })
     return userData
   }
@@ -127,10 +140,22 @@ class UserModel {
     const userId = await User.findOne({
       attributes: ['id'],
       where: {
-        name
+        name,
+        is_deleted: 0
       }
     })
     return userId
+  }
+
+  async findUserGender (id) {
+    const genderOfUser = await User.findOne({
+      attributes: ['gender'],
+      where: {
+        id,
+        is_deleted: 0
+      }
+    })
+    return genderOfUser.dataValues.gender
   }
 }
 module.exports = UserModel

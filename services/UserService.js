@@ -65,6 +65,15 @@ class UserService {
       console.log(error)
     }
   }
+
+  async getUserGender (userId) {
+    try {
+      const userGender = await this.userModel.findUserGender(userId)
+      return userGender
+    } catch (error) {
+      console.log(error)
+    }
+  }
 }
 
 module.exports = UserService
