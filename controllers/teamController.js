@@ -42,7 +42,7 @@ const createTeam = async (req, res, next) => {
     })
   } catch (error) {
     console.log(error)
-    res.status(400).json({ errorMessage: '팀 생성 실패' })
+    res.status(500).json({ errorMessage: '팀 생성 실패' })
   }
 }
 // 개별 팀 정보 보기

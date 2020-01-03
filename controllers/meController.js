@@ -16,7 +16,7 @@ const getMyInfo = async (req, res) => {
       }
     })
   } catch (error) {
-    res.status(400).json({ errorMessage: '내정보 불러오기 실패' })
+    res.status(500).json({ errorMessage: '내정보 불러오기 실패' })
   }
 }
 
@@ -42,7 +42,7 @@ const updateMyInfo = async (req, res) => {
     })
   } catch (error) {
     console.log(error)
-    res.status(401).json({ errorMessage: '내 정보 수정하기 실패' })
+    res.status(500).json({ errorMessage: '내 정보 수정하기 실패' })
     // res 401: Unauthorized
   }
 }
@@ -104,7 +104,7 @@ const updateMyTeam = async (req, res) => {
     }
   } catch (error) {
     console.log(error)
-    res.status(400).json({ errorMessage: '팀 수정 실패' })
+    res.status(500).json({ errorMessage: '팀 수정 실패' })
   }
 }
 

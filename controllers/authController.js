@@ -1,66 +1,49 @@
 const UserService = require('../services/UserService')
 const AuthService = require('../services/AuthService')
 
-const kakaoLogin = (req, res) => {
-  // To Do : 배포시 process.env.KAKAO_REDIRECTURI 수정 필요
-  const authService = new AuthService()
-  const userConsentURL = authService.makeUserConsentURL()
-  res.status(302).redirect(userConsentURL)
-}
-
-const getAccessTokenByKakaoCode = async (req, res) => {
-  const authService = new AuthService()
-  try {
-    if (req.query.code) {
-      const {
-        query: { code }
-      } = req
-      const accessToken = await authService.getAccessToken(code)
-      res.status(200).json({ data: { accessToken } })
-    } else {
-      res.status(401).json({
-        errorMessage: '개인정보 제공에 대해 사용자의 동의를 얻지 못했습니다.'
-      })
-    }
-  } catch (error) {
-    console.log(error)
-    res.status(400).json({ errorMessage: '카카오 계정 인증에 실패하였습니다.' })
-    // redirect('http://localhost:3000/api/v1/auth/kakao') 이부분 고민 -> URL은 나중에 배포하면 바꿔야함!!!!!!
-  }
-}
-
+// 카카오 로그인 및 회원가입
 const kakaoSignup = async (req, res, next) => {
   const userService = new UserService()
   const authServcie = new AuthService()
   try {
     const schema = req.headers.authorization
     const accessToken = schema.replace('Bearer ', '')
+    //id -->
     const kakao_id = await authServcie.getKakaoId(accessToken)
     const {
       body: { name, birth, height, thumbnail, authenticated_address, gender }
     } = req
-    const exUser = await userService.findUserInfoByKaKaoId(kakao_id)
-    if (exUser === []) {
-      res.status(403).json({ errorMessage: '이미 가입된 사용자입니다.' })
-      // To Do : redirect 필요?
+
+    if (!kakao_id) {
+      res.status(401).json({ errorMeesage: '토큰이 유효하지 않음' })
     } else {
-      await userService.saveUser({
-        kakao_id,
-        name,
-        birth,
-        height,
-        thumbnail,
-        authenticated_address,
-        gender
-      })
-      res.status(201).json({ data: { message: '회원가입에 성공했습니다.' } })
+      const exUser = await userService.findUserInfoByKaKaoId(kakao_id)
+      if (exUser) {
+        res.status(403).json({ errorMessage: '이미 가입된 사용자입니다.' })
+      } else {
+        await userService.saveUser({
+          kakao_id,
+          name,
+          birth,
+          height,
+          thumbnail,
+          authenticated_address,
+          gender
+        })
+        // const token = authService.makeToken(authInfo.id)
+        // console.log('Issued token: ', token)
+        res
+          .status(201)
+          .json({ data: { message: '회원가입에 성공했습니다.' }, token }) //To Do: 토큰 수정
+      }
     }
   } catch (error) {
     console.log(error)
-    res.status(400).json({ errorMessage: '회원가입에 실패했습니다.' })
+    res.status(500).json({ errorMessage: '회원가입에 실패했습니다.' })
   }
 }
 
+// 로컬 로그인
 const localLogin = async (req, res) => {
   const userService = new UserService()
   const authService = new AuthService()
@@ -80,27 +63,29 @@ const localLogin = async (req, res) => {
         // Token 만들기
         const token = authService.makeToken(authInfo.id)
         console.log('Issued token: ', token)
-        res.status(200).json({
-          data: '로그인에 성공했습니다. & 토큰이 발행되었습니다.'
+        res.status(202).json({
+          data: { message: '로그인에 성공했습니다. & 토큰이 발행되었습니다.' },
+          token
         })
       } else {
         res.status(401).json({
-          data: '비밀번호가 틀렸습니다.'
+          errorMessage: '비밀번호가 틀렸습니다.'
         })
       }
     } else {
-      res.status(401).json({
+      res.status(400).json({
         errorMessage: '존재하지 않는 아이디입니다.'
       })
     }
   } catch (error) {
     console.log(error)
-    res.status(400).json({
-      errorMessage: '로그인 실패'
+    res.status(500).json({
+      errorMessage: '로그인에 실패했습니다.'
     })
   }
 }
 
+// 로컬 회원가입
 const localSignup = async (req, res) => {
   const userService = new UserService()
   const authService = new AuthService()
@@ -119,7 +104,7 @@ const localSignup = async (req, res) => {
   try {
     const exUserId = await userService.findUserIdByLocalId(local_id)
     if (exUserId) {
-      res.status(403).json({ data: { message: '이미 가입된 사용자입니다.' } })
+      res.status(400).json({ data: { message: '이미 가입된 사용자입니다.' } })
     } else {
       const encryptInfo = await authService.encryptPassword(password)
       await userService.saveUserByLocal({
@@ -133,7 +118,7 @@ const localSignup = async (req, res) => {
         authenticated_address,
         gender
       })
-      res.status(201).json({ data: { message: '회원가입 성공' } })
+      res.status(201).json({ data: { message: '회원가입에 성공했습니다.' } })
     }
   } catch (error) {
     console.log(error)
@@ -141,48 +126,47 @@ const localSignup = async (req, res) => {
   }
 }
 
-const logout = (req, res) => {
-  req.logout()
-  res.redirect('/')
-}
-
+// 로컬 아이디 중복 확인
 const checkDuplicateLocalId = async (req, res) => {
   const authService = new AuthService()
   const {
     query: { local_id }
   } = req
-  const isDuplicateLocalId = await authService.findExistingLocalIdByLocalId(
+  const isDuplicateLocalId = await authService.checkIsDuplicateLocalIdByLocalId(
     local_id
   )
   if (isDuplicateLocalId) {
     res.status(400).json({ errorMessage: '이미 존재하는 아이디입니다.' })
   } else {
-    res.status(200).json({ data: { message: '사용 가능한 아이디입니다.' } })
+    res.status(202).json({ data: { message: '사용 가능한 아이디입니다.' } })
   }
 }
 
+// 닉네임(이름) 중복 확인
 const checkDuplicateName = async (req, res) => {
   const authService = new AuthService()
   const {
     query: { name }
   } = req
-  const isDuplicateName = await authService.findExistingNameByName(name)
+  const isDuplicateName = await authService.checkIsDuplicateNameByName(name)
   if (isDuplicateName) {
     res.status(400).json({ errorMessage: '이미 존재하는 이름입니다.' })
   } else {
-    res.status(200).json({ data: { message: '사용 가능한 이름입니다.' } })
+    res.status(202).json({ data: { message: '사용 가능한 이름입니다.' } })
   }
 }
 
+// 가능한 이메일인지 확인
 const checkValidEmail = async (req, res) => {
   const authService = new AuthService()
   const {
     body: { email, name }
   } = req
   const isValidSchool = await authService.findSchoolByEmail(email)
-  const isDuplicateEmail = await authService.findExistingAuthenticatedAddressByEmail(
+  const isDuplicateEmail = await authService.checkIsDuplicateAuthenticatedAddressByEmail(
     email
   )
+  console.log('Duplicate: ', isDuplicateEmail)
   if (isDuplicateEmail) {
     res.status(400).json({ errorMessage: '이미 가입된 이메일입니다.' })
   } else if (!isValidSchool) {
@@ -194,18 +178,20 @@ const checkValidEmail = async (req, res) => {
   }
 }
 
+// 이메일 토큰 확인
 const confirmEmailToken = async (req, res) => {
   const authServcie = new AuthService()
   const { token } = req
   try {
     await authServcie.saveIsAuthenticated(token)
-    res.status(204).json({ data: { message: '이메일 인증이 완료되었습니다.' } })
+    res.status(201).json({ data: { message: '이메일 인증이 완료되었습니다.' } })
   } catch (error) {
     console.log(error)
-    res.status(401).json({ errorMessage: '이메일 인증에 실패하였습니다.' })
+    res.status(500).json({ errorMessage: '이메일 인증에 실패하였습니다.' })
   }
 }
 
+// 이메일 인증 여부 재확인
 const checkEmailAuth = async (req, res) => {
   const authServcie = new AuthService()
   const {
