@@ -5,9 +5,8 @@ const MatchingService = require('../services/MatchingService')
 const getMyInfo = async (req, res) => {
   const myService = new MeService()
   try {
-    // 토큰 검사 넣기
-    const myInfo = await myService.findMyInfo(1) // user id token //req.token.id
-    const myTeamList = await myService.findMyTeamList(1)// req.token.id
+    const myInfo = await myService.findMyInfo(req.token.id)
+    const myTeamList = await myService.findMyTeamList(req.token.id)
     res.status(200).json({
       data: {
         myInfo,
@@ -16,8 +15,7 @@ const getMyInfo = async (req, res) => {
       }
     })
   } catch (error) {
-    res.status(400).json({ errorMessage: '내정보 불러오기 실패' })
-    // 401,403
+    res.status(500).json({ errorMessage: '내정보 불러오기 실패' })
   }
 }
 
@@ -45,8 +43,7 @@ const updateMyInfo = async (req, res) => {
     })
   } catch (error) {
     console.log(error)
-    res.status(400).json({ errorMessage: '내 정보 수정 실패' })
-    // res 401: Unauthorized 403
+    res.status(500).json({ errorMessage: '내 정보 수정하기 실패' })
   }
 }
 const getMyTeamInfo = async (req, res) => {
