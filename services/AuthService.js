@@ -44,7 +44,7 @@ class AuthService {
       },
       process.env.JWT_SECRET,
       {
-        expiresIn: 60 * 60 * 1000, // 1시간
+        expiresIn: 24 * 60 * 60 * 1000, // 1일
         issuer: 'tingting'
       }
     )

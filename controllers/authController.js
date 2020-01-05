@@ -16,10 +16,9 @@ const kakaoLogin = async (req, res, next) => {
       res.status(401).json({ errorMeesage: '유효하지 않은 토큰입니다.' })
     } else {
       const exUserId = await userService.findUserIdByKaKaoId(kakaoId)
-      // findUserInfoByKakaoId 는 토큰을 점검하는 역할도 하기 때문에, 토큰이 유효하지 않은 경우에 대한 예외처리도 해줘야 해!! --> 이부분 잘 이해안감!
       if (exUserId) {
         // 이미 로그인된 경우
-        const token = authServcie.makeToken(exUserId)
+        const token = authServcie.makeToken(exUserId.id)
         console.log('Issued token: ', token)
         res
           .status(200)
@@ -35,8 +34,8 @@ const kakaoLogin = async (req, res, next) => {
           authenticated_address,
           gender
         })
-        const id = await userService.findUserIdByKaKaoId(kakaoId)
-        const token = authServcie.makeToken(id)
+        const userId = await userService.findUserIdByKaKaoId(kakaoId)
+        const token = authServcie.makeToken(userId.id)
         console.log('Issued token: ', token)
         res
           .status(201)
@@ -128,8 +127,8 @@ const localSignup = async (req, res) => {
         authenticated_address,
         gender
       })
-      const id = await userService.findUserIdByLocalId(local_id)
-      const token = authService.makeToken(id)
+      const userId = await userService.findUserIdByLocalId(local_id)
+      const token = authService.makeToken(userId.id)
       res
         .status(201)
         .json({ data: { message: '회원가입에 성공했습니다.', token } })

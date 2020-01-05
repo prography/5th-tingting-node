@@ -73,4 +73,5 @@ const Team = db.define(
     timestamps: false
   }
 )
+
 module.exports = Team
