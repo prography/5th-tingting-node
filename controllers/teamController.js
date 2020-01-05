@@ -12,19 +12,20 @@ const getTeamList = async (req, res) => {
       token: { id }
     } = req
     const gender = await meService.findMyGender(id)
-    const teamIdList = await teamService.findAllTeamListWithoutMe(id, gender)
-    console.log('teamIdList:', teamIdList)
-
-    // 팀ID 리스트 -> 팀객체 리스트 변환
-    const teamObjList = await teamService.makeTeamObjList(teamIdList)
-    console.log('teamObjList:', teamObjList)
+    const teamList = await teamService.findAllTeamListWithoutMe(id, gender)
+    for (let idx in teamList) {
+      const teamId = teamList[idx].id
+      teamList[idx].teamMembersInfo = await teamService.findAllTeamMembersInfo(
+        teamId
+      )
+    }
 
     // 응답 처리
-    if (teamObjList.length === 0) {
+    if (teamList.length === 0) {
       res.status(404).json({ errorMessage: '팀이 존재하지 않습니다.' })
     } else {
       res.status(200).json({
-        data: { teamObjList }
+        data: { teamList }
       })
     }
   } catch (error) {
@@ -87,7 +88,7 @@ const getTeamInfo = async (req, res) => {
   const teamService = new TeamService()
   try {
     const teamInfo = await teamService.findTeamInfo(req.params.id)
-    const teamMember = await teamService.findTeamMemberList(req.params.id)
+    const teamMember = await teamService.findAllTeamMembersInfo(req.params.id)
     if (teamInfo === null) {
       res.status(404).json({ errorMessage: '팀이 존재하지 않습니다.' })
     } else {

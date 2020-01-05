@@ -1,4 +1,10 @@
 import Belong from './entities/Belong.entity'
+import User from './entities/User.entity'
+import Team from './entities/Team.entity'
+
+Team.belongsToMany(User, { through: Belong })
+User.belongsToMany(Team, { through: Belong })
+
 const Sequelize = require('sequelize')
 const Op = Sequelize.Op
 
@@ -16,7 +22,7 @@ class BelongModel {
   // }
 
   // 개별 팀 팀원 리스트
-  async findTeamMemberWhoBelongto (team_id) {
+  async findTeamMemberWhoBelongto(team_id) {
     const belongs = await Belong.findAll({
       attributes: ['user_id'],
       where: {
@@ -29,7 +35,7 @@ class BelongModel {
   }
 
   // 나의 개별 팀 리스트 찾기
-  async findMyTeamList (user_id) {
+  async findMyTeamList(user_id) {
     const teams = await Belong.findAll({
       attributes: ['team_id'],
       where: {
@@ -41,7 +47,7 @@ class BelongModel {
     return teamList
   }
 
-  async deleteBelongByTeamId (team_id) {
+  async deleteBelongByTeamId(team_id) {
     await Belong.destroy({
       where: {
         team_id
@@ -49,7 +55,7 @@ class BelongModel {
     })
   }
 
-  async deleteBelongByUserIdAndTeamId (data) {
+  async deleteBelongByUserIdAndTeamId(data) {
     await Belong.destroy({
       where: {
         team_id: data.teamId,
@@ -58,7 +64,7 @@ class BelongModel {
     })
   }
 
-  async createTeamMember (data) {
+  async createTeamMember(data) {
     await Belong.create({
       team_id: data.teamId,
       user_id: data.userId
