@@ -21,9 +21,10 @@ class BelongModel {
       attributes: ['user_id'],
       where: {
         team_id
-      }
+      },
+      raw: true
     })
-    const teamMemberList = belongs.map(member => member.dataValues.user_id)
+    const teamMemberList = belongs.map(member => member.user_id)
     return teamMemberList
   }
 
@@ -33,9 +34,10 @@ class BelongModel {
       attributes: ['team_id'],
       where: {
         user_id
-      }
+      },
+      raw: true
     })
-    const teamList = teams.map(belong => belong.dataValues.team_id)
+    const teamList = teams.map(belong => belong.team_id)
     return teamList
   }
 

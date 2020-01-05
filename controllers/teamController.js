@@ -2,23 +2,35 @@ const TeamService = require('../services/TeamService')
 const UserService = require('../services/UserService')
 const MeService = require('../services/MeService')
 
-// 전체 팀 리스트 //수정 : 성별 필터 추가
+// 전체 팀 리스트
 const getTeamList = async (req, res) => {
   try {
+    // 팀ID 리스트 생성
     const teamService = new TeamService()
-    const teamList = await teamService.findAllTeamListWithoutMe(2) // req.token.id
-    if (teamList.length === 0) {
+    const meService = new MeService()
+    const {
+      token: { id }
+    } = req
+    const gender = await meService.findMyGender(id)
+    const teamIdList = await teamService.findAllTeamListWithoutMe(id, gender)
+    console.log('teamIdList:', teamIdList)
+
+    // 팀ID 리스트 -> 팀객체 리스트 변환
+    const teamObjList = await teamService.makeTeamObjList(teamIdList)
+    console.log('teamObjList:', teamObjList)
+
+    // 응답 처리
+    if (teamObjList.length === 0) {
       res.status(404).json({ errorMessage: '팀이 존재하지 않습니다.' })
     } else {
       res.status(200).json({
-        data: { teamList }
+        data: { teamObjList }
       })
     }
   } catch (error) {
     console.log(error)
     res.status(500).json({ errorMessage: '팀 리스트 불러오기 실패' })
   }
-  // res 401: Unauthorized ,403
 }
 
 // 팀 생성

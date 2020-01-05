@@ -1,10 +1,12 @@
 const TeamModel = require('../models/TeamModel')
 const BelongModel = require('../models/BelongModel')
+const UserModel = require('../models/UserModel')
 
 class TeamService {
   constructor () {
     this.teamModel = new TeamModel()
     this.belongModel = new BelongModel()
+    this.userModel = new UserModel()
   }
 
   async saveTeam (data) {
@@ -28,9 +30,12 @@ class TeamService {
     }
   }
 
-  async findAllTeamListWithoutMe (userId) {
+  async findAllTeamListWithoutMe (userId, userGender) {
     try {
-      const ListIsNotOwner = await this.teamModel.findTeamListIsNotOwner(userId)
+      const ListIsNotOwner = await this.teamModel.findTeamListIsNotOwner(
+        userId,
+        userGender
+      )
       const ListIsBelong = await this.belongModel.findMyTeamList(userId)
       const teamList = ListIsNotOwner.filter(
         list => !ListIsBelong.includes(list)
@@ -45,6 +50,42 @@ class TeamService {
     try {
       const teamInfo = await this.teamModel.findUserTeamInfo(teamId)
       return teamInfo
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  async makeTeamObjList (teamIdList) {
+    try {
+      const teamShortInfoList = await Promise.all(
+        teamIdList.map(
+          async teamId => await this.teamModel.findUserTeamShortInfo(teamId)
+        )
+      )
+      const teamMemberIdList = await Promise.all(
+        teamShortInfoList.map(async team => {
+          const ownerId = team.owner_id
+          const idList = await this.belongModel.findTeamMemberWhoBelongto(
+            team.id
+          )
+          idList.push(ownerId)
+          return idList
+        })
+      )
+      const teamMemberThumbnailList = await Promise.all(
+        teamMemberIdList.map(
+          async list =>
+            await list.map(async memberId => {
+              const thumbnailInfo = await this.userModel.findThumbnailById(
+                memberId
+              )
+              return { id: memberId, thumbnail: thumbnailInfo.thumbnail }
+            })
+        )
+      )
+
+      console.log('teamMemberThumbnailList:', teamMemberThumbnailList)
+      return teamMemberIdList
     } catch (error) {
       console.log(error)
     }
