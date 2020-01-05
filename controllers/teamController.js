@@ -7,12 +7,15 @@ const getTeamList = async (req, res) => {
   try {
     const userId = req.token.id
     const teamService = new TeamService()
-    const teamList = await teamService.findAllTeamListWithoutMe(userId)
+    const meService = new MeService()
+
+    const gender = await meService.findMyGender(id)
+    const teamList = await teamService.findAllTeamListWithoutMe(userId, gender)
     if (teamList.length === 0) {
       res.status(404).json({ errorMessage: '팀이 존재하지 않습니다.' })
     } else {
       res.status(200).json({
-        data: { teamList }
+        data: { teamObjList }
       })
     }
   } catch (error) {

@@ -26,7 +26,7 @@ class TeamModel {
       owner_id: data.owner_id,
       intro: data.intro,
       gender: data.gender,
-      password: data.password, //수정 필요
+      password: data.password, // 수정 필요
       max_member_number: data.max_member_number
     })
   }

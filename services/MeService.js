@@ -4,7 +4,7 @@ const BelongModel = require('../models/BelongModel')
 const AvailableEmailModel = require('../models/AvailableEmailModel')
 
 class MeService {
-  constructor() {
+  constructor () {
     this.userModel = new UserModel()
     this.teamModel = new TeamModel()
     this.belongModel = new BelongModel()
@@ -12,10 +12,14 @@ class MeService {
   }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
   async getMyInfo (userId) {
 =======
   async findMyInfo(userId) {
 >>>>>>> 토큰 수정 및 createTaem
+=======
+  async findMyInfo (userId) {
+>>>>>>> createTeam
     try {
       const myInfo = await this.userModel.findUserInfo(userId)
       const email = myInfo.authenticated_address
@@ -32,9 +36,13 @@ class MeService {
   }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
   async getMyTeamList (userId) {
 =======
   async findMyGender(userId) {
+=======
+  async findMyGender (userId) {
+>>>>>>> createTeam
     try {
       const myGender = await this.userModel.findUserGenderById(userId)
       return myGender.gender
@@ -43,8 +51,12 @@ class MeService {
     }
   }
 
+<<<<<<< HEAD
   async findMyTeamList(userId) {
 >>>>>>> 토큰 수정 및 createTaem
+=======
+  async findMyTeamList (userId) {
+>>>>>>> createTeam
     try {
       const teamsWithOwner = await this.teamModel.findTeamsOwnedByUserId(userId)
       const teamsWithMember = await this.belongModel.findTeamsByUserId(userId)
@@ -56,7 +68,7 @@ class MeService {
     }
   }
 
-  async updateMyInfo(data) {
+  async updateMyInfo (data) {
     try {
       await this.userModel.updateUserInfo(data)
     } catch (error) {
@@ -65,7 +77,7 @@ class MeService {
     }
   }
 
-  async updateMyTeam(data) {
+  async updateMyTeam (data) {
     try {
       await this.teamModel.updateTeam(data)
     } catch (error) {
@@ -74,7 +86,7 @@ class MeService {
     }
   }
 
-  async checkIsOwner(data) {
+  async checkIsOwner (data) {
     try {
       const isOwner = await this.teamModel.checkIsOnwer(data)
       return isOwner
@@ -84,7 +96,7 @@ class MeService {
     }
   }
 
-  async deleteMyTeam(teamId) {
+  async deleteMyTeam (teamId) {
     // belong table delete all by teamId
     // team table deleted 1
     try {
@@ -96,7 +108,7 @@ class MeService {
     }
   }
 
-  async removeMeFromTeam(data) {
+  async removeMeFromTeam (data) {
     // belong table delete by userId,teamId
     const isVerified = 0
     const teamId = data.teamId

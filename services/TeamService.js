@@ -3,13 +3,13 @@ const BelongModel = require('../models/BelongModel')
 const UserModel = require('../models/UserModel')
 
 class TeamService {
-  constructor () {
+  constructor() {
     this.teamModel = new TeamModel()
     this.belongModel = new BelongModel()
     this.userModel = new UserModel()
   }
 
-  async saveTeam (data) {
+  async saveTeam(data) {
     try {
       const ownerId = data.owner_id
       const userInfo = await this.userModel.findUserInfo(ownerId)
@@ -22,7 +22,7 @@ class TeamService {
     }
   }
 
-  async checkIsDuplicatedTeamName (name) {
+  async checkIsDuplicatedTeamName(name) {
     try {
       const team = await this.teamModel.findTeamByName(name)
       const isDuplicated = team && true
@@ -33,20 +33,23 @@ class TeamService {
     }
   }
 
-  async findAllTeamListWithoutMe (userId) {
+  async findAllTeamListWithoutMe(userId, userGender) {
     try {
       const userInfo = await this.userModel.findUserInfo(userId)
       const gender = userInfo.gender
-      const teamsWithNoneOwner = await this.teamModel.findTeamsWithNoneOwner(userId, gender)
-      const teamsWithMember = await this.belongModel.findTeamsByUserId(userId)
-      const teamList = teamsWithNoneOwner.filter(
-        team => {
-          const teamIdListWithMember = teamsWithMember.map(team => team.id)
-          return !teamIdListWithMember.includes(team.id)
-        }
+      const teamsWithNoneOwner = await this.teamModel.findTeamsWithNoneOwner(
+        userId,
+        gender
       )
+      const teamsWithMember = await this.belongModel.findTeamsByUserId(userId)
+      const teamList = teamsWithNoneOwner.filter(team => {
+        const teamIdListWithMember = teamsWithMember.map(team => team.id)
+        return !teamIdListWithMember.includes(team.id)
+      })
       for (const idx in teamList) {
-        const teamMembersInfo = await this.belongModel.findUsersByTeamId(teamList[idx].id)
+        const teamMembersInfo = await this.belongModel.findUsersByTeamId(
+          teamList[idx].id
+        )
         teamList[idx].teamMembersInfo = teamMembersInfo
       }
       return teamList
@@ -56,7 +59,7 @@ class TeamService {
     }
   }
 
-  async getTeamInfo (teamId) {
+  async getTeamInfo(teamId) {
     try {
       const teamInfo = await this.teamModel.findTeamInfo(teamId)
       if (teamInfo) delete teamInfo.password
@@ -67,7 +70,7 @@ class TeamService {
     }
   }
 
-  async getTeamMembersInfo (teamId) {
+  async getTeamMembersInfo(teamId) {
     try {
       const teamMembersInfo = await this.belongModel.findUsersByTeamId(teamId)
       return teamMembersInfo
@@ -77,7 +80,7 @@ class TeamService {
     }
   }
 
-  async checkIsGathered (teamId) {
+  async checkIsGathered(teamId) {
     try {
       const isGathered = await this.teamModel.checkIsGathered(teamId)
       return isGathered
@@ -87,7 +90,7 @@ class TeamService {
     }
   }
 
-  async joinTeamToBelong (data) {
+  async joinTeamToBelong(data) {
     try {
       const is_verified = 1
       const teamId = data.teamId
@@ -107,7 +110,7 @@ class TeamService {
     }
   }
 
-  async getTeamGender (teamId) {
+  async getTeamGender(teamId) {
     try {
       const teamGender = await this.teamModel.findTeamGender(teamId)
       return teamGender
