@@ -4,13 +4,14 @@ const BelongModel = require('../models/BelongModel')
 const AvailableEmailModel = require('../models/AvailableEmailModel')
 
 class MeService {
-  constructor () {
+  constructor() {
     this.userModel = new UserModel()
     this.teamModel = new TeamModel()
     this.belongModel = new BelongModel()
     this.availableEmailModel = new AvailableEmailModel()
   }
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
   async getMyInfo (userId) {
@@ -28,6 +29,12 @@ class MeService {
       const schoolName = school.name
       myInfo.schoolName = schoolName
       delete myInfo.authenticated_address
+=======
+  async findMyInfo(userId) {
+    try {
+      const myInfo = await this.userModel.findUserInfoById(userId)
+      console.log(myInfo)
+>>>>>>> me/team 저체 수정
       return myInfo
     } catch (error) {
       console.log(error)
@@ -37,12 +44,16 @@ class MeService {
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
   async getMyTeamList (userId) {
 =======
   async findMyGender(userId) {
 =======
   async findMyGender (userId) {
 >>>>>>> createTeam
+=======
+  async findMyGender(userId) {
+>>>>>>> me/team 저체 수정
     try {
       const myGender = await this.userModel.findUserGenderById(userId)
       return myGender.gender
@@ -52,7 +63,8 @@ class MeService {
   }
 
 <<<<<<< HEAD
-  async findMyTeamList(userId) {
+<<<<<<< HEAD
+  async (userId) {
 >>>>>>> 토큰 수정 및 createTaem
 =======
   async findMyTeamList (userId) {
@@ -61,6 +73,19 @@ class MeService {
       const teamsWithOwner = await this.teamModel.findTeamsOwnedByUserId(userId)
       const teamsWithMember = await this.belongModel.findTeamsByUserId(userId)
       const teamList = teamsWithOwner.concat(teamsWithMember)
+=======
+  async findMyTeamList(userId) {
+    try {
+      const teamListOwner = await this.teamModel.findMyTeamList(userId)
+      const teamIdListBelongsTo = await this.belongModel.findMyTeamList(userId)
+      const teamListBelongsTo = []
+      for (let teamId of teamIdListBelongsTo) {
+        const teamName = await this.teamModel.findName(teamId)
+        console.log(teamName)
+        teamListBelongsTo.push({ id: teamId, name: teamName })
+      }
+      const teamList = teamListOwner.concat(teamListBelongsTo)
+>>>>>>> me/team 저체 수정
       return teamList
     } catch (error) {
       console.log(error)
@@ -68,7 +93,7 @@ class MeService {
     }
   }
 
-  async updateMyInfo (data) {
+  async updateMyInfo(data) {
     try {
       await this.userModel.updateUserInfo(data)
     } catch (error) {
@@ -77,7 +102,7 @@ class MeService {
     }
   }
 
-  async updateMyTeam (data) {
+  async updateMyTeam(data) {
     try {
       await this.teamModel.updateTeam(data)
     } catch (error) {
@@ -86,7 +111,7 @@ class MeService {
     }
   }
 
-  async checkIsOwner (data) {
+  async checkIsOwner(data) {
     try {
       const isOwner = await this.teamModel.checkIsOnwer(data)
       return isOwner
@@ -96,7 +121,7 @@ class MeService {
     }
   }
 
-  async deleteMyTeam (teamId) {
+  async deleteMyTeam(teamId) {
     // belong table delete all by teamId
     // team table deleted 1
     try {
@@ -108,7 +133,7 @@ class MeService {
     }
   }
 
-  async removeMeFromTeam (data) {
+  async removeMeFromTeam(data) {
     // belong table delete by userId,teamId
     const isVerified = 0
     const teamId = data.teamId

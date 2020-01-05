@@ -1,4 +1,6 @@
 import Team from './entities/Team.entity'
+import User from './entities/User.entity'
+import Belong from './entities/Belong.entity'
 const Sequelize = require('sequelize')
 const Op = Sequelize.Op
 
@@ -6,7 +8,7 @@ class TeamModel {
   // 전체 팀 리스트 찾기(User is not owner)
   async findTeamsWithNoneOwner(userId, gender) {
     const teams = await Team.findAll({
-      attributes: ['id', 'name', 'max_member_number'],
+      attributes: ['id', 'owner_id', 'name', 'password', 'max_member_number'],
       where: {
         owner_id: { [Op.ne]: userId },
         gender,
@@ -159,6 +161,16 @@ class TeamModel {
       }
     })
     return genderOfTeam.dataValues.gender
+  }
+
+  async findName(id) {
+    const team = await Team.findOne({
+      attributes: ['name'],
+      where: {
+        id
+      }
+    })
+    return team.name
   }
 }
 

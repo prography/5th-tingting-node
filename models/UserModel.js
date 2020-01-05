@@ -1,7 +1,7 @@
 import User from './entities/User.entity'
 
 class UserModel {
-  async saveUserByLocal (data) {
+  async saveUserByLocal(data) {
     await User.create({
       local_id: data.local_id,
       password: data.password,
@@ -15,7 +15,7 @@ class UserModel {
     })
   }
 
-  async saveUserByKakao (data) {
+  async saveUserByKakao(data) {
     await User.create({
       kakao_id: data.kakao_id,
       name: data.name,
@@ -29,6 +29,7 @@ class UserModel {
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
   async findUserInfo (id) {
 =======
   async findUserInfoById(id) {
@@ -38,25 +39,39 @@ class UserModel {
 >>>>>>> createTeam
     // To Do: parameter 수정 필요// attributes: { exclude: ['baz'] } 적용?
     const user = await User.findOne({
+=======
+  async findUserInfoById(id) {
+    // To Do: parameter 수정 필요// attributes: { exclude: ['baz'] } 적용?
+    const userData = await User.findOne({
+>>>>>>> me/team 저체 수정
       attributes: [
         'name',
         'birth',
         'height',
         'thumbnail',
         'gender',
+<<<<<<< HEAD
+=======
+        'is_deleted',
+>>>>>>> me/team 저체 수정
         'authenticated_address'
       ],
       where: {
         id,
         is_deleted: 0
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
       }
+=======
+      },
+      raw: true
+>>>>>>> me/team 저체 수정
     })
     return userData
   }
 
-  async findUserGenderById (id) {
+  async findUserGenderById(id) {
     const gender = await User.findOne({
       where: {
         id
@@ -67,7 +82,7 @@ class UserModel {
     return gender
   }
 
-  async findThumbnailById (id) {
+  async findThumbnailById(id) {
     const thumbnail = await User.findOne({
       where: {
         id
@@ -78,7 +93,7 @@ class UserModel {
     return thumbnail
   }
 
-  async findUserIdByKaKaoId (kakao_id) {
+  async findUserIdByKaKaoId(kakao_id) {
     const userData = await User.findOne({
       where: {
         kakao_id
@@ -91,6 +106,7 @@ class UserModel {
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
   async findUserByKaKaoId (kakao_id) {
     const user = await User.findOne({
 =======
@@ -98,6 +114,9 @@ class UserModel {
 =======
   async findUserInfoByKaKaoId (kakao_id) {
 >>>>>>> createTeam
+=======
+  async findUserInfoByKaKaoId(kakao_id) {
+>>>>>>> me/team 저체 수정
     // To Do: parameter 수정 필요
     const userData = await User.findAll({
       attributes: [
@@ -120,6 +139,7 @@ class UserModel {
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
   async findUserByLocalId (local_id) {
     const user = await User.findOne({
 =======
@@ -127,6 +147,9 @@ class UserModel {
 =======
   async findUserIdByLocalId (local_id) {
 >>>>>>> createTeam
+=======
+  async findUserIdByLocalId(local_id) {
+>>>>>>> me/team 저체 수정
     const userId = await User.findOne({
 >>>>>>> 토큰 수정 및 createTaem
       where: {
@@ -140,6 +163,7 @@ class UserModel {
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
   async findUserByName (name) {
     const user = await User.findOne({
 =======
@@ -147,6 +171,9 @@ class UserModel {
 =======
   async findLocalIdByLocalId (local_id) {
 >>>>>>> createTeam
+=======
+  async findLocalIdByLocalId(local_id) {
+>>>>>>> me/team 저체 수정
     const localId = await User.findOne({
 >>>>>>> 토큰 수정 및 createTaem
       where: {
@@ -160,6 +187,7 @@ class UserModel {
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
   async findAuthInfoByLocalId (local_id) {
     const authInfo = await User.findOne({
 =======
@@ -167,6 +195,9 @@ class UserModel {
 =======
   async findAuthInfoByLocalId (local_id) {
 >>>>>>> createTeam
+=======
+  async findAuthInfoByLocalId(local_id) {
+>>>>>>> me/team 저체 수정
     const authData = await User.findOne({
 >>>>>>> 토큰 수정 및 createTaem
       where: {
@@ -179,7 +210,7 @@ class UserModel {
     return authInfo
   }
 
-  async updateUserInfo (data) {
+  async updateUserInfo(data) {
     await User.update(
       {
         height: data.height,
@@ -191,6 +222,7 @@ class UserModel {
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
   async findUserByAuthenticatedAddress (authenticatedAddress) {
     const row = await User.findOne({
 =======
@@ -198,6 +230,9 @@ class UserModel {
 =======
   async findNameByName (name) {
 >>>>>>> createTeam
+=======
+  async findNameByName(name) {
+>>>>>>> me/team 저체 수정
     const ExistingName = await User.findOne({
       where: {
         name,
@@ -208,7 +243,7 @@ class UserModel {
     return ExistingName
   }
 
-  async findAuthenticatedAddressByEmail (email) {
+  async findAuthenticatedAddressByEmail(email) {
     const ExistingEmail = await User.findOne({
 >>>>>>> 토큰 수정 및 createTaem
       where: {
@@ -223,7 +258,7 @@ class UserModel {
     return ExistingEmail
   }
 
-  async findUserIdByName (name) {
+  async findUserIdByName(name) {
     const userId = await User.findOne({
       attributes: ['id'],
       where: {
@@ -235,7 +270,7 @@ class UserModel {
     return row
   }
 
-  async findUserGender (id) {
+  async findUserGender(id) {
     const genderOfUser = await User.findOne({
       attributes: ['gender'],
       where: {
@@ -245,6 +280,18 @@ class UserModel {
       raw: true
     })
     return genderOfUser.gender
+  }
+
+  async findThumbnail(id) {
+    const user = await User.findOne({
+      attributes: ['thumbnail'],
+      where: {
+        id,
+        is_deleted: 0
+      },
+      raw: true
+    })
+    return user.thumbnail
   }
 }
 
