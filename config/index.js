@@ -1,6 +1,7 @@
-const dbConfig = require('./dbConfig')
 const dotenv = require('dotenv')
 dotenv.config()
+
+const dbConfig = require('./dbConfig')
 
 module.exports = {
   PORT: process.env.PORT,

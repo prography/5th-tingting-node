@@ -4,16 +4,18 @@ const Op = Sequelize.Op
 
 class TeamModel {
   // 전체 팀 리스트 찾기(User is not owner)
-  async findTeamListIsNotOwner (userId) {
+  async findTeamListIsNotOwner (userId, userGender) {
     const teams = await Team.findAll({
       attributes: ['id'],
       where: {
         owner_id: { [Op.ne]: userId },
+        gender: userGender,
         is_verified: 0,
         is_deleted: 0
-      }
+      },
+      raw: true
     })
-    const teamList = teams.map(team => team.dataValues.id)
+    const teamList = teams.map(team => team.id)
     return teamList
   }
 
@@ -25,7 +27,7 @@ class TeamModel {
       owner_id: data.owner_id,
       intro: data.intro,
       gender: data.gender,
-      password: data.password,
+      password: data.password, // 수정 필요
       max_member_number: data.max_member_number
     })
   }
@@ -57,6 +59,26 @@ class TeamModel {
         id,
         is_deleted: 0
       }
+    })
+    return teamData
+  }
+
+  // 개별 팀 간략 정보 보기
+  async findUserTeamShortInfo (id) {
+    const teamData = await Team.findOne({
+      attributes: [
+        'id',
+        'name',
+        'owner_id',
+        'gender',
+        'password',
+        'max_member_number'
+      ],
+      where: {
+        id,
+        is_deleted: 0
+      },
+      raw: true
     })
     return teamData
   }

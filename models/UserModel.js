@@ -15,7 +15,7 @@ class UserModel {
     })
   }
 
-  async saveUserByKako (data) {
+  async saveUserByKakao (data) {
     await User.create({
       kakao_id: data.kakao_id,
       name: data.name,
@@ -46,6 +46,28 @@ class UserModel {
     return userData
   }
 
+  async findUserGenderById (id) {
+    const gender = await User.findOne({
+      where: {
+        id
+      },
+      attributes: ['gender'],
+      raw: true
+    })
+    return gender
+  }
+
+  async findThumbnailById (id) {
+    const thumbnail = await User.findOne({
+      where: {
+        id
+      },
+      attributes: ['thumbnail'],
+      raw: true
+    })
+    return thumbnail
+  }
+
   async findUserIdByKaKaoId (kakao_id) {
     const userData = await User.findOne({
       where: {
@@ -60,7 +82,14 @@ class UserModel {
   async findUserInfoByKaKaoId (kakao_id) {
     // To Do: parameter 수정 필요
     const userData = await User.findAll({
-      attributes: ['name', 'birth', 'height', 'thumbnail', 'gender', 'is_deleted'],
+      attributes: [
+        'name',
+        'birth',
+        'height',
+        'thumbnail',
+        'gender',
+        'is_deleted'
+      ],
       where: {
         kakao_id,
         is_deleted: 0

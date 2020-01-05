@@ -19,6 +19,15 @@ class MeService {
     }
   }
 
+  async findMyGender (userId) {
+    try {
+      const myGender = await this.userModel.findUserGenderById(userId)
+      return myGender.gender
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
   async findMyTeamList (userId) {
     try {
       const teamListOwner = await this.teamModel.findMyTeamList(userId).then()

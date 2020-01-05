@@ -43,7 +43,7 @@ class UserService {
 
   async saveUserByKakao (data) {
     try {
-      await this.userModel.saveUserByKako(data)
+      await this.userModel.saveUserByKakao(data)
     } catch (error) {
       console.log(error)
     }
