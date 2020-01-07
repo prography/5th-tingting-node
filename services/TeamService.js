@@ -3,13 +3,13 @@ const BelongModel = require('../models/BelongModel')
 const UserModel = require('../models/UserModel')
 
 class TeamService {
-  constructor() {
+  constructor () {
     this.teamModel = new TeamModel()
     this.belongModel = new BelongModel()
     this.userModel = new UserModel()
   }
 
-  async saveTeam(data) {
+  async saveTeam (data) {
     try {
       await this.teamModel.saveTeam(data)
     } catch (error) {
@@ -17,7 +17,7 @@ class TeamService {
     }
   }
 
-  async checkIsDuplicateTeamNameByName(name) {
+  async checkIsDuplicateTeamNameByName (name) {
     try {
       const teamName = await this.teamModel.findNameByName(name)
       if (teamName) {
@@ -30,7 +30,7 @@ class TeamService {
     }
   }
 
-  async findAllTeamListWithoutMe(userId, userGender) {
+  async findAllTeamListWithoutMe (userId, userGender) {
     try {
       const teamListIsNotOwner = await this.teamModel.findTeamListIsNotOwner(
         userId,
@@ -46,7 +46,7 @@ class TeamService {
     }
   }
 
-  async findTeamInfo(teamId) {
+  async findTeamInfo (teamId) {
     try {
       const teamInfo = await this.teamModel.findUserTeamInfo(teamId)
       return teamInfo
@@ -55,7 +55,7 @@ class TeamService {
     }
   }
 
-  async makeTeamObjList(teamIdList) {
+  async makeTeamObjList (teamIdList) {
     try {
       const teamShortInfoList = await Promise.all(
         teamIdList.map(
@@ -91,7 +91,7 @@ class TeamService {
     }
   }
 
-  async findTeamMemberList(teamId) {
+  async findTeamMemberList (teamId) {
     try {
       const belongMember = await this.belongModel.findTeamMemberWhoBelongto(
         teamId
@@ -102,7 +102,7 @@ class TeamService {
     }
   }
 
-  async checkIsGathered(teamId) {
+  async checkIsGathered (teamId) {
     try {
       const isGathered = await this.teamModel.checkIsGathered(teamId)
       return isGathered
@@ -111,27 +111,22 @@ class TeamService {
     }
   }
 
-  async joinTeamToBelong(data) {
+  async joinTeamToBelong (teamId, userId) {
     try {
-      const is_verified = 1
-      const teamId = data.teamId
-      // create belong
-      await this.belongModel.createTeamMember(data)
-
-      // if length == maxnumber -> update is verified = 1 //controller로 가야할까?
-      const belongMember = await this.belongModel.findTeamMemberWhoBelongto(
+      await this.belongModel.createTeamMember({ teamId, userId })
+      const belongMemberList = await this.belongModel.findTeamMembersWhoBelongto(
         teamId
       )
-      const maxMember = await this.teamModel.findTeamMaxMemberNum(teamId)
-      if (belongMember.length + 1 === maxMember) {
-        await this.teamModel.updateTeamIsVerified({ teamId, is_verified })
+      const maxMemberNumber = await this.teamModel.findTeamMaxMemberNum(teamId)
+      if (belongMemberList.length + 1 === maxMemberNumber) {
+        await this.teamModel.updateTeamIsVerified({ teamId, is_verified: 1 })
       }
     } catch (error) {
       console.log(error)
     }
   }
 
-  async getTeamGender(teamId) {
+  async getTeamGender (teamId) {
     try {
       const teamGender = await this.teamModel.findTeamGender(teamId)
       return teamGender
@@ -140,11 +135,20 @@ class TeamService {
     }
   }
 
-  async findAllTeamMembersInfo(teamId) {
+  async getTeamPassword (teamId) {
+    try {
+      const teamPassword = await this.teamModel.findTeamPassword(teamId)
+      return teamPassword
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  async findAllTeamMembersInfo (teamId) {
     try {
       const userIds = await this.belongModel.findTeamMemberWhoBelongto(teamId)
       const membersInfo = []
-      for (let userId of userIds) {
+      for (const userId of userIds) {
         const thumbnail = await this.userModel.findThumbnail(userId)
         membersInfo.push({ id: userId, thumbnail })
       }

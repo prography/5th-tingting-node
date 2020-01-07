@@ -62,7 +62,7 @@ const getMyTeamInfo = async (req, res) => {
     if (userTeamList.length !== 0) {
       req.params.id = parseInt(req.params.id)
       let isUsersTeam = false
-      for (let team of userTeamList) {
+      for (const team of userTeamList) {
         if (team.id === req.params.id) {
           isUsersTeam = true
           break
@@ -102,7 +102,7 @@ const updateMyTeam = async (req, res) => {
   try {
     const userTeamList = await myService.findMyTeamList(2) // req.token.id
     let isUsersTeam = false
-    for (let team of userTeamList) {
+    for (const team of userTeamList) {
       if (team.id === req.params.id) {
         isUsersTeam = true
         break
@@ -150,7 +150,7 @@ const leaveMyTeam = async (req, res) => {
     const userTeamList = await myService.findMyTeamList(userId)
     console.log(userTeamList)
     let isUsersTeam = false
-    for (let team of userTeamList) {
+    for (const team of userTeamList) {
       if (team.id === teamId) {
         isUsersTeam = true
         break
