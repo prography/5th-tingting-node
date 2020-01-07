@@ -4,11 +4,11 @@ const AuthService = require('../services/AuthService')
 // 카카오 로그인 및 회원가입
 const kakaoLogin = async (req, res, next) => {
   const userService = new UserService()
-  const authServcie = new AuthService()
+  const authService = new AuthService()
   try {
     const schema = req.headers.authorization
     const accessToken = schema.replace('Bearer ', '')
-    const kakaoId = await authServcie.getKakaoId(accessToken)
+    const kakaoId = await authService.getKakaoId(accessToken)
     const {
       body: { name, birth, height, thumbnail, authenticated_address, gender }
     } = req
@@ -18,7 +18,7 @@ const kakaoLogin = async (req, res, next) => {
       const exUserId = await userService.findUserIdByKaKaoId(kakaoId)
       if (exUserId) {
         // 이미 로그인된 경우
-        const token = authServcie.makeToken(exUserId)
+        const token = authService.makeToken(exUserId)
         res
           .status(200)
           .json({ data: { message: '로그인에 성공했습니다.', token } })
@@ -38,7 +38,7 @@ const kakaoLogin = async (req, res, next) => {
           gender
         })
         const userId = await userService.findUserIdByKaKaoId(kakaoId)
-        const token = authServcie.makeToken(userId)
+        const token = authService.makeToken(userId)
         res
           .status(201)
           .json({ data: { message: '회원가입에 성공했습니다.', token } })

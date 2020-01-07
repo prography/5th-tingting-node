@@ -102,7 +102,7 @@ class AuthService {
   async checkIsAuthenticatedByEmail (email) {
     try {
       const auth = await this.authModel.findLastAuthByEmail(email)
-      const isAuthenticated = (auth && auth.is_authenticated === 1) ? true : false
+      const isAuthenticated = auth && (auth.is_authenticated === 1)
       return isAuthenticated
     } catch (error) {
       console.log(error)
@@ -114,7 +114,7 @@ class AuthService {
     try {
       const domain = email.split('@')[1] // 'hanyang.ac.kr'
       const school = await this.availableEmailModel.findSchoolByDomain(domain)
-      const isValid = (school) ? true : false
+      const isValid = school && true
       return isValid
     } catch (error) {
       console.log(error)
@@ -185,7 +185,7 @@ class AuthService {
       const user = await this.userModel.findUserByAuthenticatedAddress(
         email
       )
-      const isDuplicated = (user) ? true : false
+      const isDuplicated = user && true
       return isDuplicated
     } catch (error) {
       console.log(error)
