@@ -3,8 +3,7 @@ const UserService = require('../services/UserService')
 const getUserInfo = async (req, res) => {
   const userService = new UserService()
   try {
-    const userInfo = await userService.findUserInfoById(req.params.id)
-    /// 음... null별로인데.. 일단 썼습니다.
+    const userInfo = await userService.getUserInfo(req.params.id)
     if (userInfo === null) {
       res.status(404).json({ errorMessage: '사용자가 존재하지 않음' })
     } else {

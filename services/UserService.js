@@ -5,12 +5,13 @@ class UserService {
     this.userModel = new UserModel()
   }
 
-  async findUserInfoById (userId) {
+  async getUserInfo (userId) {
     try {
       const userInfo = await this.userModel.findUserInfoById(userId)
       return userInfo
     } catch (error) {
       console.log(error)
+      throw new Error(error)
     }
   }
 

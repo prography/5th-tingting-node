@@ -33,7 +33,10 @@ class TeamModel {
   // 팀 이름 존재하는지 찾기
   async findNameByName (name) {
     const teamName = await Team.findOne({
-      where: { name },
+      where: { 
+        name,
+        is_deleted: 0 
+      },
       attributes: ['name'],
       raw: true
     })
