@@ -50,9 +50,10 @@ class MeService {
 
   async updateMyTeam (data) {
     try {
-      await this.teamModel.updateUserTeam(data)
+      await this.teamModel.updateTeam(data)
     } catch (error) {
       console.log(error)
+      throw new Error(error)
     }
   }
 
@@ -62,6 +63,7 @@ class MeService {
       return isOwner
     } catch (error) {
       console.log(error)
+      throw new Error(error)
     }
   }
 
@@ -73,20 +75,23 @@ class MeService {
       await this.teamModel.deleteTeam(teamId)
     } catch (error) {
       console.log(error)
+      throw new Error(error)
     }
   }
 
   async removeMeFromTeam (data) {
     // belong table delete by userId,teamId
-    const is_verified = 0
+    const isVerified = 0
     const teamId = data.teamId
     // team is_verifiied false
     try {
       await this.belongModel.deleteBelongByUserIdAndTeamId(data)
-      await this.teamModel.updateTeamVerify({ teamId, is_verified })
+      await this.teamModel.updateTeamIsVerified({ teamId, isVerified })
     } catch (error) {
       console.log(error)
+      throw new Error(error)
     }
   }
 }
+
 module.exports = MeService

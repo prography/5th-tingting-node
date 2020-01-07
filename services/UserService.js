@@ -73,15 +73,6 @@ class UserService {
     }
   }
 
-  async findUserIdByName (name) {
-    try {
-      const user = await this.userModel.findUserIdByName(name)
-      return user.id
-    } catch (error) {
-      console.log(error)
-    }
-  }
-
   async getUserGender (userId) {
     try {
       const userGender = await this.userModel.findUserGender(userId)

@@ -15,21 +15,24 @@ class MatchingService {
       return isMatched
     } catch (error) {
       console.log(error)
+      throw new Error(error)
     }
   }
 
   async deleteMatchingdata (teamId) {
     try {
       // matching id 찾기 matching deleted 1
-      const matchingIdList = await this.matchingModel.findMatchingIdsByTeamId(teamId)
+      const matchings = await this.matchingModel.findMatchingIdsByTeamId(teamId)
       await this.matchingModel.deleteMatchingByTeamId(teamId)
       // accept apply matching id로 지우기
-      for (const matchingId of matchingIdList) {
+      for (const matching of matchings) {
+        const matchingId = matching.id
         await this.applyModel.deleteApplyByMatchingId(matchingId)
         await this.acceptModel.deleteAcceptByMatchingId(matchingId)
       }
     } catch (error) {
       console.log(error)
+      throw new Error(error)
     }
   }
 

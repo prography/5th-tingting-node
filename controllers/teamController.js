@@ -1,11 +1,12 @@
 const TeamService = require('../services/TeamService')
 const UserService = require('../services/UserService')
 
-// 전체 팀 리스트 //수정 : 성별 필터 추가
+// 전체 팀 리스트 조회 // 수정 : 성별 필터 추가
 const getTeamList = async (req, res) => {
   try {
+    const userId = req.token.id
     const teamService = new TeamService()
-    const teamList = await teamService.findAllTeamListWithoutMe(2) // req.token.id
+    const teamList = await teamService.findAllTeamListWithoutMe(userId)
     if (teamList.length === 0) {
       res.status(404).json({ errorMessage: '팀이 존재하지 않습니다.' })
     } else {
@@ -14,22 +15,19 @@ const getTeamList = async (req, res) => {
       })
     }
   } catch (error) {
-    console.log(error)
     res.status(500).json({ errorMessage: '팀 리스트 불러오기 실패' })
   }
-  // res 401: Unauthorized ,403
 }
 
 // 팀 생성
 const createTeam = async (req, res) => {
   const teamService = new TeamService()
+  const userId = req.token.id
   const {
     body: {
       name,
       chat_address,
-      owner_id,
       intro,
-      gender,
       password,
       max_member_number
     }
@@ -38,18 +36,16 @@ const createTeam = async (req, res) => {
     await teamService.saveTeam({
       name,
       chat_address,
-      owner_id,
+      owner_id: userId,
       intro,
-      gender,
       password,
       max_member_number
     })
-
     res.status(201).json({
       data: {
-        // 생성된 팀 정보(name) name으로 id 찾아서 정보 반환 --> 기능 찾아서 추가
+        message: '팀 생성 성공'
       }
-    })
+    }) // 생성된 팀 정보(name) name으로 id 찾아서 정보 반환 --> 기능 찾아서 추가
   } catch (error) {
     console.log(error)
     res.status(500).json({ errorMessage: '팀 생성 실패' })
@@ -62,11 +58,10 @@ const checkDuplicateTeamName = async (req, res) => {
   const {
     query: { name }
   } = req
-  console.log(name)
-  const isDuplicateTeamName = await teamService.checkIsDuplicateTeamNameByName(
+  const isDuplicated = await teamService.checkIsDuplicatedTeamName(
     name
   )
-  if (isDuplicateTeamName) {
+  if (isDuplicated) {
     res.status(400).json({ errorMessage: '이미 존재하는 팀명입니다.' })
   } else {
     res.status(200).json({ data: { message: '사용 가능한 팀명입니다.' } })
@@ -77,11 +72,12 @@ const checkDuplicateTeamName = async (req, res) => {
 const getTeamInfo = async (req, res) => {
   const teamService = new TeamService()
   try {
-    const teamInfo = await teamService.findTeamInfo(req.params.id)
-    const teamMember = await teamService.findTeamMemberList(req.params.id)
+    const teamId = req.params.id
+    const teamInfo = await teamService.getTeamInfo(teamId)
     if (teamInfo === null) {
       res.status(404).json({ errorMessage: '팀이 존재하지 않습니다.' })
     } else {
+      const teamMember = await teamService.getTeamMembersInfo(teamId)
       res.status(200).json({
         data: {
           teamInfo,
@@ -91,7 +87,6 @@ const getTeamInfo = async (req, res) => {
       })
     }
   } catch (error) {
-    console.log(error)
     res.status(500).json({ errorMessage: '해당 팀 정보 불러오기 실패' })
   }
 }
