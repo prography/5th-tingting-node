@@ -194,14 +194,16 @@ class AuthService {
       await this.authModel.setIsAuthenticatedByEmail(email)
     } catch (error) {
       console.log(error)
+      throw new Error(error)
     }
   }
 
   async checkIsAuthenticatedByEmail (email) {
     try {
-      const isAuthenticated = await this.authModel.findIsAuthenticatedByEmail(
+      const auth = await this.authModel.findIsAuthenticatedByEmail(
         email
       )
+      const isAuthenticated = (auth) ? true : false
       return isAuthenticated
     } catch (error) {
       console.log(error)
