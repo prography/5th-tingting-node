@@ -80,21 +80,22 @@ class UserModel {
     return user
   }
 
-  async findLocalIdByLocalId (local_id) {
-    const localId = await User.findOne({
+  async findUserByName (name) {
+    const user = await User.findOne({
       where: {
-        local_id
+        name,
+        is_deleted: 0
       },
-      attributes: ['local_id'],
       raw: true
     })
-    return localId
+    return user
   }
 
   async findAuthInfoByLocalId (local_id) {
     const authInfo = await User.findOne({
       where: {
-        local_id
+        local_id,
+        is_deleted: 0
       },
       attributes: ['id', 'salt', 'password'],
       raw: true
@@ -112,17 +113,6 @@ class UserModel {
       },
       { where: { id: data.id } }
     )
-  }
-
-  async findNameByName (name) {
-    const ExistingName = await User.findOne({
-      where: {
-        name,
-        is_deleted: 0
-      },
-      attributes: ['name']
-    })
-    return ExistingName
   }
 
   async findUserByAuthenticatedAddress (authenticatedAddress) {

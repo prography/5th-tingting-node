@@ -147,10 +147,10 @@ const checkDuplicateLocalId = async (req, res) => {
   const {
     query: { local_id }
   } = req
-  const isDuplicateLocalId = await authService.checkIsDuplicateLocalIdByLocalId(
+  const isDuplicatedLocalId = await authService.checkIsDuplicatedLocalId(
     local_id
   )
-  if (isDuplicateLocalId) {
+  if (isDuplicatedLocalId) {
     res.status(400).json({ errorMessage: '이미 존재하는 아이디입니다.' })
   } else {
     res.status(200).json({ data: { message: '사용 가능한 아이디입니다.' } })
@@ -163,8 +163,8 @@ const checkDuplicateName = async (req, res) => {
   const {
     query: { name }
   } = req
-  const isDuplicateName = await authService.checkIsDuplicateNameByName(name)
-  if (isDuplicateName) {
+  const isDuplicatedName = await authService.checkIsDuplicatedName(name)
+  if (isDuplicatedName) {
     res.status(400).json({ errorMessage: '이미 존재하는 이름입니다.' })
   } else {
     res.status(200).json({ data: { message: '사용 가능한 이름입니다.' } })
