@@ -46,15 +46,14 @@ class UserModel {
     return userData
   }
 
-  async findUserIdByKaKaoId (kakao_id) {
-    const userData = await User.findOne({
+  async findUserByKaKaoId (kakao_id) {
+    const user = await User.findOne({
       where: {
         kakao_id
       },
-      attributes: ['id'],
       raw: true
     })
-    return userData
+    return user
   }
 
   async findUserInfoByKaKaoId (kakao_id) {

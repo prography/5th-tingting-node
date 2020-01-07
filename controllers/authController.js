@@ -19,7 +19,6 @@ const kakaoLogin = async (req, res, next) => {
       if (exUserId) {
         // 이미 로그인된 경우
         const token = authServcie.makeToken(exUserId)
-        console.log('Issued token: ', token)
         res
           .status(200)
           .json({ data: { message: '로그인에 성공했습니다.', token } })
@@ -34,16 +33,14 @@ const kakaoLogin = async (req, res, next) => {
           authenticated_address,
           gender
         })
-        const id = await userService.findUserIdByKaKaoId(kakaoId)
-        const token = authServcie.makeToken(id)
-        console.log('Issued token: ', token)
+        const userId = await userService.findUserIdByKaKaoId(kakaoId)
+        const token = authServcie.makeToken(userId)
         res
           .status(201)
           .json({ data: { message: '회원가입에 성공했습니다.', token } })
       }
     }
   } catch (error) {
-    console.log(error)
     res
       .status(500)
       .json({ errorMessage: '로그인 혹은 회원가입에 실패했습니다.' })
