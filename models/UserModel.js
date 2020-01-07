@@ -125,15 +125,14 @@ class UserModel {
     return ExistingName
   }
 
-  async findAuthenticatedAddressByEmail (email) {
-    const ExistingEmail = await User.findOne({
+  async findUserByAuthenticatedAddress (authenticatedAddress) {
+    const row = await User.findOne({
       where: {
-        authenticated_address: email,
+        authenticated_address: authenticatedAddress,
         is_deleted: 0
-      },
-      attributes: ['authenticated_address']
+      }
     })
-    return ExistingEmail
+    return row
   }
 
   async findUserIdByName (name) {

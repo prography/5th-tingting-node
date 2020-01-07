@@ -2,12 +2,12 @@ import AvailableEmail from './entities/AvailableEmail.entity'
 
 class AvailableEmailModel {
   async findSchoolByDomain (domain) {
-    const school = await AvailableEmail.findOne({
+    const row = await AvailableEmail.findOne({
       where: {
         domain
       }
     })
-    return school
+    return row
   }
 }
 
