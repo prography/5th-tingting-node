@@ -49,7 +49,8 @@ class UserModel {
   async findUserByKaKaoId (kakao_id) {
     const user = await User.findOne({
       where: {
-        kakao_id
+        kakao_id,
+        is_deleted: 0
       },
       raw: true
     })
@@ -68,15 +69,15 @@ class UserModel {
     return userData
   }
 
-  async findUserIdByLocalId (local_id) {
-    const userId = await User.findOne({
+  async findUserByLocalId (local_id) {
+    const user = await User.findOne({
       where: {
-        local_id
+        local_id,
+        is_deleted: 0
       },
-      attributes: ['id'],
       raw: true
     })
-    return userId
+    return user
   }
 
   async findLocalIdByLocalId (local_id) {
@@ -91,14 +92,14 @@ class UserModel {
   }
 
   async findAuthInfoByLocalId (local_id) {
-    const authData = await User.findOne({
+    const authInfo = await User.findOne({
       where: {
         local_id
       },
       attributes: ['id', 'salt', 'password'],
       raw: true
     })
-    return authData
+    return authInfo
   }
 
   async updateUserInfo (data) {

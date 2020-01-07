@@ -79,6 +79,7 @@ class AuthService {
       return encryptInfo
     } catch (error) {
       console.log(error)
+      throw new Error(error)
     }
   }
 
@@ -94,6 +95,18 @@ class AuthService {
       }
     } catch (error) {
       console.log(error)
+      throw new Error(error)
+    }
+  }
+
+  async checkIsAuthenticatedByEmail (email) {
+    try {
+      const auth = await this.authModel.findLastAuthByEmail(email)
+      const isAuthenticated = (auth && auth.is_authenticated === 1) ? true : false
+      return isAuthenticated
+    } catch (error) {
+      console.log(error)
+      throw new Error(error)
     }
   }
 
@@ -196,18 +209,6 @@ class AuthService {
     } catch (error) {
       console.log(error)
       throw new Error(error)
-    }
-  }
-
-  async checkIsAuthenticatedByEmail (email) {
-    try {
-      const auth = await this.authModel.findIsAuthenticatedByEmail(
-        email
-      )
-      const isAuthenticated = (auth) ? true : false
-      return isAuthenticated
-    } catch (error) {
-      console.log(error)
     }
   }
 }

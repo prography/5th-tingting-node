@@ -21,14 +21,15 @@ class AuthModel {
     )
   }
 
-  async findIsAuthenticatedByEmail (email) {
-    const row = await Auth.findOne({
+  async findLastAuthByEmail (email) {
+    const rows = await Auth.findAll({
+      limit: 1,
       where: {
-        authenticated_email: email,
-        is_authenticated: 1
-      }
+        authenticated_email: email
+      },
+      order: [['created_at', 'DESC']]
     })
-    return row
+    return rows[0]
   }
 }
 
