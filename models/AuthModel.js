@@ -8,7 +8,7 @@ class AuthModel {
     })
   }
 
-  async saveIsAuthenticated (email) {
+  async setIsAuthenticatedByEmail (email) {
     await Auth.update(
       {
         is_authenticated: 1

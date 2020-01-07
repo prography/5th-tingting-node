@@ -199,7 +199,7 @@ const confirmEmailToken = async (req, res) => {
   const authServcie = new AuthService()
   const { token } = req
   try {
-    await authServcie.saveIsAuthenticated(token)
+    await authServcie.setIsAuthenticatedOfAuth(token)
     res.status(201).json({ data: { message: '이메일 인증이 완료되었습니다.' } })
   } catch (error) {
     console.log(error)

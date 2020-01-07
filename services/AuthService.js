@@ -188,10 +188,10 @@ class AuthService {
     }
   }
 
-  async saveIsAuthenticated (token) {
+  async setIsAuthenticatedOfAuth (token) {
     try {
       const { email } = token
-      await this.authModel.saveIsAuthenticated(email)
+      await this.authModel.setIsAuthenticatedByEmail(email)
     } catch (error) {
       console.log(error)
     }
