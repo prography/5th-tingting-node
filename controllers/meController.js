@@ -12,7 +12,6 @@ const getMyInfo = async (req, res) => {
       data: {
         myInfo,
         myTeamList
-        // 학교 이름 제공
       }
     })
   } catch (error) {
@@ -23,25 +22,14 @@ const getMyInfo = async (req, res) => {
 const updateMyInfo = async (req, res) => {
   const myService = new MeService()
   const userId = req.token.id
-  const { name, birth, height, thumbnail } = req.body
+  const { height, thumbnail } = req.body
   try {
-    // 토큰 검사 넣기
     await myService.updateMyInfo({
-      id,
-      name,
-      birth,
+      userId,
       height,
       thumbnail
     })
-    const updateMyInfo = await myService.getMyInfo(userId)
-    const updatemyTeamList = await myService.getMyTeamList(userId)
-    res.status(202).json({
-      data: {
-        updateMyInfo,
-        updatemyTeamList
-        // 학교 이름 제공
-      }
-    })
+    res.sendStatus(204)
   } catch (error) {
     res.status(500).json({ errorMessage: '내 정보 수정하기 실패' })
   }

@@ -64,17 +64,17 @@ class TeamModel {
     return teamData
   }
 
-  // 나의 개별 팀 리스트 찾기
-  async findMyTeamList (userId) {
+  // 해당 유저가 주인으로 있는 팀 목록 찾기
+  async findTeamsOwnedByUserId (userId) {
     const teams = await Team.findAll({
-      attributes: ['id'],
+      attributes: ['id', 'name'],
       where: {
         owner_id: userId,
         is_deleted: 0
-      }
+      },
+      raw: true
     })
-    const teamList = teams.map(team => team.dataValues.id)
-    return teamList
+    return teams
   }
 
   // 나의 팀 정보 수정
