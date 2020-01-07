@@ -27,10 +27,12 @@ class UserService {
 
   async findUserIdByLocalId (localId) {
     try {
-      const userId = await this.userModel.findUserIdByLocalId(localId)
+      const user = await this.userModel.findUserByLocalId(localId)
+      const userId = (user) ? user.id : null
       return userId
     } catch (error) {
       console.log(error)
+      throw new Error(error)
     }
   }
 
@@ -40,6 +42,7 @@ class UserService {
       return authInfo
     } catch (error) {
       console.log(error)
+      throw new Error(error)
     }
   }
 

@@ -4,11 +4,11 @@ const AuthService = require('../services/AuthService')
 // 카카오 로그인 및 회원가입
 const kakaoLogin = async (req, res, next) => {
   const userService = new UserService()
-  const authServcie = new AuthService()
+  const authService = new AuthService()
   try {
     const schema = req.headers.authorization
     const accessToken = schema.replace('Bearer ', '')
-    const kakaoId = await authServcie.getKakaoId(accessToken)
+    const kakaoId = await authService.getKakaoId(accessToken)
     const {
       body: { name, birth, height, thumbnail, authenticated_address, gender }
     } = req
@@ -18,12 +18,16 @@ const kakaoLogin = async (req, res, next) => {
       const exUserId = await userService.findUserIdByKaKaoId(kakaoId)
       if (exUserId) {
         // 이미 로그인된 경우
-        const token = authServcie.makeToken(exUserId)
+        const token = authService.makeToken(exUserId)
         res
           .status(200)
           .json({ data: { message: '로그인에 성공했습니다.', token } })
       } else {
         // 회원가입하는 경우
+        const isAuthenticated = await authService.checkIsAuthenticatedByEmail(authenticated_address)
+        if (!isAuthenticated) {
+          return res.status(401).json({ errorMessage: '인증된 이메일이 아닙니다.' })
+        }
         await userService.saveUserByKakao({
           kakao_id: kakaoId,
           name,
@@ -34,7 +38,7 @@ const kakaoLogin = async (req, res, next) => {
           gender
         })
         const userId = await userService.findUserIdByKaKaoId(kakaoId)
-        const token = authServcie.makeToken(userId)
+        const token = authService.makeToken(userId)
         res
           .status(201)
           .json({ data: { message: '회원가입에 성공했습니다.', token } })
@@ -64,10 +68,8 @@ const localLogin = async (req, res) => {
         password
       )
       if (isCorrectPassword) {
-        // Token 만들기
         const token = authService.makeToken(authInfo.id)
-        console.log('Issued token: ', token)
-        res.status(202).json({
+        res.status(200).json({
           data: {
             message: '로그인에 성공했습니다. & 토큰이 발행되었습니다.',
             token
@@ -84,7 +86,6 @@ const localLogin = async (req, res) => {
       })
     }
   } catch (error) {
-    console.log(error)
     res.status(500).json({
       errorMessage: '로그인에 실패했습니다.'
     })
@@ -110,9 +111,13 @@ const localSignup = async (req, res) => {
   try {
     const exUserId = await userService.findUserIdByLocalId(local_id)
     if (exUserId) {
-      res.status(400).json({ data: { message: '이미 가입된 사용자입니다.' } })
+      return res.status(400).json({ data: { message: '이미 가입된 사용자입니다.' } })
     } else {
       const encryptInfo = await authService.encryptPassword(password)
+      const isAuthenticated = await authService.checkIsAuthenticatedByEmail(authenticated_address)
+      if (!isAuthenticated) {
+        return res.status(401).json({ errorMessage: '인증된 이메일이 아닙니다.' })
+      }
       await userService.saveUserByLocal({
         local_id,
         password: encryptInfo.encryptedpassword,
@@ -124,8 +129,8 @@ const localSignup = async (req, res) => {
         authenticated_address,
         gender
       })
-      const id = await userService.findUserIdByLocalId(local_id)
-      const token = authService.makeToken(id)
+      const userId = await userService.findUserIdByLocalId(local_id)
+      const token = authService.makeToken(userId)
       res
         .status(201)
         .json({ data: { message: '회원가입에 성공했습니다.', token } })
