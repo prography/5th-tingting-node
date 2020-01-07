@@ -161,6 +161,7 @@ class AuthService {
       return isDuplicated
     } catch (error) {
       console.log(error)
+      throw new Error(error)
     }
   }
 
@@ -171,6 +172,7 @@ class AuthService {
       return isDuplicated
     } catch (error) {
       console.log(error)
+      throw new Error(error)
     }
   }
 

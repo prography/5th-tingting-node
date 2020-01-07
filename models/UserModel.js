@@ -29,21 +29,20 @@ class UserModel {
 
   async findUserInfoById (id) {
     // To Do: parameter 수정 필요// attributes: { exclude: ['baz'] } 적용?
-    const userData = await User.findAll({
+    const user = await User.findOne({
       attributes: [
         'name',
         'birth',
         'height',
         'thumbnail',
-        'gender',
-        'is_deleted'
+        'gender'
       ],
       where: {
         id,
         is_deleted: 0
       }
     })
-    return userData
+    return user
   }
 
   async findUserByKaKaoId (kakao_id) {
