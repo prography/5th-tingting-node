@@ -144,11 +144,9 @@ const leaveMyTeam = async (req, res) => {
         await matchingService.deleteMatchingdata(teamId) // deleted 1
         if (isOwner) {
           await myService.deleteMyTeam(teamId) // team deleted 1 belong destroy
-          res
-            .status(200)
-            .json({
-              data: { message: '팀장 권한으로 팀 제거 완료(매칭 채널)' }
-            })
+          res.status(200).json({
+            data: { message: '팀장 권한으로 팀 제거 완료(매칭 채널)' }
+          })
         } else {
           await myService.removeMeFromTeam({ userId, teamId })
           res

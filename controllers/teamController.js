@@ -13,7 +13,7 @@ const getTeamList = async (req, res) => {
     } = req
     const gender = await meService.findMyGender(id)
     const teamList = await teamService.findAllTeamListWithoutMe(id, gender)
-    for (let idx in teamList) {
+    for (const idx in teamList) {
       const teamId = teamList[idx].id
       teamList[idx].teamMembersInfo = await teamService.findAllTeamMembersInfo(
         teamId
@@ -105,39 +105,58 @@ const joinTeam = async (req, res) => {
   const teamService = new TeamService()
   const userService = new UserService()
   const teamId = parseInt(req.params.id)
-  const userId = 5 // req.token.id
+  const userId = req.token.id
+  const {
+    body: { password }
+  } = req
   try {
-    const teamList = await teamService.findAllTeamListWithoutMe(userId)
+    const userGender = await userService.getUserGender(userId)
+    const teamList = await teamService.findAllTeamListWithoutMe(
+      userId,
+      userGender
+    )
     if (teamList.length !== 0) {
-      const isNotUsersTeam = teamList.includes(teamId)
-      if (isNotUsersTeam) {
-        const userGender = await userService.getUserGender(userId)
-        const teamGender = await teamService.getTeamGender(teamId)
-        if (userGender === teamGender) {
-          await teamService.joinTeamToBelong({ teamId, userId })
-          res.status(204).json({
-            data: { message: '합류 성공' }
-          })
+      // 유저가 합류 가능한 팀인지 확인 (Gender 같은 팀 / User가 현재 속하지 않은 팀 / 존재하는 팀)
+      let isTeamPossibleToJoin = false
+      teamList.some(team => {
+        if (team.id === teamId) {
+          isTeamPossibleToJoin = true
+        }
+      })
+      if (isTeamPossibleToJoin) {
+        const teamPassword = await teamService.getTeamPassword(teamId)
+        if (teamPassword !== null) {
+          // 비밀번호가 있는 경우
+          if (teamPassword === password) {
+            await teamService.joinTeamToBelong(teamId, userId)
+            res.status(201).json({
+              data: { message: '합류에 성공했습니다.' }
+            })
+          } else {
+            res.status(403).json({
+              errorMessage: '비밀번호가 틀렸습니다.'
+            })
+          }
         } else {
-          res
-            .status(403)
-            .json({ errorMessage: '성별이 달라 합류할 수 없습니다.' })
+          // 비밀번호가 없는 경우
+          await teamService.joinTeamToBelong(teamId, userId)
+          res.status(201).json({
+            data: { message: '합류에 성공했습니다.' }
+          })
         }
       } else {
         res.status(403).json({
-          errorMessage:
-            '합류하고자 하는 팀에 속해있거나, 팀이 존재하지 않습니다.'
+          errorMessage: '합류가 불가능한 팀입니다.'
         })
       }
     } else {
-      res
-        .status(404)
-        .json({ errorMessage: '합류할 수 있는 팀이 존재하지 않습니다.' })
+      res.status(403).json({
+        errorMessage: '합류할 수 있는 팀이 존재하지 않습니다.'
+      })
     }
-    // 팀 id 존재 유무 따로 빼기 //team API 전체 적용
   } catch (error) {
     console.log(error)
-    res.status(500).json({ errorMessage: '팀 합류 실패' })
+    res.status(500).json({ errorMessage: '합류에 실패하였습니다.' })
   }
 }
 

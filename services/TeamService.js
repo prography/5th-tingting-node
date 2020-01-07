@@ -90,20 +90,15 @@ class TeamService {
     }
   }
 
-  async joinTeamToBelong(data) {
+  async joinTeamToBelong(teamId, userId) {
     try {
-      const is_verified = 1
-      const teamId = data.teamId
-      // create belong
-      await this.belongModel.createTeamMember(data)
-
-      // if length == maxnumber -> update is verified = 1 //controller로 가야할까?
-      const belongMember = await this.belongModel.findTeamMemberWhoBelongto(
+      await this.belongModel.createTeamMember({ teamId, userId })
+      const belongMemberList = await this.belongModel.findTeamMembersWhoBelongto(
         teamId
       )
-      const maxMember = await this.teamModel.findTeamMaxMemberNum(teamId)
-      if (belongMember.length + 1 === maxMember) {
-        await this.teamModel.updateTeamIsVerified({ teamId, is_verified })
+      const maxMemberNumber = await this.teamModel.findTeamMaxMemberNum(teamId)
+      if (belongMemberList.length + 1 === maxMemberNumber) {
+        await this.teamModel.updateTeamIsVerified({ teamId, is_verified: 1 })
       }
     } catch (error) {
       console.log(error)
@@ -119,11 +114,20 @@ class TeamService {
     }
   }
 
+  async getTeamPassword(teamId) {
+    try {
+      const teamPassword = await this.teamModel.findTeamPassword(teamId)
+      return teamPassword
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
   async findAllTeamMembersInfo(teamId) {
     try {
       const userIds = await this.belongModel.findTeamMemberWhoBelongto(teamId)
       const membersInfo = []
-      for (let userId of userIds) {
+      for (const userId of userIds) {
         const thumbnail = await this.userModel.findThumbnail(userId)
         membersInfo.push({ id: userId, thumbnail })
       }

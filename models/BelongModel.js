@@ -7,7 +7,7 @@ Team.belongsToMany(User, { through: 'Belongs' })
 
 class BelongModel {
   // 개별 팀 팀원 리스트
-  async findTeamMemberWhoBelongto(team_id) {
+  async findTeamMembersWhoBelongto(team_id) {
     const belongs = await Belong.findAll({
       attributes: ['user_id'],
       where: {

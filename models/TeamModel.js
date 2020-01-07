@@ -172,6 +172,17 @@ class TeamModel {
     })
     return team.name
   }
+
+  async findTeamPassword(id) {
+    const team = await Team.findOne({
+      attributes: ['password'],
+      where: {
+        id
+      },
+      raw: true
+    })
+    return team.password
+  }
 }
 
 module.exports = TeamModel
