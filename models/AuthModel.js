@@ -22,13 +22,13 @@ class AuthModel {
   }
 
   async findIsAuthenticatedByEmail (email) {
-    const isAuthenticated = await Auth.findOne({
+    const row = await Auth.findOne({
       where: {
-        authenticated_email: email
-      },
-      attributes: ['is_authenticated']
+        authenticated_email: email,
+        is_authenticated: 1
+      }
     })
-    return isAuthenticated
+    return row
   }
 }
 

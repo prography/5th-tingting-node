@@ -202,8 +202,7 @@ const confirmEmailToken = async (req, res) => {
     await authServcie.setIsAuthenticatedOfAuth(token)
     res.status(201).json({ data: { message: '이메일 인증이 완료되었습니다.' } })
   } catch (error) {
-    console.log(error)
-    res.status(500).json({ errorMessage: '이메일 인증에 실패하였습니다.' })
+    res.status(500).json({ errorMessage: '서버 에러' })
   }
 }
 
@@ -218,10 +217,10 @@ const checkEmailAuth = async (req, res) => {
     if (isAuthenticated) {
       res.status(200).json({ data: { message: '인증이 완료된 이메일입니다.' } })
     } else {
-      res.status(401).json({ data: { message: '인증이 필요한 이메일입니다.' } })
+      res.status(401).json({ errorMessage: '인증이 필요한 이메일입니다.' })
     }
   } catch (error) {
-    console.log(error)
+    res.status(500).json({ errorMessage: '서버 에러!' })
   }
 }
 
