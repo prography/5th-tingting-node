@@ -9,7 +9,7 @@ class MeService {
     this.belongModel = new BelongModel()
   }
 
-  async findMyInfo (userId) {
+  async getMyInfo (userId) {
     try {
       const myInfo = await this.userModel.findUserInfoById(userId)
       // 학교 이름 제공
@@ -19,7 +19,7 @@ class MeService {
     }
   }
 
-  async findMyTeamList (userId) {
+  async getMyTeamList (userId) {
     try {
       const teamListOwner = await this.teamModel.findMyTeamList(userId).then()
       const teamListId = await this.belongModel.findMyTeamList(userId).then()

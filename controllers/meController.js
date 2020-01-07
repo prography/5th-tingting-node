@@ -3,10 +3,11 @@ const TeamService = require('../services/TeamService')
 const MatchingService = require('../services/MatchingService')
 
 const getMyInfo = async (req, res) => {
+  const userId = req.token.id
   const myService = new MeService()
   try {
-    const myInfo = await myService.findMyInfo(req.token.id)
-    const myTeamList = await myService.findMyTeamList(req.token.id)
+    const myInfo = await myService.getMyInfo(userId)
+    const myTeamList = await myService.getMyTeamList(userId)
     res.status(200).json({
       data: {
         myInfo,
@@ -21,7 +22,7 @@ const getMyInfo = async (req, res) => {
 
 const updateMyInfo = async (req, res) => {
   const myService = new MeService()
-  const id = 1 // req.token.id
+  const userId = req.token.id
   const { name, birth, height, thumbnail } = req.body
   try {
     // 토큰 검사 넣기
@@ -32,8 +33,8 @@ const updateMyInfo = async (req, res) => {
       height,
       thumbnail
     })
-    const updateMyInfo = await myService.findMyInfo(id)
-    const updatemyTeamList = await myService.findMyTeamList(id)
+    const updateMyInfo = await myService.getMyInfo(userId)
+    const updatemyTeamList = await myService.getMyTeamList(userId)
     res.status(202).json({
       data: {
         updateMyInfo,
@@ -42,15 +43,15 @@ const updateMyInfo = async (req, res) => {
       }
     })
   } catch (error) {
-    console.log(error)
     res.status(500).json({ errorMessage: '내 정보 수정하기 실패' })
   }
 }
+
 const getMyTeamInfo = async (req, res) => {
   const myService = new MeService()
   const teamService = new TeamService()
   try {
-    const userTeamList = await myService.findMyTeamList(2) // req.token.id
+    const userTeamList = await myService.getMyTeamList(2) // req.token.id
     if (userTeamList.length !== 0) {
       req.params.id = parseInt(req.params.id)
       const isUsersTeam = userTeamList.includes(req.params.id)
@@ -84,7 +85,7 @@ const updateMyTeam = async (req, res) => {
     body: { name, chat_address, owner_id, intro, password, max_member_number }
   } = req
   try {
-    const userTeamList = await myService.findMyTeamList(2) // req.token.id
+    const userTeamList = await myService.getMyTeamList(2) // req.token.id
     const isUsersTeam = userTeamList.includes(id)
     if (isUsersTeam) {
       await myService.updateMyTeam({
@@ -123,7 +124,7 @@ const leaveMyTeam = async (req, res) => {
   const isMatched = await matchingService.checkIsMatched(teamId)
   const isOwner = await myService.checkIsOwner({ userId, teamId })
   try {
-    const userTeamList = await myService.findMyTeamList(userId)
+    const userTeamList = await myService.getMyTeamList(userId)
     const isUsersTeam = userTeamList.includes(teamId)
     if (isUsersTeam) {
       // 방 팀원이 다 안찬 팀
