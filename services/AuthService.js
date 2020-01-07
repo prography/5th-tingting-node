@@ -34,6 +34,7 @@ class AuthService {
       }
     } catch (error) {
       console.log(error)
+      throw new Error(error)
     }
   }
 
@@ -44,7 +45,7 @@ class AuthService {
       },
       process.env.JWT_SECRET,
       {
-        expiresIn: 60 * 60 * 1000, // 1시간
+        expiresIn: 365 * 24 * 60 * 60 * 1000, // 1년
         issuer: 'tingting'
       }
     )

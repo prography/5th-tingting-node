@@ -16,10 +16,12 @@ class UserService {
 
   async findUserIdByKaKaoId (kakaoId) {
     try {
-      const userId = await this.userModel.findUserIdByKaKaoId(kakaoId)
+      const user = await this.userModel.findUserByKaKaoId(kakaoId)
+      const userId = (user) ? user.id : null
       return userId
     } catch (error) {
       console.log(error)
+      throw new Error(error)
     }
   }
 
@@ -46,6 +48,7 @@ class UserService {
       await this.userModel.saveUserByKako(data)
     } catch (error) {
       console.log(error)
+      throw new Error(error)
     }
   }
 
