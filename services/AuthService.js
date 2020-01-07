@@ -104,7 +104,7 @@ class AuthService {
       return isValid
     } catch (error) {
       console.log(error)
-      throw new Error()
+      throw new Error(error)
     }
   }
 
