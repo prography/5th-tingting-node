@@ -169,24 +169,28 @@ const checkDuplicateName = async (req, res) => {
   }
 }
 
-// 가능한 이메일인지 확인
-const checkValidEmail = async (req, res) => {
+// 유효한 이메일인지 체크하고, 확인 메일 전송.
+const checkValidityAndSendEmail = async (req, res) => {
   const authService = new AuthService()
   const {
     body: { email, name }
   } = req
-  const isValidSchool = await authService.findSchoolByEmail(email)
-  const isDuplicateEmail = await authService.checkIsDuplicateAuthenticatedAddressByEmail(
-    email
-  )
-  if (isDuplicateEmail) {
-    res.status(400).json({ errorMessage: '이미 가입된 이메일입니다.' })
-  } else if (!isValidSchool) {
-    res.status(401).json({ errorMessage: '가입이 불가능한 이메일입니다.' })
-  } else {
-    await authService.saveNameAndAuthenticatedEmail(name, email)
-    await authService.sendEmail(email)
-    res.status(201).json({ data: { message: '인증메일을 전송했습니다.' } })
+  try {
+    const isValid = await authService.checkValidityOfEmail(email)
+    const isDuplicated = await authService.checkIsDuplicatedEmail(
+      email
+    )
+    if (isDuplicated) {
+      res.status(400).json({ errorMessage: '이미 가입된 이메일입니다.' })
+    } else if (!isValid) {
+      res.status(401).json({ errorMessage: '가입이 불가능한 이메일입니다.' })
+    } else {
+      await authService.saveNameAndAuthenticatedEmail(name, email)
+      await authService.sendEmail(email)
+      res.status(201).json({ data: { message: '인증메일을 전송했습니다.' } })
+    }
+  } catch (err) {
+    res.status(500).json({ errMessage: '서버 에러' })
   }
 }
 
@@ -227,7 +231,7 @@ module.exports = {
   localSignup,
   checkDuplicateLocalId,
   checkDuplicateName,
-  checkValidEmail,
+  checkValidityAndSendEmail,
   confirmEmailToken,
   checkEmailAuth
 }

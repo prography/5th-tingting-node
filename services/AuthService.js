@@ -51,7 +51,7 @@ class AuthService {
     return token
   }
 
-  makeEmailToken (email) {
+  _makeEmailToken (email) {
     const token = jwt.sign(
       {
         email
@@ -96,13 +96,15 @@ class AuthService {
     }
   }
 
-  async findSchoolByEmail (email) {
+  async checkValidityOfEmail (email) {
     try {
       const domain = email.split('@')[1] // 'hanyang.ac.kr'
       const school = await this.availableEmailModel.findSchoolByDomain(domain)
-      return school
+      const isValid = (school) ? true : false
+      return isValid
     } catch (error) {
       console.log(error)
+      throw new Error()
     }
   }
 
@@ -112,8 +114,8 @@ class AuthService {
       host: 'smtp.naver.com',
       port: 587,
       auth: {
-        user: process.env.EMAIL_USEREMAIL,
-        pass: process.env.EMAIL_PASSWORD
+        user: process.env.SMTP_EMAIL,
+        pass: process.env.SMTP_PASSWORD
       }
     }
     const html = fs.readFileSync(
@@ -121,20 +123,20 @@ class AuthService {
       'utf8'
     )
     try {
-      const token = this.makeEmailToken(email)
-      const splitHtml = html.split('token=')
-      const htmlEnd = splitHtml[0] + 'token=' + token + splitHtml[1]
-      // console.log(token)
+      const token = this._makeEmailToken(email)
+      const splitedHtml = html.split('token=')
+      const finalHtml = splitedHtml[0] + 'token=' + token + splitedHtml[1]
       const message = {
-        from: process.env.EMAIL_USEREMAIL,
+        from: process.env.SMTP_EMAIL,
         to: email,
         subject: '[팅팅] 이메일 인증 요청',
-        html: htmlEnd
+        html: finalHtml
       }
       const transporter = nodemailer.createTransport(mailConfig)
       transporter.sendMail(message)
     } catch (error) {
       console.log(error)
+      throw new Error(error)
     }
   }
 
@@ -164,18 +166,16 @@ class AuthService {
     }
   }
 
-  async checkIsDuplicateAuthenticatedAddressByEmail (email) {
+  async checkIsDuplicatedEmail (email) {
     try {
-      const ExistingEmail = await this.userModel.findAuthenticatedAddressByEmail(
+      const user = await this.userModel.findUserByAuthenticatedAddress(
         email
       )
-      if (ExistingEmail) {
-        return true
-      } else {
-        return false
-      }
+      const isDuplicated = (user) ? true : false
+      return isDuplicated
     } catch (error) {
       console.log(error)
+      throw new Error(error)
     }
   }
 
@@ -184,6 +184,7 @@ class AuthService {
       await this.authModel.saveNameAndAuthenticatedEmail(name, email)
     } catch (error) {
       console.log(error)
+      throw new Error(error)
     }
   }
 

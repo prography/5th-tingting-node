@@ -5,7 +5,7 @@ const {
   localSignup,
   checkDuplicateLocalId,
   checkDuplicateName,
-  checkValidEmail,
+  checkValidityAndSendEmail,
   confirmEmailToken,
   checkEmailAuth
 } = require('../../../controllers/authController')
@@ -17,7 +17,7 @@ router.post('/local/login', localLogin)
 router.post('/local/signup', localSignup)
 router.get('/duplicate-id', checkDuplicateLocalId)
 router.get('/duplicate-name', checkDuplicateName)
-router.post('/school', checkValidEmail)
+router.post('/school', checkValidityAndSendEmail)
 router.post('/school/confirm', verifyEmailToken, confirmEmailToken)
 router.get('/school/complete', checkEmailAuth)
 
