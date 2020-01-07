@@ -30,11 +30,28 @@ class BelongModel {
       }]
     })
     const teams = user.teams
-    console.log(teams)
-    for (let idx in teams) {
+    for (const idx in teams) {
       delete teams[idx].dataValues.Belongs
     }
     return teams
+  }
+
+  // 팀멤버 찾기
+  async findUsersByTeamId (teamId) {
+    const team = await Team.findOne({
+      where: {
+        id: teamId
+      },
+      include: [{
+        model: User,
+        attributes: ['id', 'name', 'thumbnail']
+      }]
+    })
+    const users = team.users
+    for (const idx in users) {
+      delete users[idx].dataValues.Belongs
+    }
+    return users
   }
 
   async deleteBelongByTeamId (team_id) {

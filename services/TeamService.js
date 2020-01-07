@@ -1,63 +1,79 @@
 const TeamModel = require('../models/TeamModel')
 const BelongModel = require('../models/BelongModel')
+const UserModel = require('../models/UserModel')
 
 class TeamService {
   constructor () {
     this.teamModel = new TeamModel()
     this.belongModel = new BelongModel()
+    this.userModel = new UserModel()
   }
 
   async saveTeam (data) {
     try {
+      const ownerId = data.owner_id
+      const userInfo = await this.userModel.findUserInfo(ownerId)
+      const gender = userInfo.gender
+      data.gender = gender
       await this.teamModel.saveTeam(data)
     } catch (error) {
       console.log(error)
+      throw new Error(error)
     }
   }
 
-  async checkIsDuplicateTeamNameByName (name) {
+  async checkIsDuplicatedTeamName (name) {
     try {
-      const teamName = await this.teamModel.findNameByName(name)
-      if (teamName) {
-        return true
-      } else {
-        return false
-      }
+      const team = await this.teamModel.findTeamByName(name)
+      const isDuplicated = team && true
+      return isDuplicated
     } catch (error) {
       console.log(error)
+      throw new Error(error)
     }
   }
 
   async findAllTeamListWithoutMe (userId) {
     try {
-      const ListIsNotOwner = await this.teamModel.findTeamListIsNotOwner(userId)
-      const ListIsBelong = await this.belongModel.findTeamsByUserId(userId)
-      const teamList = ListIsNotOwner.filter(
-        list => !ListIsBelong.includes(list)
+      const userInfo = await this.userModel.findUserInfo(userId)
+      const gender = userInfo.gender
+      const teamsWithNoneOwner = await this.teamModel.findTeamsWithNoneOwner(userId, gender)
+      const teamsWithMember = await this.belongModel.findTeamsByUserId(userId)
+      const teamList = teamsWithNoneOwner.filter(
+        team => {
+          const teamIdListWithMember = teamsWithMember.map(team => team.id)
+          return !teamIdListWithMember.includes(team.id)
+        }
       )
+      for (const idx in teamList) {
+        const teamMembersInfo = await this.belongModel.findUsersByTeamId(teamList[idx].id)
+        teamList[idx].teamMembersInfo = teamMembersInfo
+      }
       return teamList
     } catch (error) {
       console.log(error)
+      throw new Error(error)
     }
   }
 
-  async findTeamInfo (teamId) {
+  async getTeamInfo (teamId) {
     try {
-      const teamInfo = await this.teamModel.findUserTeamInfo(teamId)
+      const teamInfo = await this.teamModel.findTeamInfo(teamId)
+      if (teamInfo) delete teamInfo.password
       return teamInfo
     } catch (error) {
       console.log(error)
+      throw new Error(error)
     }
   }
 
-  async findTeamMemberList (teamId) {
+  async getTeamMembersInfo (teamId) {
     try {
-      const belongMember = await this.belongModel.findTeamMemberWhoBelongto(
-        teamId
-      )
-      return belongMember
+      const teamMembersInfo = await this.belongModel.findUsersByTeamId(teamId)
+      return teamMembersInfo
     } catch (error) {
       console.log(error)
+      throw new Error(error)
     }
   }
 
@@ -67,6 +83,7 @@ class TeamService {
       return isGathered
     } catch (error) {
       console.log(error)
+      throw new Error(error)
     }
   }
 
@@ -99,4 +116,5 @@ class TeamService {
     }
   }
 }
+
 module.exports = TeamService
