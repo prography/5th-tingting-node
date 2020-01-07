@@ -154,27 +154,21 @@ class AuthService {
     }
   }
 
-  async checkIsDuplicateLocalIdByLocalId (localId) {
+  async checkIsDuplicatedLocalId (localId) {
     try {
-      const existingLocalId = await this.userModel.findLocalIdByLocalId(localId)
-      if (existingLocalId) {
-        return true
-      } else {
-        return false
-      }
+      const user = await this.userModel.findUserByLocalId(localId)
+      const isDuplicated = user && true
+      return isDuplicated
     } catch (error) {
       console.log(error)
     }
   }
 
-  async checkIsDuplicateNameByName (name) {
+  async checkIsDuplicatedName (name) {
     try {
-      const existingName = await this.userModel.findNameByName(name)
-      if (existingName) {
-        return true
-      } else {
-        return false
-      }
+      const user = await this.userModel.findUserByName(name)
+      const isDuplicated = user && true
+      return isDuplicated
     } catch (error) {
       console.log(error)
     }
