@@ -5,7 +5,8 @@ class AvailableEmailModel {
     const row = await AvailableEmail.findOne({
       where: {
         domain
-      }
+      },
+      raw: true
     })
     return row
   }

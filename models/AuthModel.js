@@ -27,7 +27,8 @@ class AuthModel {
       where: {
         authenticated_email: email
       },
-      order: [['created_at', 'DESC']]
+      order: [['created_at', 'DESC']],
+      raw: true
     })
     return rows[0]
   }

@@ -31,7 +31,7 @@ class TeamService {
   async findAllTeamListWithoutMe (userId) {
     try {
       const ListIsNotOwner = await this.teamModel.findTeamListIsNotOwner(userId)
-      const ListIsBelong = await this.belongModel.findMyTeamList(userId)
+      const ListIsBelong = await this.belongModel.findTeamsByUserId(userId)
       const teamList = ListIsNotOwner.filter(
         list => !ListIsBelong.includes(list)
       )

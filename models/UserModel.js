@@ -27,7 +27,7 @@ class UserModel {
     })
   }
 
-  async findUserInfoById (id) {
+  async findUserInfo (id) {
     // To Do: parameter 수정 필요// attributes: { exclude: ['baz'] } 적용?
     const user = await User.findOne({
       attributes: [
@@ -35,12 +35,14 @@ class UserModel {
         'birth',
         'height',
         'thumbnail',
-        'gender'
+        'gender',
+        'authenticated_address'
       ],
       where: {
         id,
         is_deleted: 0
-      }
+      },
+      raw: true
     })
     return user
   }
@@ -54,18 +56,6 @@ class UserModel {
       raw: true
     })
     return user
-  }
-
-  async findUserInfoByKaKaoId (kakao_id) {
-    // To Do: parameter 수정 필요
-    const userData = await User.findAll({
-      attributes: ['name', 'birth', 'height', 'thumbnail', 'gender', 'is_deleted'],
-      where: {
-        kakao_id,
-        is_deleted: 0
-      }
-    })
-    return userData
   }
 
   async findUserByLocalId (local_id) {
@@ -105,12 +95,10 @@ class UserModel {
   async updateUserInfo (data) {
     await User.update(
       {
-        name: data.name,
-        birth: data.birth,
         height: data.height,
         thumbnail: data.thumbnail
       },
-      { where: { id: data.id } }
+      { where: { id: data.userId } }
     )
   }
 
@@ -119,7 +107,8 @@ class UserModel {
       where: {
         authenticated_address: authenticatedAddress,
         is_deleted: 0
-      }
+      },
+      raw: true
     })
     return row
   }
@@ -130,7 +119,8 @@ class UserModel {
       where: {
         name,
         is_deleted: 0
-      }
+      },
+      raw: true
     })
     return userId
   }
@@ -141,9 +131,10 @@ class UserModel {
       where: {
         id,
         is_deleted: 0
-      }
+      },
+      raw: true
     })
-    return genderOfUser.dataValues.gender
+    return genderOfUser.gender
   }
 }
 module.exports = UserModel

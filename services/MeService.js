@@ -1,32 +1,41 @@
 const UserModel = require('../models/UserModel')
 const TeamModel = require('../models/TeamModel')
 const BelongModel = require('../models/BelongModel')
+const AvailableEmailModel = require('../models/AvailableEmailModel')
 
 class MeService {
   constructor () {
     this.userModel = new UserModel()
     this.teamModel = new TeamModel()
     this.belongModel = new BelongModel()
+    this.availableEmailModel = new AvailableEmailModel()
   }
 
   async getMyInfo (userId) {
     try {
-      const myInfo = await this.userModel.findUserInfoById(userId)
-      // 학교 이름 제공
+      const myInfo = await this.userModel.findUserInfo(userId)
+      const email = myInfo.authenticated_address
+      const domain = email.split('@')[1]
+      const school = await this.availableEmailModel.findSchoolByDomain(domain)
+      const schoolName = school.name
+      myInfo.schoolName = schoolName
+      delete myInfo.authenticated_address
       return myInfo
     } catch (error) {
       console.log(error)
+      throw new Error(error)
     }
   }
 
   async getMyTeamList (userId) {
     try {
-      const teamListOwner = await this.teamModel.findMyTeamList(userId).then()
-      const teamListId = await this.belongModel.findMyTeamList(userId).then()
-      const teamList = teamListOwner.concat(teamListId)
+      const teamsWithOwner = await this.teamModel.findTeamsOwnedByUserId(userId)
+      const teamsWithMember = await this.belongModel.findTeamsByUserId(userId)
+      const teamList = teamsWithOwner.concat(teamsWithMember)
       return teamList
     } catch (error) {
       console.log(error)
+      throw new Error(error)
     }
   }
 
@@ -35,6 +44,7 @@ class MeService {
       await this.userModel.updateUserInfo(data)
     } catch (error) {
       console.log(error)
+      throw new Error(error)
     }
   }
 
