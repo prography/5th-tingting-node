@@ -18,7 +18,7 @@ const kakaoLogin = async (req, res, next) => {
       const exUserId = await userService.findUserIdByKaKaoId(kakaoId)
       if (exUserId) {
         // 이미 로그인된 경우
-        const token = authService.makeToken(exUserId.id)
+        const token = authService.makeToken(exUserId)
         res
           .status(200)
           .json({ data: { message: '로그인에 성공했습니다.', token } })
@@ -42,7 +42,7 @@ const kakaoLogin = async (req, res, next) => {
           gender
         })
         const userId = await userService.findUserIdByKaKaoId(kakaoId)
-        const token = authService.makeToken(userId.id)
+        const token = authService.makeToken(userId)
         res
           .status(201)
           .json({ data: { message: '회원가입에 성공했습니다.', token } })
@@ -140,7 +140,7 @@ const localSignup = async (req, res) => {
         gender
       })
       const userId = await userService.findUserIdByLocalId(local_id)
-      const token = authService.makeToken(userId.id)
+      const token = authService.makeToken(userId)
       res
         .status(201)
         .json({ data: { message: '회원가입에 성공했습니다.', token } })
