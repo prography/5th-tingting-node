@@ -24,10 +24,7 @@ const getTeamList = async (req, res) => {
 // 팀 생성
 const createTeam = async (req, res) => {
   const teamService = new TeamService()
-  // const meService = new MeService()
-  const {
-    token: { id }
-  } = req
+  const userId = req.token.id
   const {
     body: { name, chat_address, intro, password, max_member_number }
   } = req
@@ -36,7 +33,7 @@ const createTeam = async (req, res) => {
     await teamService.saveTeam({
       name,
       chat_address,
-      owner_id: id,
+      owner_id: userId,
       intro,
       password,
       max_member_number
