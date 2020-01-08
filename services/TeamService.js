@@ -122,20 +122,6 @@ class TeamService {
       console.log(error)
     }
   }
-
-  async findAllTeamMembersInfo (teamId) {
-    try {
-      const userIds = await this.belongModel.findTeamMembersWhoBelongto(teamId)
-      const membersInfo = []
-      for (const userId of userIds) {
-        const thumbnail = await this.userModel.findThumbnail(userId)
-        membersInfo.push({ id: userId, thumbnail })
-      }
-      return membersInfo
-    } catch (error) {
-      console.log(error)
-    }
-  }
 }
 
 module.exports = TeamService
