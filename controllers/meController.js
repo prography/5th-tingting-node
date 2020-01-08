@@ -8,13 +8,13 @@ const getMyInfo = async (req, res) => {
   const myService = new MeService()
   const authService = new AuthService()
   try {
-    const myInfo = await myService.getMyInfo(req.token.id)
+    const myInfo = await myService.getMyInfo(userId)
     const address = myInfo.authenticated_address
     const school = await authService.findSchoolByEmail(address)
     const schoolName = school.name
     myInfo.schoolName = schoolName
     delete myInfo.authenticated_address
-    const myTeamList = await myService.getMyTeamList(req.token.id)
+    const myTeamList = await myService.getMyTeamList(userId)
     res.status(200).json({
       data: {
         myInfo,

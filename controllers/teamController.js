@@ -36,7 +36,7 @@ const getTeamList = async (req, res) => {
 // 팀 생성
 const createTeam = async (req, res) => {
   const teamService = new TeamService()
-  const meService = new MeService()
+  // const meService = new MeService()
   const {
     token: { id }
   } = req
@@ -44,7 +44,7 @@ const createTeam = async (req, res) => {
     body: { name, chat_address, intro, password, max_member_number }
   } = req
   try {
-    const gender = await meService.findMyGender(id)
+    // const gender = await meService.findMyGender(id) //이부분 같이 얘기해봐야될것 같음!
     await teamService.saveTeam({
       name,
       chat_address,
