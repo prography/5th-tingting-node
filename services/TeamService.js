@@ -125,7 +125,7 @@ class TeamService {
 
   async findAllTeamMembersInfo (teamId) {
     try {
-      const userIds = await this.belongModel.findTeamMemberWhoBelongto(teamId)
+      const userIds = await this.belongModel.findTeamMembersWhoBelongto(teamId)
       const membersInfo = []
       for (const userId of userIds) {
         const thumbnail = await this.userModel.findThumbnail(userId)
