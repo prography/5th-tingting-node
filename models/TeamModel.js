@@ -161,16 +161,6 @@ class TeamModel {
     return genderOfTeam.dataValues.gender
   }
 
-  async findName (id) {
-    const team = await Team.findOne({
-      attributes: ['name'],
-      where: {
-        id
-      }
-    })
-    return team.name
-  }
-
   async findTeamPassword (id) {
     const team = await Team.findOne({
       attributes: ['password'],
