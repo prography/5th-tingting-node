@@ -2,10 +2,10 @@ const TeamService = require('../services/TeamService')
 const UserService = require('../services/UserService')
 const MeService = require('../services/MeService')
 
-// 전체 팀 리스트 조회 // 수정 : 성별 필터 추가
+// 전체 팀 리스트
 const getTeamList = async (req, res) => {
   try {
-    const userId = req.token.id
+    // 팀ID 리스트 생성
     const teamService = new TeamService()
     const meService = new MeService()
     const {

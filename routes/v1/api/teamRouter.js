@@ -20,6 +20,9 @@ router.post('/:id/join', joinTeam)
 router.get('/duplicate-name', checkDuplicateTeamName)
 router.get('/:id', getTeamInfo)
 router.post('/:id/join', verifyToken, joinTeam)
+<<<<<<< HEAD
 >>>>>>> Team Join
+=======
+>>>>>>> 8c0c5e4672cef45178b76861bf01d8674d1a8075
 
 module.exports = router

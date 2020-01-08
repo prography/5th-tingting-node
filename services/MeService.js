@@ -38,7 +38,10 @@ class MeService {
     try {
       const myInfo = await this.userModel.findUserInfoById(userId)
       console.log(myInfo)
+<<<<<<< HEAD
 >>>>>>> me/team 저체 수정
+=======
+>>>>>>> 8c0c5e4672cef45178b76861bf01d8674d1a8075
       return myInfo
     } catch (error) {
       console.log(error)
@@ -46,6 +49,7 @@ class MeService {
     }
   }
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -62,6 +66,9 @@ class MeService {
 =======
   async findMyGender (userId) {
 >>>>>>> Team Join
+=======
+  async findMyGender (userId) {
+>>>>>>> 8c0c5e4672cef45178b76861bf01d8674d1a8075
     try {
       const myGender = await this.userModel.findUserGenderById(userId)
       return myGender.gender
@@ -73,12 +80,16 @@ class MeService {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
   async (userId) {
 >>>>>>> 토큰 수정 및 createTaem
 =======
+=======
+>>>>>>> 8c0c5e4672cef45178b76861bf01d8674d1a8075
   async findMyTeamList (userId) {
 >>>>>>> createTeam
     try {
+<<<<<<< HEAD
       const teamsWithOwner = await this.teamModel.findTeamsOwnedByUserId(userId)
       const teamsWithMember = await this.belongModel.findTeamsByUserId(userId)
       const teamList = teamsWithOwner.concat(teamsWithMember)
@@ -88,6 +99,8 @@ class MeService {
   async findMyTeamList (userId) {
 >>>>>>> Team Join
     try {
+=======
+>>>>>>> 8c0c5e4672cef45178b76861bf01d8674d1a8075
       const teamListOwner = await this.teamModel.findMyTeamList(userId)
       const teamIdListBelongsTo = await this.belongModel.findMyTeamList(userId)
       const teamListBelongsTo = []
@@ -97,7 +110,10 @@ class MeService {
         teamListBelongsTo.push({ id: teamId, name: teamName })
       }
       const teamList = teamListOwner.concat(teamListBelongsTo)
+<<<<<<< HEAD
 >>>>>>> me/team 저체 수정
+=======
+>>>>>>> 8c0c5e4672cef45178b76861bf01d8674d1a8075
       return teamList
     } catch (error) {
       console.log(error)

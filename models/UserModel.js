@@ -39,6 +39,7 @@ class UserModel {
   async findUserInfoById (id) {
 >>>>>>> createTeam
     // To Do: parameter 수정 필요// attributes: { exclude: ['baz'] } 적용?
+<<<<<<< HEAD
     const user = await User.findOne({
 =======
   async findUserInfoById(id) {
@@ -48,6 +49,9 @@ class UserModel {
     // To Do: parameter 수정 필요// attributes: { exclude: ['baz'] } 적용?
     const userData = await User.findOne({
 >>>>>>> me/team 저체 수정
+=======
+    const userData = await User.findOne({
+>>>>>>> 8c0c5e4672cef45178b76861bf01d8674d1a8075
       attributes: [
         'name',
         'birth',
@@ -55,14 +59,19 @@ class UserModel {
         'thumbnail',
         'gender',
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
         'is_deleted',
 >>>>>>> me/team 저체 수정
+=======
+        'is_deleted',
+>>>>>>> 8c0c5e4672cef45178b76861bf01d8674d1a8075
         'authenticated_address'
       ],
       where: {
         id,
         is_deleted: 0
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 =======
@@ -71,6 +80,10 @@ class UserModel {
       },
       raw: true
 >>>>>>> me/team 저체 수정
+=======
+      },
+      raw: true
+>>>>>>> 8c0c5e4672cef45178b76861bf01d8674d1a8075
     })
     return userData
   }
@@ -135,7 +148,10 @@ class UserModel {
         'gender',
         'is_deleted'
       ],
+<<<<<<< HEAD
 >>>>>>> 토큰 수정 및 createTaem
+=======
+>>>>>>> 8c0c5e4672cef45178b76861bf01d8674d1a8075
       where: {
         kakao_id,
         is_deleted: 0
@@ -304,6 +320,18 @@ class UserModel {
       raw: true
     })
     return genderOfUser.gender
+  }
+
+  async findThumbnail (id) {
+    const user = await User.findOne({
+      attributes: ['thumbnail'],
+      where: {
+        id,
+        is_deleted: 0
+      },
+      raw: true
+    })
+    return user.thumbnail
   }
 
   async findThumbnail (id) {
