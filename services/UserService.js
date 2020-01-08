@@ -26,7 +26,7 @@ class UserService {
   async findUserIdByKaKaoId (kakaoId) {
     try {
       const user = await this.userModel.findUserByKaKaoId(kakaoId)
-      const userId = (user) ? user.id : null
+      const userId = user ? user.id : null
       return userId
     } catch (error) {
       console.log(error)
@@ -37,7 +37,7 @@ class UserService {
   async findUserIdByLocalId (localId) {
     try {
       const user = await this.userModel.findUserByLocalId(localId)
-      const userId = (user) ? user.id : null
+      const userId = user ? user.id : null
       return userId
     } catch (error) {
       console.log(error)
@@ -57,7 +57,7 @@ class UserService {
 
   async saveUserByKakao (data) {
     try {
-      await this.userModel.saveUserByKako(data)
+      await this.userModel.saveUserByKakao(data)
     } catch (error) {
       console.log(error)
       throw new Error(error)

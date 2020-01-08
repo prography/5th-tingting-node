@@ -102,7 +102,7 @@ class AuthService {
   async checkIsAuthenticatedByEmail (email) {
     try {
       const auth = await this.authModel.findLastAuthByEmail(email)
-      const isAuthenticated = auth && (auth.is_authenticated === 1)
+      const isAuthenticated = auth && auth.is_authenticated === 1
       return isAuthenticated
     } catch (error) {
       console.log(error)
@@ -178,9 +178,7 @@ class AuthService {
 
   async checkIsDuplicatedEmail (email) {
     try {
-      const user = await this.userModel.findUserByAuthenticatedAddress(
-        email
-      )
+      const user = await this.userModel.findUserByAuthenticatedAddress(email)
       const isDuplicated = user && true
       return isDuplicated
     } catch (error) {

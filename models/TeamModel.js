@@ -6,7 +6,7 @@ class TeamModel {
   // 전체 팀 리스트 찾기(User is not owner)
   async findTeamsWithNoneOwner (userId, gender) {
     const teams = await Team.findAll({
-      attributes: ['id', 'name', 'max_member_number'],
+      attributes: ['id', 'owner_id', 'name', 'max_member_number'],
       where: {
         owner_id: { [Op.ne]: userId },
         gender,
@@ -26,7 +26,7 @@ class TeamModel {
       owner_id: data.owner_id,
       intro: data.intro,
       gender: data.gender,
-      password: data.password,
+      password: data.password, // 수정 필요
       max_member_number: data.max_member_number
     })
   }
@@ -93,6 +93,8 @@ class TeamModel {
     )
   }
 
+  // 팀 떠나기
+  // is gatherd? = is_verified ?  1:0
   async checkIsGathered (id) {
     const gathered = await Team.findOne({
       where: {
@@ -157,6 +159,17 @@ class TeamModel {
       }
     })
     return genderOfTeam.dataValues.gender
+  }
+
+  async findTeamPassword (id) {
+    const team = await Team.findOne({
+      attributes: ['password'],
+      where: {
+        id
+      },
+      raw: true
+    })
+    return team.password
   }
 }
 

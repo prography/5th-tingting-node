@@ -93,7 +93,9 @@ const updateMyTeam = async (req, res) => {
         } // 수정 팀 data
       })
     } else {
-      res.status(403).json({ errorMessage: '수정하고자 하는 팀에 속해있지 않음' })
+      res
+        .status(403)
+        .json({ errorMessage: '수정하고자 하는 팀에 속해있지 않음' })
     }
   } catch (error) {
     res.status(500).json({ errorMessage: '팀 수정 실패' })
@@ -120,10 +122,14 @@ const leaveMyTeam = async (req, res) => {
         // 방 팀원이 다 안찬 팀
         if (isOwner) {
           await myService.deleteMyTeam(teamId)
-          res.status(200).json({ data: { message: '팀장 권한으로 팀 제거 완료(팀 채널)' } })
+          res
+            .status(200)
+            .json({ data: { message: '팀장 권한으로 팀 제거 완료(팀 채널)' } })
         } else {
           await myService.removeMeFromTeam({ userId, teamId })
-          res.status(200).json({ data: { message: '팀원 나가기 완료(팀 채널)' } })
+          res
+            .status(200)
+            .json({ data: { message: '팀원 나가기 완료(팀 채널)' } })
         }
       } else if (!isMatched) {
         // 찼지만 매칭이 안된 팀
@@ -131,10 +137,14 @@ const leaveMyTeam = async (req, res) => {
         await matchingService.deleteMatchingdata(teamId) // deleted 1
         if (isOwner) {
           await myService.deleteMyTeam(teamId) // team deleted 1 belong destroy
-          res.status(200).json({ data: { message: '팀장 권한으로 팀 제거 완료(매칭 채널)' } })
+          res.status(200).json({
+            data: { message: '팀장 권한으로 팀 제거 완료(매칭 채널)' }
+          })
         } else {
           await myService.removeMeFromTeam({ userId, teamId })
-          res.status(200).json({ data: { message: '팀원 나가기 완료(매칭 채널)' } })
+          res
+            .status(200)
+            .json({ data: { message: '팀원 나가기 완료(매칭 채널)' } })
         }
       } else {
         res.status(400).json({ errorMessage: '이미 매칭 된 팀, 나가기 불가' })

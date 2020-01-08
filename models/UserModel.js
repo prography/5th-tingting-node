@@ -15,7 +15,7 @@ class UserModel {
     })
   }
 
-  async saveUserByKako (data) {
+  async saveUserByKakao (data) {
     await User.create({
       kakao_id: data.kakao_id,
       name: data.name,

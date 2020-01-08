@@ -24,9 +24,13 @@ const kakaoLogin = async (req, res, next) => {
           .json({ data: { message: '로그인에 성공했습니다.', token } })
       } else {
         // 회원가입하는 경우
-        const isAuthenticated = await authService.checkIsAuthenticatedByEmail(authenticated_address)
+        const isAuthenticated = await authService.checkIsAuthenticatedByEmail(
+          authenticated_address
+        )
         if (!isAuthenticated) {
-          return res.status(401).json({ errorMessage: '인증된 이메일이 아닙니다.' })
+          return res
+            .status(401)
+            .json({ errorMessage: '인증된 이메일이 아닙니다.' })
         }
         await userService.saveUserByKakao({
           kakao_id: kakaoId,
@@ -111,12 +115,18 @@ const localSignup = async (req, res) => {
   try {
     const exUserId = await userService.findUserIdByLocalId(local_id)
     if (exUserId) {
-      return res.status(400).json({ data: { message: '이미 가입된 사용자입니다.' } })
+      return res
+        .status(400)
+        .json({ data: { message: '이미 가입된 사용자입니다.' } })
     } else {
       const encryptInfo = await authService.encryptPassword(password)
-      const isAuthenticated = await authService.checkIsAuthenticatedByEmail(authenticated_address)
+      const isAuthenticated = await authService.checkIsAuthenticatedByEmail(
+        authenticated_address
+      )
       if (!isAuthenticated) {
-        return res.status(401).json({ errorMessage: '인증된 이메일이 아닙니다.' })
+        return res
+          .status(401)
+          .json({ errorMessage: '인증된 이메일이 아닙니다.' })
       }
       await userService.saveUserByLocal({
         local_id,
@@ -179,9 +189,7 @@ const checkValidityAndSendEmail = async (req, res) => {
   } = req
   try {
     const isValid = await authService.checkValidityOfEmail(email)
-    const isDuplicated = await authService.checkIsDuplicatedEmail(
-      email
-    )
+    const isDuplicated = await authService.checkIsDuplicatedEmail(email)
     if (isDuplicated) {
       res.status(400).json({ errorMessage: '이미 가입된 이메일입니다.' })
     } else if (!isValid) {

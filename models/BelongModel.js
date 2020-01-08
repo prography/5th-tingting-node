@@ -7,14 +7,15 @@ Team.belongsToMany(User, { through: 'Belongs' })
 
 class BelongModel {
   // 개별 팀 팀원 리스트
-  async findTeamMemberWhoBelongto (team_id) {
+  async findTeamMembersWhoBelongto (team_id) {
     const belongs = await Belong.findAll({
       attributes: ['user_id'],
       where: {
         team_id
-      }
+      },
+      raw: true
     })
-    const teamMemberList = belongs.map(member => member.dataValues.user_id)
+    const teamMemberList = belongs.map(member => member.user_id)
     return teamMemberList
   }
 
@@ -24,10 +25,12 @@ class BelongModel {
       where: {
         id: userId
       },
-      include: [{
-        model: Team,
-        attributes: ['id', 'name']
-      }]
+      include: [
+        {
+          model: Team,
+          attributes: ['id', 'name']
+        }
+      ]
     })
     const teams = user.teams
     for (const idx in teams) {
@@ -42,10 +45,12 @@ class BelongModel {
       where: {
         id: teamId
       },
-      include: [{
-        model: User,
-        attributes: ['id', 'name', 'thumbnail']
-      }]
+      include: [
+        {
+          model: User,
+          attributes: ['id', 'name', 'thumbnail']
+        }
+      ]
     })
     const users = team.users
     for (const idx in users) {

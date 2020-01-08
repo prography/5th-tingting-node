@@ -14,6 +14,6 @@ router.get('/', verifyToken, getTeamList)
 router.post('/', verifyToken, createTeam)
 router.get('/duplicate-name', verifyToken, checkDuplicateTeamName)
 router.get('/:id', verifyToken, getTeamInfo)
-router.post('/:id/join', joinTeam)
+router.post('/:id/join', verifyToken, joinTeam)
 
 module.exports = router
