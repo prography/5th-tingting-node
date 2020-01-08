@@ -33,19 +33,18 @@ class TeamService {
     }
   }
 
-  async findAllTeamListWithoutMe (userId, userGender) {
+  async findAllTeamListWithoutMe (userId) {
     try {
       const userInfo = await this.userModel.findUserInfo(userId)
       const gender = userInfo.gender
-      const teamsWithNoneOwner = await this.teamModel.findTeamsWithNoneOwner(
-        userId,
-        gender
-      )
+      const teamsWithNoneOwner = await this.teamModel.findTeamsWithNoneOwner(userId, gender)
       const teamsWithMember = await this.belongModel.findTeamsByUserId(userId)
-      const teamList = teamsWithNoneOwner.filter(team => {
-        const teamIdListWithMember = teamsWithMember.map(team => team.id)
-        return !teamIdListWithMember.includes(team.id)
-      })
+      const teamList = teamsWithNoneOwner.filter(
+        team => {
+          const teamIdListWithMember = teamsWithMember.map(team => team.id)
+          return !teamIdListWithMember.includes(team.id)
+        }
+      )
       for (const idx in teamList) {
         const teamMembersInfo = await this.belongModel.findUsersByTeamId(
           teamList[idx].id
