@@ -6,21 +6,9 @@ const MeService = require('../services/MeService')
 const getTeamList = async (req, res) => {
   try {
     // 팀ID 리스트 생성
+    const userId = req.token.id
     const teamService = new TeamService()
-    const meService = new MeService()
-    const {
-      token: { id }
-    } = req
-    const gender = await meService.findMyGender(id)
-    const teamList = await teamService.findAllTeamListWithoutMe(id, gender)
-    for (const idx in teamList) {
-      const teamId = teamList[idx].id
-      teamList[idx].teamMembersInfo = await teamService.findAllTeamMembersInfo(
-        teamId
-      )
-    }
-
-    // 응답 처리
+    const teamList = await teamService.findAllTeamListWithoutMe(userId)
     if (teamList.length === 0) {
       res.status(404).json({ errorMessage: '팀이 존재하지 않습니다.' })
     } else {
