@@ -29,7 +29,6 @@ const createTeam = async (req, res) => {
     body: { name, chat_address, intro, password, max_member_number }
   } = req
   try {
-    // const gender = await meService.findMyGender(id) //이부분 같이 얘기해봐야될것 같음!
     await teamService.saveTeam({
       name,
       chat_address,
