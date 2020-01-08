@@ -2,20 +2,12 @@ const UserModel = require('../models/UserModel')
 const AvailableEmailModel = require('../models/AvailableEmailModel')
 
 class UserService {
-  constructor () {
+  constructor() {
     this.userModel = new UserModel()
     this.availableEmailModel = new AvailableEmailModel()
   }
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-  async getUserInfo (userId) {
-=======
-  async findUserInfoById(userId) {
->>>>>>> 토큰 수정 및 createTaem
-=======
-  async findUserInfoById (userId) {
->>>>>>> createTeam
+  async getUserInfo(userId) {
     try {
       const userInfo = await this.userModel.findUserInfo(userId)
       const email = userInfo.authenticated_address
@@ -31,10 +23,10 @@ class UserService {
     }
   }
 
-  async findUserIdByKaKaoId (kakaoId) {
+  async findUserIdByKaKaoId(kakaoId) {
     try {
       const user = await this.userModel.findUserByKaKaoId(kakaoId)
-      const userId = (user) ? user.id : null
+      const userId = user ? user.id : null
       return userId
     } catch (error) {
       console.log(error)
@@ -42,10 +34,10 @@ class UserService {
     }
   }
 
-  async findUserIdByLocalId (localId) {
+  async findUserIdByLocalId(localId) {
     try {
       const user = await this.userModel.findUserByLocalId(localId)
-      const userId = (user) ? user.id : null
+      const userId = user ? user.id : null
       return userId
     } catch (error) {
       console.log(error)
@@ -53,7 +45,7 @@ class UserService {
     }
   }
 
-  async findAuthInfoByLocalId (localId) {
+  async findAuthInfoByLocalId(localId) {
     try {
       const authInfo = await this.userModel.findAuthInfoByLocalId(localId)
       return authInfo
@@ -63,7 +55,7 @@ class UserService {
     }
   }
 
-  async saveUserByKakao (data) {
+  async saveUserByKakao(data) {
     try {
       await this.userModel.saveUserByKakao(data)
     } catch (error) {
@@ -72,28 +64,16 @@ class UserService {
     }
   }
 
-  async saveUserByLocal (data) {
+  async saveUserByLocal(data) {
     try {
       await this.userModel.saveUserByLocal(data)
     } catch (error) {
       console.log(error)
-<<<<<<< HEAD
       throw new Error(error)
-=======
     }
   }
 
-  async findUserIdByName (name) {
-    try {
-      const user = await this.userModel.findUserIdByName(name)
-      return user.id
-    } catch (error) {
-      console.log(error)
->>>>>>> 토큰 수정 및 createTaem
-    }
-  }
-
-  async getUserGender (userId) {
+  async getUserGender(userId) {
     try {
       const userGender = await this.userModel.findUserGender(userId)
       return userGender
