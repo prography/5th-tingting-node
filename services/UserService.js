@@ -14,19 +14,44 @@ class UserService {
     }
   }
 
-  async findUserInfoByKaKaoId (kakaorId) {
-    // 임의로 추가됨
+  async findUserIdByKaKaoId (kakaoId) {
     try {
-      const userInfo = await this.userModel.findUserInfoByKaKaoId(kakaorId)
-      return userInfo
+      const userId = await this.userModel.findUserIdByKaKaoId(kakaoId)
+      return userId
     } catch (error) {
       console.log(error)
     }
   }
 
-  async saveUser (data) {
+  async findUserIdByLocalId (localId) {
     try {
-      await this.userModel.saveUser(data)
+      const userId = await this.userModel.findUserIdByLocalId(localId)
+      return userId
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  async findAuthInfoByLocalId (localId) {
+    try {
+      const authInfo = await this.userModel.findAuthInfoByLocalId(localId)
+      return authInfo
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  async saveUserByKakao (data) {
+    try {
+      await this.userModel.saveUserByKakao(data)
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  async saveUserByLocal (data) {
+    try {
+      await this.userModel.saveUserByLocal(data)
     } catch (error) {
       console.log(error)
     }

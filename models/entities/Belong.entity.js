@@ -37,4 +37,5 @@ const Belong = db.define(
     timestamps: false
   }
 )
+
 module.exports = Belong

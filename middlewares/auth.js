@@ -2,7 +2,9 @@ const jwt = require('jsonwebtoken')
 
 const verifyToken = (req, res, next) => {
   try {
-    req.token = jwt.verify(req.headers.authorization, process.env.JWT_SECRET)
+    const schema = req.headers.authorization
+    const token = schema.replace('Bearer ', '')
+    req.token = jwt.verify(token, process.env.JWT_SECRET)
     return next()
   } catch (error) {
     if (error.name === 'TokenExpiredError') {
@@ -22,15 +24,9 @@ const verifyEmailToken = (req, res, next) => {
     return next()
   } catch (error) {
     if (error.name === 'TokenExpiredError') {
-      return res.status(419).json({
-        code: 419,
-        meesage: '토큰 만료'
-      })
+      return res.status(419).json({ data: { meesage: '토큰 만료' } })
     }
-    return res.status(401).json({
-      code: 401,
-      message: '토큰이 유효하지 않음'
-    })
+    return res.status(401).json({ data: { message: '토큰이 유효하지 않음' } })
   }
 }
 
