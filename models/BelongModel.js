@@ -36,7 +36,8 @@ class BelongModel {
     for (const idx in teams) {
       delete teams[idx].dataValues.Belongs
     }
-    return teams
+    const team = JSON.stringify(teams)
+    return JSON.parse(team)
   }
 
   // 팀멤버 찾기

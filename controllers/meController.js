@@ -142,9 +142,7 @@ const leaveMyTeam = async (req, res) => {
           })
         } else {
           await myService.removeMeFromTeam({ userId, teamId })
-          res
-            .status(200)
-            .json({ data: { message: '팀원 나가기 완료(매칭 채널)' } })
+          res.status(200).json({ data: { message: '팀원 나가기 완료(매칭 채널)' } })
         }
       } else {
         res.status(400).json({ errorMessage: '이미 매칭 된 팀, 나가기 불가' })

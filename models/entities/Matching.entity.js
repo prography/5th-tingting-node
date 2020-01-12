@@ -60,4 +60,5 @@ const Matching = db.define(
     timestamps: false
   }
 )
+
 module.exports = Matching
