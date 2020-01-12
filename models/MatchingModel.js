@@ -3,7 +3,7 @@ const Sequelize = require('sequelize')
 const Op = Sequelize.Op
 
 class MatchingModel {
-  async checkIsMatched(teamId) {
+  async checkIsMatched (teamId) {
     const accepts = await Matching.findAll({
       where: {
         receive_team_id: teamId,
@@ -15,7 +15,7 @@ class MatchingModel {
     return isMatched
   }
 
-  async findMatchedTeams() {
+  async findMatchedTeams () {
     const teams = await Matching.findAll({
       attributes: ['send_team_id', 'receive_team_id'],
       where: {
@@ -27,7 +27,7 @@ class MatchingModel {
     return teams
   }
 
-  async findMatchingsIdsByTeamId(teamId) {
+  async findMatchingsIdsByTeamId (teamId) {
     const matchings = await Matching.findAll({
       where: {
         [Op.or]: [{ send_team_id: teamId }, { receive_team_id: teamId }],
@@ -38,7 +38,7 @@ class MatchingModel {
     return matchings
   }
 
-  async deleteMatchingByTeamId(teamId) {
+  async deleteMatchingByTeamId (teamId) {
     await Matching.update(
       {
         is_deleted: 1,

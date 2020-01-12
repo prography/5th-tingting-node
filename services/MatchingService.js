@@ -6,7 +6,7 @@ const TeamModel = require('../models/TeamModel')
 const BelongModel = require('../models/BelongModel')
 
 class MatchingService {
-  constructor() {
+  constructor () {
     this.matchingModel = new MatchingModel()
     this.applyModel = new ApplyModel()
     this.acceptModel = new AcceptModel()
@@ -15,7 +15,7 @@ class MatchingService {
     this.belongModel = new BelongModel()
   }
 
-  async checkIsMatched(teamId) {
+  async checkIsMatched (teamId) {
     try {
       const isMatched = await this.matchingModel.checkIsMatched(teamId)
       return isMatched
@@ -25,7 +25,7 @@ class MatchingService {
     }
   }
 
-  async deleteMatchingdata(teamId) {
+  async deleteMatchingdata (teamId) {
     try {
       // matching id 찾기 matching deleted 1
       const matchings = await this.matchingModel.findMatchingIdsByTeamId(teamId)
@@ -42,7 +42,7 @@ class MatchingService {
     }
   }
 
-  async findAllMatchingList(userId) {
+  async findAllMatchingList (userId) {
     try {
       const userInfo = await this.userModel.findUserInfo(userId)
       const gender = userInfo.gender
