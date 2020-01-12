@@ -1,14 +1,19 @@
+const MeService = require('../services/MeService')
 const MatchingService = require('../services/MatchingService')
 
+// 전체 매칭 리스트
 const getMatchingList = async (req, res) => {
-  const matchingService = new MatchingService()
   try {
-    const matchingList = await matchingService.findMatchingList(1) // req.token.id
+    // const userId = req.token.id
+    const meService = new MeService()
+    const matchingService = new MatchingService()
+    const myTeamList = await meService.getMyTeamList(43)
+    const matchingList = await matchingService.findAllMatchingList(43) // req.token.id
     if (matchingList.length === 0) {
       res.status(404).json({ errorMessage: '매칭 팀이 존재하지 않습니다.' })
     } else {
       res.status(200).json({
-        data: { matchingList }
+        data: { myTeamList, matchingList }
       })
     }
   } catch (error) {
@@ -17,11 +22,10 @@ const getMatchingList = async (req, res) => {
   }
 }
 
-// const myTeamList = await 어쩌구Service.findTeamById(req.token.id) //id, name, max_member_number만 받아올것
-
+// 응답 형식
 /*
 {
-  myteamList: [
+  myTeamList: [
     // 만들어진 팀만
     {
       id,
@@ -48,6 +52,7 @@ const getMatchingList = async (req, res) => {
 */
 
 const getMatchingTeamInfo = (req, res) => {}
+// 응답 형식
 /*
 {
     team: {

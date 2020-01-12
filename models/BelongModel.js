@@ -2,27 +2,12 @@ import Belong from './entities/Belong.entity'
 import User from './entities/User.entity'
 import Team from './entities/Team.entity'
 
-Team.belongsToMany(User, { through: Belong })
-User.belongsToMany(Team, { through: Belong })
-
-const Sequelize = require('sequelize')
-const Op = Sequelize.Op
+User.belongsToMany(Team, { through: 'Belongs' })
+Team.belongsToMany(User, { through: 'Belongs' })
 
 class BelongModel {
-  // 전체 팀 리스트 찾기(user is not belong)
-  // async findTeamListIsNotBelong(userId) {
-  //   const teamsNotBelong = await Belong.findAll({
-  //     attributes: ['team_id'],
-  //     where: {
-  //       user_id: { [Op.ne]: userId }
-  //     }
-  //   })
-  //   const teamList = teamsNotBelong.map(team => team.dataValues.team_id)
-  //   return teamList
-  // }
-
   // 개별 팀 팀원 리스트
-  async findTeamMemberWhoBelongto(team_id) {
+  async findTeamMembersWhoBelongto(team_id) {
     const belongs = await Belong.findAll({
       attributes: ['user_id'],
       where: {
@@ -34,17 +19,44 @@ class BelongModel {
     return teamMemberList
   }
 
-  // 나의 개별 팀 리스트 찾기
-  async findMyTeamList(user_id) {
-    const teams = await Belong.findAll({
-      attributes: ['team_id'],
+  // 내가 팀원으로 속한 팀 찾기
+  async findTeamsByUserId(userId) {
+    const user = await User.findOne({
       where: {
-        user_id
+        id: userId
       },
-      raw: true
+      include: [
+        {
+          model: Team,
+          attributes: ['id', 'name', 'max_member_number']
+        }
+      ]
     })
-    const teamList = teams.map(belong => belong.team_id)
-    return teamList
+    const teams = user.teams
+    for (const idx in teams) {
+      delete teams[idx].dataValues.Belongs
+    }
+    return teams
+  }
+
+  // 팀멤버 찾기
+  async findUsersByTeamId(teamId) {
+    const team = await Team.findOne({
+      where: {
+        id: teamId
+      },
+      include: [
+        {
+          model: User,
+          attributes: ['id', 'name', 'thumbnail']
+        }
+      ]
+    })
+    const users = team.users
+    for (const idx in users) {
+      delete users[idx].dataValues.Belongs
+    }
+    return users
   }
 
   async deleteBelongByTeamId(team_id) {

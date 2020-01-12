@@ -1,76 +1,73 @@
 const UserModel = require('../models/UserModel')
 const TeamModel = require('../models/TeamModel')
 const BelongModel = require('../models/BelongModel')
+const AvailableEmailModel = require('../models/AvailableEmailModel')
 
 class MeService {
-  constructor() {
+  constructor () {
     this.userModel = new UserModel()
     this.teamModel = new TeamModel()
     this.belongModel = new BelongModel()
+    this.availableEmailModel = new AvailableEmailModel()
   }
 
-  async findMyInfo(userId) {
+  async getMyInfo (userId) {
     try {
-      const myInfo = await this.userModel.findUserInfoById(userId)
-      console.log(myInfo)
+      const myInfo = await this.userModel.findUserInfo(userId)
+      const email = myInfo.authenticated_address
+      const domain = email.split('@')[1]
+      const school = await this.availableEmailModel.findSchoolByDomain(domain)
+      const schoolName = school.name
+      myInfo.schoolName = schoolName
+      delete myInfo.authenticated_address
       return myInfo
     } catch (error) {
       console.log(error)
+      throw new Error(error)
     }
   }
 
-  async findMyGender(userId) {
+  async getMyTeamList (userId) {
     try {
-      const myGender = await this.userModel.findUserGenderById(userId)
-      return myGender.gender
-    } catch (error) {
-      console.log(error)
-    }
-  }
-
-  async findMyTeamList(userId) {
-    try {
-      const teamListOwner = await this.teamModel.findMyTeamList(userId)
-      const teamIdListBelongsTo = await this.belongModel.findMyTeamList(userId)
-      const teamListBelongsTo = []
-      for (let teamId of teamIdListBelongsTo) {
-        const teamName = await this.teamModel.findName(teamId)
-        console.log(teamName)
-        teamListBelongsTo.push({ id: teamId, name: teamName })
-      }
-      const teamList = teamListOwner.concat(teamListBelongsTo)
+      const teamsWithOwner = await this.teamModel.findTeamsOwnedByUserId(userId)
+      const teamsWithMember = await this.belongModel.findTeamsByUserId(userId)
+      const teamList = teamsWithOwner.concat(teamsWithMember)
       return teamList
     } catch (error) {
       console.log(error)
+      throw new Error(error)
     }
   }
 
-  async updateMyInfo(data) {
+  async updateMyInfo (data) {
     try {
       await this.userModel.updateUserInfo(data)
     } catch (error) {
       console.log(error)
+      throw new Error(error)
     }
   }
 
-  async updateMyTeam(data) {
+  async updateMyTeam (data) {
     try {
-      await this.teamModel.updateUserTeam(data)
+      await this.teamModel.updateTeam(data)
     } catch (error) {
       console.log(error)
+      throw new Error(error)
     }
   }
 
-  async checkIsOwner(data) {
+  async checkIsOwner (data) {
     try {
       const isOwner = await this.teamModel.checkIsOnwer(data)
       return isOwner
     } catch (error) {
       console.log(error)
+      throw new Error(error)
     }
   }
 
-  async deleteMyTeam(teamId) {
+  async deleteMyTeam (teamId) {
     // belong table delete all by teamId
     // team table deleted 1
     try {
@@ -78,20 +75,23 @@ class MeService {
       await this.teamModel.deleteTeam(teamId)
     } catch (error) {
       console.log(error)
+      throw new Error(error)
     }
   }
 
-  async removeMeFromTeam(data) {
+  async removeMeFromTeam (data) {
     // belong table delete by userId,teamId
-    const is_verified = 0
+    const isVerified = 0
     const teamId = data.teamId
     // team is_verifiied false
     try {
       await this.belongModel.deleteBelongByUserIdAndTeamId(data)
-      await this.teamModel.updateTeamVerify({ teamId, is_verified })
+      await this.teamModel.updateTeamIsVerified({ teamId, isVerified })
     } catch (error) {
       console.log(error)
+      throw new Error(error)
     }
   }
 }
+
 module.exports = MeService
