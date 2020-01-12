@@ -2,6 +2,8 @@ const UserModel = require('../models/UserModel')
 const TeamModel = require('../models/TeamModel')
 const BelongModel = require('../models/BelongModel')
 const AvailableEmailModel = require('../models/AvailableEmailModel')
+const MatchingModel = require('../models/MatchingModel')
+const ApplyModel = require('../models/ApplyModel')
 
 class MeService {
   constructor () {
@@ -9,6 +11,8 @@ class MeService {
     this.teamModel = new TeamModel()
     this.belongModel = new BelongModel()
     this.availableEmailModel = new AvailableEmailModel()
+    this.matchingModel = new MatchingModel()
+    this.applyModel = new ApplyModel()
   }
 
   async getMyInfo (userId) {
@@ -32,6 +36,16 @@ class MeService {
       const teamsWithOwner = await this.teamModel.findTeamsOwnedByUserId(userId)
       const teamsWithMember = await this.belongModel.findTeamsByUserId(userId)
       const teamList = teamsWithOwner.concat(teamsWithMember)
+      for (const team of teamList) {
+        const teamId = team.id
+        let matchingInfos = await this.matchingModel.findMatchingInfosByTeamId(teamId)
+        const myApplys = await this.applyModel.findMyApplys(userId)
+        const appliedMatchingIds = myApplys.map(apply => apply.matching_id)
+        matchingInfos = matchingInfos.filter(matchingInfo => {
+          return !(appliedMatchingIds.includes(matchingInfo.dataValues.id))
+        })
+        team.matchingInfos = matchingInfos
+      }
       return teamList
     } catch (error) {
       console.log(error)

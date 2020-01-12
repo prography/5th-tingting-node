@@ -1,6 +1,10 @@
 import Matching from './entities/Matching.entity'
+import Team from './entities/Team.entity'
 const Sequelize = require('sequelize')
 const Op = Sequelize.Op
+
+Matching.belongsTo(Team, { foreignKey: 'send_team_id', as: 'sendTeam' })
+Matching.belongsTo(Team, { foreignKey: 'receive_team_id', as: 'receiveTeam' })
 
 class MatchingModel {
   async checkIsMatched (teamId) {
@@ -33,6 +37,27 @@ class MatchingModel {
     }, {
       where: { [Op.or]: [{ send_team_id: teamId }, { receive_team_id: teamId }] }
     })
+  }
+
+  async findMatchingInfosByTeamId (teamId, userId) {
+    const matchings = await Matching.findAll({
+      attributes: ['id'],
+      where: {
+        send_team_id: teamId,
+        send_accept_all: 0,
+        is_deleted: 0
+      },
+      include: [{
+        model: Team,
+        as: 'sendTeam',
+        attributes: ['id', 'name']
+      }, {
+        model: Team,
+        as: 'receiveTeam',
+        attributes: ['id', 'name']
+      }]
+    })
+    return matchings
   }
 }
 module.exports = MatchingModel
