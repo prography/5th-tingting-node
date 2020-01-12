@@ -18,6 +18,20 @@ class TeamModel {
     return teams
   }
 
+  // 아직 매칭되지 않은 이성 팀 리스트 찾기
+  async findVerifiedTeamsWithOppositeGender(gender) {
+    const teams = await Team.findAll({
+      attributes: ['id', 'owner_id', 'name', 'max_member_number'],
+      where: {
+        gender: !gender,
+        is_verified: 1,
+        is_deleted: 0
+      },
+      raw: true
+    })
+    return teams
+  }
+
   // 팀 생성
   async saveTeam(data) {
     await Team.create({
