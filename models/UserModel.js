@@ -28,7 +28,7 @@ class UserModel {
   }
 
   async findUserInfo (id) {
-    // To Do: parameter 수정 필요// attributes: { exclude: ['baz'] } 적용?
+    // attributes: { exclude: ['baz'] } 적용?
     const user = await User.findOne({
       attributes: [
         'name',

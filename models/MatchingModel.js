@@ -15,8 +15,20 @@ class MatchingModel {
         is_deleted: 0
       }
     })
-    const isMatched = (accepts.length !== 0)
+    const isMatched = accepts.length !== 0
     return isMatched
+  }
+
+  async findMatchedTeams () {
+    const teams = await Matching.findAll({
+      attributes: ['send_team_id', 'receive_team_id'],
+      where: {
+        is_deleted: 0,
+        verified_at: { [Op.ne]: null }
+      },
+      raw: true
+    })
+    return teams
   }
 
   async findMatchingsIdsByTeamId (teamId) {
@@ -31,12 +43,17 @@ class MatchingModel {
   }
 
   async deleteMatchingByTeamId (teamId) {
-    await Matching.update({
-      is_deleted: 1,
-      deleted_at: new Date()
-    }, {
-      where: { [Op.or]: [{ send_team_id: teamId }, { receive_team_id: teamId }] }
-    })
+    await Matching.update(
+      {
+        is_deleted: 1,
+        deleted_at: new Date()
+      },
+      {
+        where: {
+          [Op.or]: [{ send_team_id: teamId }, { receive_team_id: teamId }]
+        }
+      }
+    )
   }
 
   async findMatchingInfosByTeamId (teamId, userId) {

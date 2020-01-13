@@ -1,6 +1,5 @@
 const TeamService = require('../services/TeamService')
 const UserService = require('../services/UserService')
-const MeService = require('../services/MeService')
 
 // 전체 팀 리스트
 const getTeamList = async (req, res) => {
@@ -8,7 +7,7 @@ const getTeamList = async (req, res) => {
     // 팀ID 리스트 생성
     const userId = req.token.id
     const teamService = new TeamService()
-    const teamList = await teamService.findAllTeamListWithoutMe(userId) //test
+    const teamList = await teamService.findAllTeamListWithoutMe(userId)
     if (teamList.length === 0) {
       res.status(404).json({ errorMessage: '팀이 존재하지 않습니다.' })
     } else {
@@ -94,11 +93,7 @@ const joinTeam = async (req, res) => {
     body: { password }
   } = req
   try {
-    const userGender = await userService.getUserGender(userId)
-    const teamList = await teamService.findAllTeamListWithoutMe(
-      userId,
-      userGender
-    )
+    const teamList = await teamService.findAllTeamListWithoutMe(userId)
     if (teamList.length !== 0) {
       // 유저가 합류 가능한 팀인지 확인 (Gender 같은 팀 / User가 현재 속하지 않은 팀 / 존재하는 팀)
       let isTeamPossibleToJoin = false
@@ -107,6 +102,7 @@ const joinTeam = async (req, res) => {
           isTeamPossibleToJoin = true
         }
       })
+      // const isPossibleToJoin = await teamService.checkIsPossibleToJoin
       if (isTeamPossibleToJoin) {
         const teamPassword = await teamService.getTeamPassword(teamId)
         if (teamPassword !== null) {
