@@ -1,12 +1,14 @@
 const TeamModel = require('../models/TeamModel')
 const BelongModel = require('../models/BelongModel')
 const UserModel = require('../models/UserModel')
+const MatchingModel = require('../models/MatchingModel')
 
 class TeamService {
   constructor () {
     this.teamModel = new TeamModel()
     this.belongModel = new BelongModel()
     this.userModel = new UserModel()
+    this.matchingModel = new MatchingModel()
   }
 
   async saveTeam (data) {
@@ -117,6 +119,16 @@ class TeamService {
     try {
       const teamPassword = await this.teamModel.findTeamPassword(teamId)
       return teamPassword
+    } catch (error) {
+      console.log(error)
+      throw new Error(error)
+    }
+  }
+
+  async getTeamMatchingInfo (teamId) {
+    try {
+      const teamReceivedList = await this.matchingModel.findTeamReceivedList(teamId)
+      return teamReceivedList
     } catch (error) {
       console.log(error)
       throw new Error(error)

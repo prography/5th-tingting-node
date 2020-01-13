@@ -121,6 +121,7 @@ class MatchingModel {
     return matchings
   }
 
+<<<<<<< HEAD
   async saveMatching (sendTeamId, receiveTeamId, message) {
     const result = await Matching.create({
       send_team_id: sendTeamId,
@@ -158,5 +159,27 @@ class MatchingModel {
       { where: { id: matchingId } }
     )
   }
+<<<<<<< HEAD
+=======
+
+=======
+  async findTeamReceivedList (teamId) {
+    const teams = await Matching.findAll({
+      attributes: [],
+      where: {
+        receive_team_id: teamId,
+        receive_accept_all: 0,
+        is_deleted: 0
+      },
+      include: [{
+        model: Team,
+        as: 'receiveTeam',
+        attributes: ['id', 'name', 'max_member_number'] // 장소 추가
+      }]
+    })
+    return teams
+  }
+>>>>>>> team Receive MatchingList
+>>>>>>> team Receive MatchingList
 }
 module.exports = MatchingModel
