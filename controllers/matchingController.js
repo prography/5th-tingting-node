@@ -10,14 +10,15 @@ const getMatchingList = async (req, res) => {
     const myTeamList = await meService.getMyTeamList(userId)
     const matchingList = await matchingService.findAllMatchingList(userId)
     if (matchingList.length === 0) {
-      res.status(404).json({ errorMessage: '매칭 팀이 존재하지 않습니다.' })
+      res.status(200).json({
+        data: { myTeamList, matchingList }
+      })
     } else {
       res.status(200).json({
         data: { myTeamList, matchingList }
       })
     }
   } catch (error) {
-    console.log(error)
     res.status(500).json({ errorMessage: '팀 리스트 불러오기 실패' })
   }
 }

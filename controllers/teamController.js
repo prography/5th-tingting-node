@@ -85,7 +85,6 @@ const getTeamInfo = async (req, res) => {
 }
 
 const joinTeam = async (req, res) => {
-  // 수정 필요
   const teamService = new TeamService()
   const userService = new UserService()
   const teamId = parseInt(req.params.id)
@@ -94,11 +93,7 @@ const joinTeam = async (req, res) => {
     body: { password }
   } = req
   try {
-    const userGender = await userService.getUserGender(userId)
-    const teamList = await teamService.findAllTeamListWithoutMe(
-      userId,
-      userGender
-    )
+    const teamList = await teamService.findAllTeamListWithoutMe(userId)
     if (teamList.length !== 0) {
       // 유저가 합류 가능한 팀인지 확인 (Gender 같은 팀 / User가 현재 속하지 않은 팀 / 존재하는 팀)
       let isTeamPossibleToJoin = false
@@ -107,6 +102,7 @@ const joinTeam = async (req, res) => {
           isTeamPossibleToJoin = true
         }
       })
+      // const isPossibleToJoin = await teamService.checkIsPossibleToJoin
       if (isTeamPossibleToJoin) {
         const teamPassword = await teamService.getTeamPassword(teamId)
         if (teamPassword !== null) {
