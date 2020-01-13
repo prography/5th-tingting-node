@@ -3,13 +3,13 @@ const ApplyModel = require('../models/ApplyModel')
 const AcceptModel = require('../models/AcceptModel')
 
 class MatchingService {
-  constructor() {
+  constructor () {
     this.matchingModel = new MatchingModel()
     this.applyModel = new ApplyModel()
     this.acceptModel = new AcceptModel()
   }
 
-  async checkIsMatched(teamId) {
+  async checkIsMatched (teamId) {
     try {
       const isMatched = await this.matchingModel.checkIsMatched(teamId)
       return isMatched
@@ -19,7 +19,7 @@ class MatchingService {
     }
   }
 
-  async deleteMatchingdata(teamId) {
+  async deleteMatchingdata (teamId) {
     try {
       // matching id 찾기 matching deleted 1
       const matchings = await this.matchingModel.findMatchingIdsByTeamId(teamId)
@@ -36,7 +36,7 @@ class MatchingService {
     }
   }
 
-  async findAllMatchingList(userId) {
+  async findAllMatchingList (userId) {
     try {
       const matchingList = ['1']
       // await this.teamList(userId)

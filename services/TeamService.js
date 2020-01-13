@@ -1,15 +1,17 @@
 const TeamModel = require('../models/TeamModel')
 const BelongModel = require('../models/BelongModel')
 const UserModel = require('../models/UserModel')
+const MatchingModel = require('../models/MatchingModel')
 
 class TeamService {
-  constructor() {
+  constructor () {
     this.teamModel = new TeamModel()
     this.belongModel = new BelongModel()
     this.userModel = new UserModel()
+    this.matchingModel = new MatchingModel()
   }
 
-  async saveTeam(data) {
+  async saveTeam (data) {
     try {
       const ownerId = data.owner_id
       const userInfo = await this.userModel.findUserInfo(ownerId)
@@ -22,7 +24,7 @@ class TeamService {
     }
   }
 
-  async checkIsDuplicatedTeamName(name) {
+  async checkIsDuplicatedTeamName (name) {
     try {
       const team = await this.teamModel.findTeamByName(name)
       const isDuplicated = team && true
@@ -33,7 +35,7 @@ class TeamService {
     }
   }
 
-  async findAllTeamListWithoutMe(userId) {
+  async findAllTeamListWithoutMe (userId) {
     try {
       const userInfo = await this.userModel.findUserInfo(userId)
       const gender = userInfo.gender
@@ -59,7 +61,7 @@ class TeamService {
     }
   }
 
-  async getTeamInfo(teamId) {
+  async getTeamInfo (teamId) {
     try {
       const teamInfo = await this.teamModel.findTeamInfo(teamId)
       if (teamInfo) delete teamInfo.password
@@ -70,7 +72,7 @@ class TeamService {
     }
   }
 
-  async getTeamMembersInfo(teamId) {
+  async getTeamMembersInfo (teamId) {
     try {
       const teamMembersInfo = await this.belongModel.findUsersByTeamId(teamId)
       return teamMembersInfo
@@ -80,7 +82,7 @@ class TeamService {
     }
   }
 
-  async checkIsGathered(teamId) {
+  async checkIsGathered (teamId) {
     try {
       const isGathered = await this.teamModel.checkIsGathered(teamId)
       return isGathered
@@ -90,7 +92,7 @@ class TeamService {
     }
   }
 
-  async joinTeamToBelong(teamId, userId) {
+  async joinTeamToBelong (teamId, userId) {
     try {
       await this.belongModel.createTeamMember({ teamId, userId })
       const belongMemberList = await this.belongModel.findTeamMembersWhoBelongto(
@@ -105,7 +107,7 @@ class TeamService {
     }
   }
 
-  async getTeamGender(teamId) {
+  async getTeamGender (teamId) {
     try {
       const teamGender = await this.teamModel.findTeamGender(teamId)
       return teamGender
@@ -114,12 +116,22 @@ class TeamService {
     }
   }
 
-  async getTeamPassword(teamId) {
+  async getTeamPassword (teamId) {
     try {
       const teamPassword = await this.teamModel.findTeamPassword(teamId)
       return teamPassword
     } catch (error) {
       console.log(error)
+    }
+  }
+
+  async getTeamMatchingInfo (teamId) {
+    try {
+      const teamReceivedList = await this.matchingModel.findTeamReceivedList(teamId)
+      return teamReceivedList
+    } catch (error) {
+      console.log(error)
+      throw new Error(error)
     }
   }
 }

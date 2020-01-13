@@ -59,5 +59,22 @@ class MatchingModel {
     })
     return matchings
   }
+
+  async findTeamReceivedList (teamId) {
+    const teams = await Matching.findAll({
+      attributes: [],
+      where: {
+        receive_team_id: teamId,
+        receive_accept_all: 0,
+        is_deleted: 0
+      },
+      include: [{
+        model: Team,
+        as: 'receiveTeam',
+        attributes: ['id', 'name', 'max_member_number'] // 장소 추가
+      }]
+    })
+    return teams
+  }
 }
 module.exports = MatchingModel

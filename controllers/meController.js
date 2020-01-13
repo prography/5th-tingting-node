@@ -48,11 +48,12 @@ const getMyTeamInfo = async (req, res) => {
       const isMember = myTeamIdList.includes(teamId)
       if (isMember) {
         const teamMember = await teamService.getTeamMembersInfo(req.params.id)
+        const teamMatching = await teamService.getTeamMatchingInfo(teamId)
         res.status(200).json({
           data: {
             teamInfo,
-            teamMember
-            // 매칭 정보
+            teamMember,
+            teamMatching
           }
         })
       } else {
