@@ -10,7 +10,7 @@ class MatchingModel {
   async checkIsMatched (teamId) {
     const accepts = await Matching.findAll({
       where: {
-        receive_team_id: teamId,
+        [Op.or]: [{ send_team_id: teamId }, { receive_team_id: teamId }],
         receive_accept_all: 1,
         is_deleted: 0
       }
