@@ -151,30 +151,6 @@ class TeamModel {
     )
   }
 
-  // 팀 합류하기
-  async findTeamMaxMemberNum (id) {
-    const maxMember = await Team.findOne({
-      attributes: ['max_member_number'],
-      where: {
-        id,
-        is_deleted: 0,
-        is_verified: 0
-      }
-    })
-    return maxMember.dataValues.max_member_number
-  }
-
-  async findTeamGender (id) {
-    const genderOfTeam = await Team.findOne({
-      attributes: ['gender'],
-      where: {
-        id,
-        is_deleted: 0
-      }
-    })
-    return genderOfTeam.dataValues.gender
-  }
-
   async findTeamPassword (id) {
     const team = await Team.findOne({
       attributes: ['password'],

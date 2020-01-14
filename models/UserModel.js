@@ -112,18 +112,6 @@ class UserModel {
     })
     return row
   }
-
-  async findUserGender (id) {
-    const genderOfUser = await User.findOne({
-      attributes: ['gender'],
-      where: {
-        id,
-        is_deleted: 0
-      },
-      raw: true
-    })
-    return genderOfUser.gender
-  }
 }
 
 module.exports = UserModel

@@ -93,24 +93,17 @@ class TeamService {
   async joinTeamToBelong (teamId, userId) {
     try {
       await this.belongModel.createTeamMember({ teamId, userId })
-      const belongMemberList = await this.belongModel.findTeamMembersWhoBelongto(
+      const teamMemberIdList = await this.belongModel.findTeamMemberIdListWhoBelongto(
         teamId
       )
-      const maxMemberNumber = await this.teamModel.findTeamMaxMemberNum(teamId)
-      if (belongMemberList.length + 1 === maxMemberNumber) {
+      const teamInfo = await this.teamModel.findTeamInfo(teamId)
+      const maxMemberNumber = teamInfo.max_member_number
+      if (teamMemberIdList.length + 1 === maxMemberNumber) {
         await this.teamModel.updateTeamIsVerified({ teamId, is_verified: 1 })
       }
     } catch (error) {
       console.log(error)
-    }
-  }
-
-  async getTeamGender (teamId) {
-    try {
-      const teamGender = await this.teamModel.findTeamGender(teamId)
-      return teamGender
-    } catch (error) {
-      console.log(error)
+      throw new Error(error)
     }
   }
 
@@ -120,6 +113,7 @@ class TeamService {
       return teamPassword
     } catch (error) {
       console.log(error)
+      throw new Error(error)
     }
   }
 }
