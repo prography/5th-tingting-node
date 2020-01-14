@@ -22,15 +22,18 @@ class AuthService {
         url: 'https://kapi.kakao.com/v2/user/me',
         headers: { Authorization: `Bearer ${accessToken}` }
       })
-      const kakaoId = kakaoUserInfo.data.id ? kakaoUserInfo.data.id : null
-      // 유효하지 않은 토큰인 경우에 다양한 에러메시지를 전달해줌 -> 이걸 리턴해서 errorMessage에 띄워주는게 나으려나?
-      //   {
-      //     "msg": "this access token does not exist", //토큰 길이가 너무 길다 등등
-      //     "code": -401
-      //   }
+      if (kakaoUserInfo.data.id) {
+        return kakaoUserInfo.data.id
+      } else {
+        return null
+        // 유효하지 않은 토큰인 경우에 다양한 에러메시지를 전달해줌 -> 이걸 리턴해서 errorMessage에 띄워주는게 나으려나?
+        //   {
+        //     "msg": "this access token does not exist", //토큰 길이가 너무 길다 등등
+        //     "code": -401
+        //   }
+      }
     } catch (error) {
       console.log(error)
-      throw new Error(error)
     }
   }
 
@@ -41,14 +44,14 @@ class AuthService {
       },
       process.env.JWT_SECRET,
       {
-        expiresIn: 365 * 24 * 60 * 60 * 1000, // 1년
+        expiresIn: 24 * 60 * 60 * 1000, // 1일
         issuer: 'tingting'
       }
     )
     return token
   }
 
-  _makeEmailToken (email) {
+  makeEmailToken (email) {
     const token = jwt.sign(
       {
         email
@@ -65,17 +68,16 @@ class AuthService {
   encryptPassword (password) {
     try {
       const salt = crypto.randomBytes(64).toString('base64')
-      const encryptedPassword = crypto
+      const encryptedpassword = crypto
         .pbkdf2Sync(password, salt, 100000, 64, 'sha512')
         .toString('base64')
       const encryptInfo = {
         salt,
-        encryptedPassword
+        encryptedpassword
       }
       return encryptInfo
     } catch (error) {
       console.log(error)
-      throw new Error(error)
     }
   }
 
@@ -91,30 +93,16 @@ class AuthService {
       }
     } catch (error) {
       console.log(error)
-      throw new Error(error)
     }
   }
 
-  async checkIsAuthenticatedByEmail (email) {
-    try {
-      const auth = await this.authModel.findLastAuthByEmail(email)
-      const isAuthenticated = auth && auth.is_authenticated === 1
-      return isAuthenticated
-    } catch (error) {
-      console.log(error)
-      throw new Error(error)
-    }
-  }
-
-  async checkValidityOfEmail (email) {
+  async findSchoolByEmail (email) {
     try {
       const domain = email.split('@')[1] // 'hanyang.ac.kr'
       const school = await this.availableEmailModel.findSchoolByDomain(domain)
-      const isValid = school && true
-      return isValid
+      return school
     } catch (error) {
       console.log(error)
-      throw new Error(error)
     }
   }
 
@@ -124,8 +112,8 @@ class AuthService {
       host: 'smtp.naver.com',
       port: 587,
       auth: {
-        user: process.env.SMTP_EMAIL,
-        pass: process.env.SMTP_PASSWORD
+        user: process.env.EMAIL_USEREMAIL,
+        pass: process.env.EMAIL_PASSWORD
       }
     }
     const html = fs.readFileSync(
@@ -133,53 +121,61 @@ class AuthService {
       'utf8'
     )
     try {
-      const token = this._makeEmailToken(email)
-      const splitedHtml = html.split('token=')
-      const finalHtml = splitedHtml[0] + 'token=' + token + splitedHtml[1]
+      const token = this.makeEmailToken(email)
+      const splitHtml = html.split('token=')
+      const htmlEnd = splitHtml[0] + 'token=' + token + splitHtml[1]
+      // console.log(token)
       const message = {
-        from: process.env.SMTP_EMAIL,
+        from: process.env.EMAIL_USEREMAIL,
         to: email,
         subject: '[팅팅] 이메일 인증 요청',
-        html: finalHtml
+        html: htmlEnd
       }
       const transporter = nodemailer.createTransport(mailConfig)
       transporter.sendMail(message)
     } catch (error) {
       console.log(error)
-      throw new Error(error)
     }
   }
 
-  async checkIsDuplicatedLocalId (localId) {
+  async checkIsDuplicateLocalIdByLocalId (localId) {
     try {
-      const user = await this.userModel.findUserByLocalId(localId)
-      const isDuplicated = user && true
-      return isDuplicated
+      const existingLocalId = await this.userModel.findLocalIdByLocalId(localId)
+      if (existingLocalId) {
+        return true
+      } else {
+        return false
+      }
     } catch (error) {
       console.log(error)
-      throw new Error(error)
     }
   }
 
-  async checkIsDuplicatedName (name) {
+  async checkIsDuplicateNameByName (name) {
     try {
-      const user = await this.userModel.findUserByName(name)
-      const isDuplicated = user && true
-      return isDuplicated
+      const existingName = await this.userModel.findNameByName(name)
+      if (existingName) {
+        return true
+      } else {
+        return false
+      }
     } catch (error) {
       console.log(error)
-      throw new Error(error)
     }
   }
 
-  async checkIsDuplicatedEmail (email) {
+  async checkIsDuplicateAuthenticatedAddressByEmail (email) {
     try {
-      const user = await this.userModel.findUserByAuthenticatedAddress(email)
-      const isDuplicated = user && true
-      return isDuplicated
+      const ExistingEmail = await this.userModel.findAuthenticatedAddressByEmail(
+        email
+      )
+      if (ExistingEmail) {
+        return true
+      } else {
+        return false
+      }
     } catch (error) {
       console.log(error)
-      throw new Error(error)
     }
   }
 
@@ -188,17 +184,26 @@ class AuthService {
       await this.authModel.saveNameAndAuthenticatedEmail(name, email)
     } catch (error) {
       console.log(error)
-      throw new Error(error)
     }
   }
 
-  async setIsAuthenticatedOfAuth (token) {
+  async saveIsAuthenticated (token) {
     try {
       const { email } = token
-      await this.authModel.setIsAuthenticatedByEmail(email)
+      await this.authModel.saveIsAuthenticated(email)
     } catch (error) {
       console.log(error)
-      throw new Error(error)
+    }
+  }
+
+  async checkIsAuthenticatedByEmail (email) {
+    try {
+      const isAuthenticated = await this.authModel.findIsAuthenticatedByEmail(
+        email
+      )
+      return isAuthenticated
+    } catch (error) {
+      console.log(error)
     }
   }
 }

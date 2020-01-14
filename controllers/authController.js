@@ -4,11 +4,11 @@ const AuthService = require('../services/AuthService')
 // 카카오 로그인 및 회원가입
 const kakaoLogin = async (req, res, next) => {
   const userService = new UserService()
-  const authService = new AuthService()
+  const authServcie = new AuthService()
   try {
     const schema = req.headers.authorization
     const accessToken = schema.replace('Bearer ', '')
-    const kakaoId = await authService.getKakaoId(accessToken)
+    const kakaoId = await authServcie.getKakaoId(accessToken)
     const {
       body: { name, birth, height, thumbnail, authenticated_address, gender }
     } = req
@@ -18,20 +18,13 @@ const kakaoLogin = async (req, res, next) => {
       const exUserId = await userService.findUserIdByKaKaoId(kakaoId)
       if (exUserId) {
         // 이미 로그인된 경우
-        const token = authService.makeToken(exUserId)
+        const token = authServcie.makeToken(exUserId.id)
+        console.log('Issued token: ', token)
         res
           .status(200)
           .json({ data: { message: '로그인에 성공했습니다.', token } })
       } else {
         // 회원가입하는 경우
-        const isAuthenticated = await authService.checkIsAuthenticatedByEmail(
-          authenticated_address
-        )
-        if (!isAuthenticated) {
-          return res
-            .status(401)
-            .json({ errorMessage: '인증된 이메일이 아닙니다.' })
-        }
         await userService.saveUserByKakao({
           kakao_id: kakaoId,
           name,
@@ -42,13 +35,15 @@ const kakaoLogin = async (req, res, next) => {
           gender
         })
         const userId = await userService.findUserIdByKaKaoId(kakaoId)
-        const token = authService.makeToken(userId)
+        const token = authServcie.makeToken(userId.id)
+        console.log('Issued token: ', token)
         res
           .status(201)
           .json({ data: { message: '회원가입에 성공했습니다.', token } })
       }
     }
   } catch (error) {
+    console.log(error)
     res
       .status(500)
       .json({ errorMessage: '로그인 혹은 회원가입에 실패했습니다.' })
@@ -72,8 +67,10 @@ const localLogin = async (req, res) => {
         password
       )
       if (isCorrectPassword) {
+        // Token 만들기
         const token = authService.makeToken(authInfo.id)
-        res.status(200).json({
+        console.log('Issued token: ', token)
+        res.status(202).json({
           data: {
             message: '로그인에 성공했습니다. & 토큰이 발행되었습니다.',
             token
@@ -90,6 +87,7 @@ const localLogin = async (req, res) => {
       })
     }
   } catch (error) {
+    console.log(error)
     res.status(500).json({
       errorMessage: '로그인에 실패했습니다.'
     })
@@ -115,22 +113,12 @@ const localSignup = async (req, res) => {
   try {
     const exUserId = await userService.findUserIdByLocalId(local_id)
     if (exUserId) {
-      return res
-        .status(400)
-        .json({ data: { message: '이미 가입된 사용자입니다.' } })
+      res.status(400).json({ data: { message: '이미 가입된 사용자입니다.' } })
     } else {
       const encryptInfo = await authService.encryptPassword(password)
-      const isAuthenticated = await authService.checkIsAuthenticatedByEmail(
-        authenticated_address
-      )
-      if (!isAuthenticated) {
-        return res
-          .status(401)
-          .json({ errorMessage: '인증된 이메일이 아닙니다.' })
-      }
       await userService.saveUserByLocal({
         local_id,
-        password: encryptInfo.encryptedPassword,
+        password: encryptInfo.encryptedpassword,
         salt: encryptInfo.salt,
         name,
         birth,
@@ -140,7 +128,7 @@ const localSignup = async (req, res) => {
         gender
       })
       const userId = await userService.findUserIdByLocalId(local_id)
-      const token = authService.makeToken(userId)
+      const token = authService.makeToken(userId.id)
       res
         .status(201)
         .json({ data: { message: '회원가입에 성공했습니다.', token } })
@@ -157,10 +145,10 @@ const checkDuplicateLocalId = async (req, res) => {
   const {
     query: { local_id }
   } = req
-  const isDuplicatedLocalId = await authService.checkIsDuplicatedLocalId(
+  const isDuplicateLocalId = await authService.checkIsDuplicateLocalIdByLocalId(
     local_id
   )
-  if (isDuplicatedLocalId) {
+  if (isDuplicateLocalId) {
     res.status(400).json({ errorMessage: '이미 존재하는 아이디입니다.' })
   } else {
     res.status(200).json({ data: { message: '사용 가능한 아이디입니다.' } })
@@ -173,34 +161,32 @@ const checkDuplicateName = async (req, res) => {
   const {
     query: { name }
   } = req
-  const isDuplicatedName = await authService.checkIsDuplicatedName(name)
-  if (isDuplicatedName) {
+  const isDuplicateName = await authService.checkIsDuplicateNameByName(name)
+  if (isDuplicateName) {
     res.status(400).json({ errorMessage: '이미 존재하는 이름입니다.' })
   } else {
     res.status(200).json({ data: { message: '사용 가능한 이름입니다.' } })
   }
 }
 
-// 유효한 이메일인지 체크하고, 확인 메일 전송.
-const checkValidityAndSendEmail = async (req, res) => {
+// 가능한 이메일인지 확인
+const checkValidEmail = async (req, res) => {
   const authService = new AuthService()
   const {
     body: { email, name }
   } = req
-  try {
-    const isValid = await authService.checkValidityOfEmail(email)
-    const isDuplicated = await authService.checkIsDuplicatedEmail(email)
-    if (isDuplicated) {
-      res.status(400).json({ errorMessage: '이미 가입된 이메일입니다.' })
-    } else if (!isValid) {
-      res.status(401).json({ errorMessage: '가입이 불가능한 이메일입니다.' })
-    } else {
-      await authService.saveNameAndAuthenticatedEmail(name, email)
-      await authService.sendEmail(email)
-      res.status(201).json({ data: { message: '인증메일을 전송했습니다.' } })
-    }
-  } catch (err) {
-    res.status(500).json({ errMessage: '서버 에러' })
+  const isValidSchool = await authService.findSchoolByEmail(email)
+  const isDuplicateEmail = await authService.checkIsDuplicateAuthenticatedAddressByEmail(
+    email
+  )
+  if (isDuplicateEmail) {
+    res.status(400).json({ errorMessage: '이미 가입된 이메일입니다.' })
+  } else if (!isValidSchool) {
+    res.status(401).json({ errorMessage: '가입이 불가능한 이메일입니다.' })
+  } else {
+    await authService.saveNameAndAuthenticatedEmail(name, email)
+    await authService.sendEmail(email)
+    res.status(201).json({ data: { message: '인증메일을 전송했습니다.' } })
   }
 }
 
@@ -209,10 +195,11 @@ const confirmEmailToken = async (req, res) => {
   const authServcie = new AuthService()
   const { token } = req
   try {
-    await authServcie.setIsAuthenticatedOfAuth(token)
+    await authServcie.saveIsAuthenticated(token)
     res.status(201).json({ data: { message: '이메일 인증이 완료되었습니다.' } })
   } catch (error) {
-    res.status(500).json({ errorMessage: '서버 에러' })
+    console.log(error)
+    res.status(500).json({ errorMessage: '이메일 인증에 실패하였습니다.' })
   }
 }
 
@@ -227,10 +214,10 @@ const checkEmailAuth = async (req, res) => {
     if (isAuthenticated) {
       res.status(200).json({ data: { message: '인증이 완료된 이메일입니다.' } })
     } else {
-      res.status(401).json({ errorMessage: '인증이 필요한 이메일입니다.' })
+      res.status(401).json({ data: { message: '인증이 필요한 이메일입니다.' } })
     }
   } catch (error) {
-    res.status(500).json({ errorMessage: '서버 에러!' })
+    console.log(error)
   }
 }
 
@@ -240,7 +227,7 @@ module.exports = {
   localSignup,
   checkDuplicateLocalId,
   checkDuplicateName,
-  checkValidityAndSendEmail,
+  checkValidEmail,
   confirmEmailToken,
   checkEmailAuth
 }

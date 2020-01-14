@@ -2,12 +2,27 @@ import Belong from './entities/Belong.entity'
 import User from './entities/User.entity'
 import Team from './entities/Team.entity'
 
-User.belongsToMany(Team, { through: 'Belongs' })
-Team.belongsToMany(User, { through: 'Belongs' })
+Team.belongsToMany(User, { through: Belong })
+User.belongsToMany(Team, { through: Belong })
+
+const Sequelize = require('sequelize')
+const Op = Sequelize.Op
 
 class BelongModel {
+  // 전체 팀 리스트 찾기(user is not belong)
+  // async findTeamListIsNotBelong(userId) {
+  //   const teamsNotBelong = await Belong.findAll({
+  //     attributes: ['team_id'],
+  //     where: {
+  //       user_id: { [Op.ne]: userId }
+  //     }
+  //   })
+  //   const teamList = teamsNotBelong.map(team => team.dataValues.team_id)
+  //   return teamList
+  // }
+
   // 개별 팀 팀원 리스트
-  async findTeamMemberIdListWhoBelongto (team_id) {
+  async findTeamMemberWhoBelongto(team_id) {
     const belongs = await Belong.findAll({
       attributes: ['user_id'],
       where: {
@@ -15,51 +30,24 @@ class BelongModel {
       },
       raw: true
     })
-    const teamMemberIdList = belongs.map(member => member.user_id)
-    return teamMemberIdList
+    const teamMemberList = belongs.map(member => member.user_id)
+    return teamMemberList
   }
 
-  // 내가 팀원으로 속한 팀 찾기
-  async findTeamsByUserId (userId) {
-    const user = await User.findOne({
+  // 나의 개별 팀 리스트 찾기
+  async findMyTeamList(user_id) {
+    const teams = await Belong.findAll({
+      attributes: ['team_id'],
       where: {
-        id: userId
+        user_id
       },
-      include: [
-        {
-          model: Team,
-          attributes: ['id', 'name', 'max_member_number']
-        }
-      ]
+      raw: true
     })
-    const teams = user.teams
-    for (const idx in teams) {
-      delete teams[idx].dataValues.Belongs
-    }
-    return teams
+    const teamList = teams.map(belong => belong.team_id)
+    return teamList
   }
 
-  // 팀멤버 찾기
-  async findUsersByTeamId (teamId) {
-    const team = await Team.findOne({
-      where: {
-        id: teamId
-      },
-      include: [
-        {
-          model: User,
-          attributes: ['id', 'name', 'thumbnail']
-        }
-      ]
-    })
-    const users = team.users
-    for (const idx in users) {
-      delete users[idx].dataValues.Belongs
-    }
-    return users
-  }
-
-  async deleteBelongByTeamId (team_id) {
+  async deleteBelongByTeamId(team_id) {
     await Belong.destroy({
       where: {
         team_id
@@ -67,7 +55,7 @@ class BelongModel {
     })
   }
 
-  async deleteBelongByUserIdAndTeamId (data) {
+  async deleteBelongByUserIdAndTeamId(data) {
     await Belong.destroy({
       where: {
         team_id: data.teamId,
@@ -76,7 +64,7 @@ class BelongModel {
     })
   }
 
-  async createTeamMember (data) {
+  async createTeamMember(data) {
     await Belong.create({
       team_id: data.teamId,
       user_id: data.userId

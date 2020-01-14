@@ -8,7 +8,7 @@ class AuthModel {
     })
   }
 
-  async setIsAuthenticatedByEmail (email) {
+  async saveIsAuthenticated (email) {
     await Auth.update(
       {
         is_authenticated: 1
@@ -21,16 +21,14 @@ class AuthModel {
     )
   }
 
-  async findLastAuthByEmail (email) {
-    const rows = await Auth.findAll({
-      limit: 1,
+  async findIsAuthenticatedByEmail (email) {
+    const isAuthenticated = await Auth.findOne({
       where: {
         authenticated_email: email
       },
-      order: [['created_at', 'DESC']],
-      raw: true
+      attributes: ['is_authenticated']
     })
-    return rows[0]
+    return isAuthenticated
   }
 }
 

@@ -1,13 +1,26 @@
 const TeamService = require('../services/TeamService')
 const UserService = require('../services/UserService')
+const MeService = require('../services/MeService')
 
 // 전체 팀 리스트
 const getTeamList = async (req, res) => {
   try {
     // 팀ID 리스트 생성
-    const userId = req.token.id
     const teamService = new TeamService()
-    const teamList = await teamService.findAllTeamListWithoutMe(userId)
+    const meService = new MeService()
+    const {
+      token: { id }
+    } = req
+    const gender = await meService.findMyGender(id)
+    const teamList = await teamService.findAllTeamListWithoutMe(id, gender)
+    for (let idx in teamList) {
+      const teamId = teamList[idx].id
+      teamList[idx].teamMembersInfo = await teamService.findAllTeamMembersInfo(
+        teamId
+      )
+    }
+
+    // 응답 처리
     if (teamList.length === 0) {
       res.status(404).json({ errorMessage: '팀이 존재하지 않습니다.' })
     } else {
@@ -16,6 +29,7 @@ const getTeamList = async (req, res) => {
       })
     }
   } catch (error) {
+    console.log(error)
     res.status(500).json({ errorMessage: '팀 리스트 불러오기 실패' })
   }
 }
@@ -23,16 +37,21 @@ const getTeamList = async (req, res) => {
 // 팀 생성
 const createTeam = async (req, res) => {
   const teamService = new TeamService()
-  const userId = req.token.id
+  const meService = new MeService()
+  const {
+    token: { id }
+  } = req
   const {
     body: { name, chat_address, intro, password, max_member_number }
   } = req
   try {
+    const gender = await meService.findMyGender(id)
     await teamService.saveTeam({
       name,
       chat_address,
-      owner_id: userId,
+      owner_id: id,
       intro,
+      gender,
       password,
       max_member_number
     })
@@ -53,8 +72,11 @@ const checkDuplicateTeamName = async (req, res) => {
   const {
     query: { name }
   } = req
-  const isDuplicated = await teamService.checkIsDuplicatedTeamName(name)
-  if (isDuplicated) {
+  console.log(name)
+  const isDuplicateTeamName = await teamService.checkIsDuplicateTeamNameByName(
+    name
+  )
+  if (isDuplicateTeamName) {
     res.status(400).json({ errorMessage: '이미 존재하는 팀명입니다.' })
   } else {
     res.status(200).json({ data: { message: '사용 가능한 팀명입니다.' } })
@@ -65,12 +87,11 @@ const checkDuplicateTeamName = async (req, res) => {
 const getTeamInfo = async (req, res) => {
   const teamService = new TeamService()
   try {
-    const teamId = req.params.id
-    const teamInfo = await teamService.getTeamInfo(teamId)
+    const teamInfo = await teamService.findTeamInfo(req.params.id)
+    const teamMember = await teamService.findAllTeamMembersInfo(req.params.id)
     if (teamInfo === null) {
       res.status(404).json({ errorMessage: '팀이 존재하지 않습니다.' })
     } else {
-      const teamMember = await teamService.getTeamMembersInfo(teamId)
       res.status(200).json({
         data: {
           teamInfo,
@@ -80,62 +101,48 @@ const getTeamInfo = async (req, res) => {
       })
     }
   } catch (error) {
+    console.log(error)
     res.status(500).json({ errorMessage: '해당 팀 정보 불러오기 실패' })
   }
 }
 
 const joinTeam = async (req, res) => {
   const teamService = new TeamService()
+  const userService = new UserService()
   const teamId = parseInt(req.params.id)
-  const userId = req.token.id
-  const {
-    body: { password }
-  } = req
+  const userId = 5 // req.token.id
   try {
     const teamList = await teamService.findAllTeamListWithoutMe(userId)
     if (teamList.length !== 0) {
-      // 유저가 합류 가능한 팀인지 확인 (Gender 같은 팀 / User가 현재 속하지 않은 팀 / 존재하는 팀)
-      let isTeamPossibleToJoin = false
-      teamList.some(team => {
-        if (team.id === teamId) {
-          isTeamPossibleToJoin = true
-        }
-      })
-      // const isPossibleToJoin = await teamService.checkIsPossibleToJoin
-      if (isTeamPossibleToJoin) {
-        const teamPassword = await teamService.getTeamPassword(teamId)
-        if (teamPassword !== null) {
-          // 비밀번호가 있는 경우
-          if (teamPassword === password) {
-            await teamService.joinTeamToBelong(teamId, userId)
-            res.status(201).json({
-              data: { message: '합류에 성공했습니다.' }
-            })
-          } else {
-            res.status(403).json({
-              errorMessage: '비밀번호가 틀렸습니다.'
-            })
-          }
-        } else {
-          // 비밀번호가 없는 경우
-          await teamService.joinTeamToBelong(teamId, userId)
-          res.status(201).json({
-            data: { message: '합류에 성공했습니다.' }
+      const isNotUsersTeam = teamList.includes(teamId)
+      if (isNotUsersTeam) {
+        const userGender = await userService.getUserGender(userId)
+        const teamGender = await teamService.getTeamGender(teamId)
+        if (userGender === teamGender) {
+          await teamService.joinTeamToBelong({ teamId, userId })
+          res.status(204).json({
+            data: { message: '합류 성공' }
           })
+        } else {
+          res
+            .status(403)
+            .json({ errorMessage: '성별이 달라 합류할 수 없습니다.' })
         }
       } else {
         res.status(403).json({
-          errorMessage: '합류가 불가능한 팀입니다.'
+          errorMessage:
+            '합류하고자 하는 팀에 속해있거나, 팀이 존재하지 않습니다.'
         })
       }
     } else {
-      res.status(404).json({
-        errorMessage: '합류할 수 있는 팀이 존재하지 않습니다.'
-      })
+      res
+        .status(404)
+        .json({ errorMessage: '합류할 수 있는 팀이 존재하지 않습니다.' })
     }
+    // 팀 id 존재 유무 따로 빼기 //team API 전체 적용
   } catch (error) {
     console.log(error)
-    res.status(500).json({ errorMessage: '합류에 실패하였습니다.' })
+    res.status(500).json({ errorMessage: '팀 합류 실패' })
   }
 }
 

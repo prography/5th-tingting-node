@@ -12,8 +12,8 @@ const router = express.Router()
 
 router.get('/', verifyToken, getTeamList)
 router.post('/', verifyToken, createTeam)
-router.get('/duplicate-name', verifyToken, checkDuplicateTeamName)
-router.get('/:id', verifyToken, getTeamInfo)
-router.post('/:id/join', verifyToken, joinTeam)
+router.get('/duplicate-name', checkDuplicateTeamName)
+router.get('/:id', getTeamInfo)
+router.post('/:id/join', joinTeam)
 
 module.exports = router
