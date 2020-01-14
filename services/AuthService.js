@@ -22,18 +22,15 @@ class AuthService {
         url: 'https://kapi.kakao.com/v2/user/me',
         headers: { Authorization: `Bearer ${accessToken}` }
       })
-      if (kakaoUserInfo.data.id) {
-        return kakaoUserInfo.data.id
-      } else {
-        return null
-        // 유효하지 않은 토큰인 경우에 다양한 에러메시지를 전달해줌 -> 이걸 리턴해서 errorMessage에 띄워주는게 나으려나?
-        //   {
-        //     "msg": "this access token does not exist", //토큰 길이가 너무 길다 등등
-        //     "code": -401
-        //   }
-      }
+      const kakaoId = kakaoUserInfo.data.id ? kakaoUserInfo.data.id : null
+      // 유효하지 않은 토큰인 경우에 다양한 에러메시지를 전달해줌 -> 이걸 리턴해서 errorMessage에 띄워주는게 나으려나?
+      //   {
+      //     "msg": "this access token does not exist", //토큰 길이가 너무 길다 등등
+      //     "code": -401
+      //   }
     } catch (error) {
       console.log(error)
+      throw new Error(error)
     }
   }
 
@@ -44,14 +41,14 @@ class AuthService {
       },
       process.env.JWT_SECRET,
       {
-        expiresIn: 24 * 60 * 60 * 1000, // 1일
+        expiresIn: 365 * 24 * 60 * 60 * 1000, // 1년
         issuer: 'tingting'
       }
     )
     return token
   }
 
-  makeEmailToken (email) {
+  _makeEmailToken (email) {
     const token = jwt.sign(
       {
         email
@@ -68,16 +65,17 @@ class AuthService {
   encryptPassword (password) {
     try {
       const salt = crypto.randomBytes(64).toString('base64')
-      const encryptedpassword = crypto
+      const encryptedPassword = crypto
         .pbkdf2Sync(password, salt, 100000, 64, 'sha512')
         .toString('base64')
       const encryptInfo = {
         salt,
-        encryptedpassword
+        encryptedPassword
       }
       return encryptInfo
     } catch (error) {
       console.log(error)
+      throw new Error(error)
     }
   }
 
@@ -93,16 +91,30 @@ class AuthService {
       }
     } catch (error) {
       console.log(error)
+      throw new Error(error)
     }
   }
 
-  async findSchoolByEmail (email) {
+  async checkIsAuthenticatedByEmail (email) {
+    try {
+      const auth = await this.authModel.findLastAuthByEmail(email)
+      const isAuthenticated = auth && auth.is_authenticated === 1
+      return isAuthenticated
+    } catch (error) {
+      console.log(error)
+      throw new Error(error)
+    }
+  }
+
+  async checkValidityOfEmail (email) {
     try {
       const domain = email.split('@')[1] // 'hanyang.ac.kr'
       const school = await this.availableEmailModel.findSchoolByDomain(domain)
-      return school
+      const isValid = school && true
+      return isValid
     } catch (error) {
       console.log(error)
+      throw new Error(error)
     }
   }
 
@@ -112,8 +124,8 @@ class AuthService {
       host: 'smtp.naver.com',
       port: 587,
       auth: {
-        user: process.env.EMAIL_USEREMAIL,
-        pass: process.env.EMAIL_PASSWORD
+        user: process.env.SMTP_EMAIL,
+        pass: process.env.SMTP_PASSWORD
       }
     }
     const html = fs.readFileSync(
@@ -121,61 +133,53 @@ class AuthService {
       'utf8'
     )
     try {
-      const token = this.makeEmailToken(email)
-      const splitHtml = html.split('token=')
-      const htmlEnd = splitHtml[0] + 'token=' + token + splitHtml[1]
-      // console.log(token)
+      const token = this._makeEmailToken(email)
+      const splitedHtml = html.split('token=')
+      const finalHtml = splitedHtml[0] + 'token=' + token + splitedHtml[1]
       const message = {
-        from: process.env.EMAIL_USEREMAIL,
+        from: process.env.SMTP_EMAIL,
         to: email,
         subject: '[팅팅] 이메일 인증 요청',
-        html: htmlEnd
+        html: finalHtml
       }
       const transporter = nodemailer.createTransport(mailConfig)
       transporter.sendMail(message)
     } catch (error) {
       console.log(error)
+      throw new Error(error)
     }
   }
 
-  async checkIsDuplicateLocalIdByLocalId (localId) {
+  async checkIsDuplicatedLocalId (localId) {
     try {
-      const existingLocalId = await this.userModel.findLocalIdByLocalId(localId)
-      if (existingLocalId) {
-        return true
-      } else {
-        return false
-      }
+      const user = await this.userModel.findUserByLocalId(localId)
+      const isDuplicated = user && true
+      return isDuplicated
     } catch (error) {
       console.log(error)
+      throw new Error(error)
     }
   }
 
-  async checkIsDuplicateNameByName (name) {
+  async checkIsDuplicatedName (name) {
     try {
-      const existingName = await this.userModel.findNameByName(name)
-      if (existingName) {
-        return true
-      } else {
-        return false
-      }
+      const user = await this.userModel.findUserByName(name)
+      const isDuplicated = user && true
+      return isDuplicated
     } catch (error) {
       console.log(error)
+      throw new Error(error)
     }
   }
 
-  async checkIsDuplicateAuthenticatedAddressByEmail (email) {
+  async checkIsDuplicatedEmail (email) {
     try {
-      const ExistingEmail = await this.userModel.findAuthenticatedAddressByEmail(
-        email
-      )
-      if (ExistingEmail) {
-        return true
-      } else {
-        return false
-      }
+      const user = await this.userModel.findUserByAuthenticatedAddress(email)
+      const isDuplicated = user && true
+      return isDuplicated
     } catch (error) {
       console.log(error)
+      throw new Error(error)
     }
   }
 
@@ -184,26 +188,17 @@ class AuthService {
       await this.authModel.saveNameAndAuthenticatedEmail(name, email)
     } catch (error) {
       console.log(error)
+      throw new Error(error)
     }
   }
 
-  async saveIsAuthenticated (token) {
+  async setIsAuthenticatedOfAuth (token) {
     try {
       const { email } = token
-      await this.authModel.saveIsAuthenticated(email)
+      await this.authModel.setIsAuthenticatedByEmail(email)
     } catch (error) {
       console.log(error)
-    }
-  }
-
-  async checkIsAuthenticatedByEmail (email) {
-    try {
-      const isAuthenticated = await this.authModel.findIsAuthenticatedByEmail(
-        email
-      )
-      return isAuthenticated
-    } catch (error) {
-      console.log(error)
+      throw new Error(error)
     }
   }
 }

@@ -1,34 +1,47 @@
 const UserModel = require('../models/UserModel')
+const AvailableEmailModel = require('../models/AvailableEmailModel')
 
 class UserService {
   constructor () {
     this.userModel = new UserModel()
+    this.availableEmailModel = new AvailableEmailModel()
   }
 
-  async findUserInfoById (userId) {
+  async getUserInfo (userId) {
     try {
-      const userInfo = await this.userModel.findUserInfoById(userId)
+      const userInfo = await this.userModel.findUserInfo(userId)
+      const email = userInfo.authenticated_address
+      const domain = email.split('@')[1]
+      const school = await this.availableEmailModel.findSchoolByDomain(domain)
+      const schoolName = school.name
+      userInfo.schoolName = schoolName
+      delete userInfo.authenticated_address
       return userInfo
     } catch (error) {
       console.log(error)
+      throw new Error(error)
     }
   }
 
   async findUserIdByKaKaoId (kakaoId) {
     try {
-      const userId = await this.userModel.findUserIdByKaKaoId(kakaoId)
+      const user = await this.userModel.findUserByKaKaoId(kakaoId)
+      const userId = user ? user.id : null
       return userId
     } catch (error) {
       console.log(error)
+      throw new Error(error)
     }
   }
 
   async findUserIdByLocalId (localId) {
     try {
-      const userId = await this.userModel.findUserIdByLocalId(localId)
+      const user = await this.userModel.findUserByLocalId(localId)
+      const userId = user ? user.id : null
       return userId
     } catch (error) {
       console.log(error)
+      throw new Error(error)
     }
   }
 
@@ -38,6 +51,7 @@ class UserService {
       return authInfo
     } catch (error) {
       console.log(error)
+      throw new Error(error)
     }
   }
 
@@ -46,6 +60,7 @@ class UserService {
       await this.userModel.saveUserByKakao(data)
     } catch (error) {
       console.log(error)
+      throw new Error(error)
     }
   }
 
@@ -54,24 +69,7 @@ class UserService {
       await this.userModel.saveUserByLocal(data)
     } catch (error) {
       console.log(error)
-    }
-  }
-
-  async findUserIdByName (name) {
-    try {
-      const user = await this.userModel.findUserIdByName(name)
-      return user.id
-    } catch (error) {
-      console.log(error)
-    }
-  }
-
-  async getUserGender (userId) {
-    try {
-      const userGender = await this.userModel.findUserGender(userId)
-      return userGender
-    } catch (error) {
-      console.log(error)
+      throw new Error(error)
     }
   }
 }

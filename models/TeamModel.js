@@ -1,17 +1,15 @@
 import Team from './entities/Team.entity'
-import User from './entities/User.entity'
-import Belong from './entities/Belong.entity'
 const Sequelize = require('sequelize')
 const Op = Sequelize.Op
 
 class TeamModel {
   // 전체 팀 리스트 찾기(User is not owner)
-  async findTeamListIsNotOwner(userId, userGender) {
+  async findTeamsWithNoneOwner (userId, gender) {
     const teams = await Team.findAll({
-      attributes: ['id', 'owner_id', 'name', 'password', 'max_member_number'],
+      attributes: ['id', 'owner_id', 'name', 'max_member_number'],
       where: {
         owner_id: { [Op.ne]: userId },
-        gender: userGender,
+        gender,
         is_verified: 0,
         is_deleted: 0
       },
@@ -20,8 +18,22 @@ class TeamModel {
     return teams
   }
 
+  // 아직 매칭되지 않은 이성 팀 리스트 찾기
+  async findVerifiedTeamsWithOppositeGender (gender) {
+    const teams = await Team.findAll({
+      attributes: ['id', 'owner_id', 'name', 'max_member_number'],
+      where: {
+        gender: !gender,
+        is_verified: 1,
+        is_deleted: 0
+      },
+      raw: true
+    })
+    return teams
+  }
+
   // 팀 생성
-  async saveTeam(data) {
+  async saveTeam (data) {
     await Team.create({
       name: data.name,
       chat_address: data.chat_address,
@@ -34,18 +46,21 @@ class TeamModel {
   }
 
   // 팀 이름 존재하는지 찾기
-  async findNameByName(name) {
-    const teamName = await Team.findOne({
-      where: { name },
+  async findTeamByName (name) {
+    const team = await Team.findOne({
+      where: {
+        name,
+        is_deleted: 0
+      },
       attributes: ['name'],
       raw: true
     })
-    return teamName
+    return team
   }
 
   // 개별 팀 정보 보기
-  async findUserTeamInfo(id) {
-    const teamData = await Team.findOne({
+  async findTeamInfo (id) {
+    const teamInfo = await Team.findOne({
       attributes: [
         'name',
         'chat_address',
@@ -59,35 +74,16 @@ class TeamModel {
       where: {
         id,
         is_deleted: 0
-      }
-    })
-    return teamData
-  }
-
-  // 개별 팀 간략 정보 보기
-  async findUserTeamShortInfo(id) {
-    const teamData = await Team.findOne({
-      attributes: [
-        'id',
-        'name',
-        'owner_id',
-        'gender',
-        'password',
-        'max_member_number'
-      ],
-      where: {
-        id,
-        is_deleted: 0
       },
       raw: true
     })
-    return teamData
+    return teamInfo
   }
 
-  // 나의 개별 팀 리스트 찾기
-  async findMyTeamList(userId) {
+  // 해당 유저가 주인으로 있는 팀 목록 찾기
+  async findTeamsOwnedByUserId (userId) {
     const teams = await Team.findAll({
-      attributes: ['id', 'name'],
+      attributes: ['id', 'name', 'max_member_number'],
       where: {
         owner_id: userId,
         is_deleted: 0
@@ -98,40 +94,34 @@ class TeamModel {
   }
 
   // 나의 팀 정보 수정
-  async updateUserTeam(data) {
+  async updateTeam (data) {
     await Team.update(
       {
         name: data.name,
         chat_address: data.chat_address,
-        owner_id: data.owner_id,
         intro: data.intro,
         password: data.password,
         max_member_number: data.max_member_number
       },
-      { where: { id: data.id } }
+      { where: { id: data.teamId } }
     )
   }
 
   // 팀 떠나기
-
   // is gatherd? = is_verified ?  1:0
-  async checkIsGathered(id) {
+  async checkIsGathered (id) {
     const gathered = await Team.findOne({
-      attributes: ['is_verified'],
       where: {
         id,
-        is_verified: 1,
-        is_deleted: 0
+        is_verified: 1
       }
     })
-    // const isGather = JSON.stringify(gathered)
-    const isGathered = gathered !== null
+    const isGathered = gathered.length !== null
     return isGathered
   }
 
-  async checkIsOnwer(data) {
+  async checkIsOnwer (data) {
     const owner = await Team.findOne({
-      attributes: ['owner_id'],
       where: {
         id: data.teamId,
         owner_id: data.userId,
@@ -142,56 +132,35 @@ class TeamModel {
     return isOwner
   }
 
-  async deleteTeam(id) {
+  async deleteTeam (id) {
     await Team.update(
       {
-        is_deleted: 1
+        is_deleted: 1,
+        deleted_at: new Date()
       },
       { where: { id } }
     )
   }
 
-  async updateTeamIsVerified(data) {
+  async updateTeamIsVerified (data) {
     await Team.update(
       {
-        is_verified: data.is_verified
+        is_verified: data.isVerified
       },
       { where: { id: data.teamId } }
     )
   }
 
-  // 팀 합류하기
-  async findTeamMaxMemberNum(id) {
-    const maxMember = await Team.findOne({
-      attributes: ['max_member_number'],
-      where: {
-        id,
-        is_deleted: 0,
-        is_verified: 0
-      }
-    })
-    return maxMember.dataValues.max_member_number
-  }
-
-  async findTeamGender(id) {
-    const genderOfTeam = await Team.findOne({
-      attributes: ['gender'],
-      where: {
-        id,
-        is_deleted: 0
-      }
-    })
-    return genderOfTeam.dataValues.gender
-  }
-
-  async findName(id) {
+  async findTeamPassword (id) {
     const team = await Team.findOne({
-      attributes: ['name'],
+      attributes: ['password'],
       where: {
         id
-      }
+      },
+      raw: true
     })
-    return team.name
+    return team.password
   }
 }
+
 module.exports = TeamModel
