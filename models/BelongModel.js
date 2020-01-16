@@ -2,8 +2,8 @@ import Belong from './entities/Belong.entity'
 import User from './entities/User.entity'
 import Team from './entities/Team.entity'
 
-User.belongsToMany(Team, { through: 'Belongs' })
-Team.belongsToMany(User, { through: 'Belongs' })
+User.belongsToMany(Team, { through: 'belongs' })
+Team.belongsToMany(User, { through: 'belongs' })
 
 class BelongModel {
   // 개별 팀 팀원 리스트
