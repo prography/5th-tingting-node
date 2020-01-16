@@ -185,7 +185,7 @@ const checkDuplicateName = async (req, res) => {
 const checkValidityAndSendEmail = async (req, res) => {
   const authService = new AuthService()
   const {
-    body: { email, name }
+    body: { email }
   } = req
   try {
     const isValid = await authService.checkValidityOfEmail(email)
@@ -195,7 +195,7 @@ const checkValidityAndSendEmail = async (req, res) => {
     } else if (!isValid) {
       res.status(401).json({ errorMessage: '가입이 불가능한 이메일입니다.' })
     } else {
-      await authService.saveNameAndAuthenticatedEmail(name, email)
+      await authService.saveAuthenticatedEmail(email)
       await authService.sendEmail(email)
       res.status(201).json({ data: { message: '인증메일을 전송했습니다.' } })
     }
