@@ -19,17 +19,32 @@ class MatchingModel {
     return isMatched
   }
 
-  async checkIsHeartSent (myTeamId, teamId) {
+  async checkIsHeartSent (sendTeamId, receiveTeamId) {
     const matching = await Matching.findOne({
       where: {
-        send_team_id: myTeamId,
-        receive_team_id: teamId,
+        send_team_id: sendTeamId,
+        receive_team_id: receiveTeamId,
         is_deleted: 0
       },
       raw: true
     })
     const isHeartSent = matching !== null
     return isHeartSent
+  }
+
+  async checkIsValidityOfHeart (sendTeamId, receiveTeamId) {
+    const matching = await Matching.findOne({
+      where: {
+        send_team_id: sendTeamId,
+        receive_team_id: receiveTeamId,
+        is_deleted: 0,
+        send_accept_all: 1,
+        receive_accept_all: 0
+      },
+      raw: true
+    })
+    const isValidityOfHeart = matching !== null
+    return isValidityOfHeart
   }
 
   async findMatchedTeams () {
@@ -53,6 +68,19 @@ class MatchingModel {
       raw: true
     })
     return matchings
+  }
+
+  async findMessage (sendTeamId, receiveTeamId) {
+    const message = await Matching.findOne({
+      attributes: ['message'],
+      where: {
+        send_team_id: sendTeamId,
+        receive_team_id: receiveTeamId,
+        is_deleted: 0
+      },
+      raw: true
+    })
+    return message.message
   }
 
   async deleteMatchingByTeamId (teamId) {
@@ -130,6 +158,5 @@ class MatchingModel {
       { where: { id: matchingId } }
     )
   }
-
 }
 module.exports = MatchingModel
