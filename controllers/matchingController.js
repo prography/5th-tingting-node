@@ -74,7 +74,7 @@ const getAppliedTeamInfo = async (req, res) => {
     )
     if (teamInfo === null) {
       res.status(404).json({
-        errorMessage: '매칭 팀이 존재하지 않습니다.'
+        errorMessage: '신청 팀이 존재하지 않습니다.'
       })
     } else {
       if (!isValid) {
