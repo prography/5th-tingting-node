@@ -97,5 +97,23 @@ class MatchingModel {
     return matching
   }
 
+  async setMatchingSendAcceptAll (matchingId) {
+    await Matching.update(
+      {
+        send_accept_all: 1
+      },
+      { where: { id: matchingId } }
+    )
+  }
+
+  async setMatchingReceiveAcceptAll (matchingId) {
+    await Matching.update(
+      {
+        receive_accept_all: 1
+      },
+      { where: { id: matchingId } }
+    )
+  }
+
 }
 module.exports = MatchingModel

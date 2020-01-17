@@ -86,7 +86,7 @@ const sendHeart = async (req, res) => {
     if (!myTeamIdList.includes(sendTeamId)) {
       return res.status(403).json({ errorMessage: '팀에 속해있지 않습니다!' })
     }
-    await matchingService.saveNewApply(userId, matchingId)
+    await matchingService.saveNewApply(userId, matchingId, sendTeamId)
     res.sendStatus(201)
   } catch (error) {
     console.log(error)
@@ -116,7 +116,7 @@ const receiveHeart = async (req, res) => {
     if (!myTeamIdList.includes(receiveTeamId)) {
       return res.status(403).json({ errorMessage: '팀에 속해있지 않습니다!' })
     }
-    await matchingService.saveNewAccept(userId, matchingId)
+    await matchingService.saveNewAccept(userId, matchingId, receiveTeamId)
     res.sendStatus(201)
   } catch (error) {
     console.log(error)

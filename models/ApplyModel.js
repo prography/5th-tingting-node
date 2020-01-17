@@ -34,6 +34,17 @@ class ApplyModel {
       matching_id: matchingId
     })
   }
+
+  async findApplysByMatchingId (matchingId) {
+    const rows = await Apply.findAll({
+      where: {
+        matching_id: matchingId
+      },
+      raw: true
+    })
+    return rows
+  }
+
 }
 
 module.exports = ApplyModel
