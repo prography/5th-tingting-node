@@ -1,9 +1,8 @@
 import Auth from './entities/Auth.entity'
 
 class AuthModel {
-  async saveNameAndAuthenticatedEmail (name, email) {
+  async saveAuthenticatedEmail (email) {
     await Auth.create({
-      user_name: name,
       authenticated_email: email
     })
   }

@@ -1,5 +1,4 @@
 const TeamService = require('../services/TeamService')
-const UserService = require('../services/UserService')
 
 // 전체 팀 리스트
 const getTeamList = async (req, res) => {

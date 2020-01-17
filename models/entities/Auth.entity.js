@@ -10,12 +10,9 @@ const Auth = db.define(
       primaryKey: true,
       autoIncrement: true
     },
-    user_name: {
-      type: Sequelize.STRING(24),
-      allowNull: false
-    },
     authenticated_email: {
-      type: Sequelize.STRING(45)
+      type: Sequelize.STRING(45),
+      allowNull: false
     },
     is_authenticated: {
       type: Sequelize.INTEGER(1)
