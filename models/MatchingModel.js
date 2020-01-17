@@ -173,7 +173,7 @@ class MatchingModel {
       },
       include: [{
         model: Team,
-        as: 'receiveTeam',
+        as: 'sendTeam',
         attributes: ['id', 'name', 'max_member_number'] // 장소 추가
       }]
     })
