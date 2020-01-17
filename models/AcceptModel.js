@@ -24,5 +24,16 @@ class AcceptModel {
       matching_id: matchingId
     })
   }
+
+  async findAcceptsByMatchingId (matchingId) {
+    const rows = await Accept.findAll({
+      where: {
+        matching_id: matchingId
+      },
+      raw: true
+    })
+    return rows
+  }
 }
+
 module.exports = AcceptModel
