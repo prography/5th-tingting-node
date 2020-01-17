@@ -71,6 +71,17 @@ class MatchingService {
       return matchingList
     } catch (error) {
       console.log(error)
+      throw new Error(error)
+    }
+  }
+
+  async saveNewMatching (userId, sendTeamId, receiveTeamId, message) {
+    try {
+      const matchingId = await this.matchingModel.saveMatching(sendTeamId, receiveTeamId, message)
+      await this.applyModel.saveApply(userId, matchingId)
+    } catch (error) {
+      console.log(error)
+      throw new Error(error)
     }
   }
 }

@@ -18,7 +18,7 @@ router.post('/local/signup', localSignup)
 router.get('/duplicate-id', checkDuplicateLocalId)
 router.get('/duplicate-name', checkDuplicateName)
 router.post('/school', checkValidityAndSendEmail)
-router.post('/school/confirm', verifyEmailToken, confirmEmailToken)
+router.get('/school/confirm', verifyEmailToken, confirmEmailToken)
 router.get('/school/complete', checkEmailAuth)
 
 module.exports = router

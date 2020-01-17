@@ -16,5 +16,13 @@ class ApplyModel {
     })
     return rows
   }
+
+  async saveApply (userId, matchingId) {
+    await Apply.create({
+      sender_id: userId,
+      matching_id: matchingId
+    })
+  }
+
 }
 module.exports = ApplyModel

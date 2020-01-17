@@ -76,5 +76,15 @@ class MatchingModel {
     })
     return matchings
   }
+
+  async saveMatching (sendTeamId, receiveTeamId, message) {
+    const result = await Matching.create({
+      send_team_id: sendTeamId,
+      receive_team_id: receiveTeamId,
+      message
+    })
+    return result.id
+  }
+
 }
 module.exports = MatchingModel
