@@ -86,5 +86,16 @@ class MatchingModel {
     return result.id
   }
 
+  async findMatching (matchingId) {
+    const matching = await Matching.findOne({
+      where: {
+        is_deleted: 0,
+        id: matchingId
+      },
+      raw: true
+    })
+    return matching
+  }
+
 }
 module.exports = MatchingModel
