@@ -19,6 +19,19 @@ class MatchingModel {
     return isMatched
   }
 
+  async checkIsHeartSent (myTeamId, teamId) {
+    const matching = await Matching.findOne({
+      where: {
+        send_team_id: myTeamId,
+        receive_team_id: teamId,
+        is_deleted: 0
+      },
+      raw: true
+    })
+    const isHeartSent = matching !== null
+    return isHeartSent
+  }
+
   async findMatchedTeams () {
     const teams = await Matching.findAll({
       attributes: ['send_team_id', 'receive_team_id'],
@@ -64,15 +77,18 @@ class MatchingModel {
         send_accept_all: 0,
         is_deleted: 0
       },
-      include: [{
-        model: Team,
-        as: 'sendTeam',
-        attributes: ['id', 'name']
-      }, {
-        model: Team,
-        as: 'receiveTeam',
-        attributes: ['id', 'name']
-      }]
+      include: [
+        {
+          model: Team,
+          as: 'sendTeam',
+          attributes: ['id', 'name']
+        },
+        {
+          model: Team,
+          as: 'receiveTeam',
+          attributes: ['id', 'name']
+        }
+      ]
     })
     return matchings
   }

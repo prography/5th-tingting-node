@@ -70,9 +70,15 @@ class TeamService {
     }
   }
 
-  async getTeamMembersInfo (teamId) {
+  async getTeamMembersInfo (teamId, ownerId) {
     try {
       const teamMembersInfo = await this.belongModel.findUsersByTeamId(teamId)
+      const ownerInfo = await this.userModel.findUserInfo(ownerId)
+      teamMembersInfo.push({
+        id: ownerId,
+        name: ownerInfo.name,
+        thumbnail: ownerInfo.thumbnail
+      })
       return teamMembersInfo
     } catch (error) {
       console.log(error)

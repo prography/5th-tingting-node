@@ -10,7 +10,7 @@ const {
 const router = express.Router()
 
 router.get('/teams', verifyToken, getMatchingList)
-// router.get('/teams/:id', getMatchingTeamInfo)
+router.get('/teams/:id', verifyToken, getMatchingTeamInfo)
 router.post('/send-heart/first', verifyToken, sendHeartForFirst)
 router.post('/send-heart', verifyToken, sendHeart)
 router.post('/receive-heart', verifyToken, receiveHeart)
