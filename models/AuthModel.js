@@ -1,13 +1,13 @@
 import Auth from './entities/Auth.entity'
 
 class AuthModel {
-  async saveAuthenticatedEmail(email) {
+  async saveAuthenticatedEmail (email) {
     await Auth.create({
       authenticated_email: email
     })
   }
 
-  async setIsAuthenticatedByEmail(email) {
+  async setIsAuthenticatedByEmail (email) {
     await Auth.update(
       {
         is_authenticated: 1
@@ -20,7 +20,7 @@ class AuthModel {
     )
   }
 
-  async findLastAuthByEmail(email) {
+  async findLastAuthByEmail (email) {
     const rows = await Auth.findAll({
       limit: 1,
       where: {

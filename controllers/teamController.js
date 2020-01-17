@@ -1,5 +1,4 @@
 const TeamService = require('../services/TeamService')
-const UserService = require('../services/UserService')
 
 // 전체 팀 리스트
 const getTeamList = async (req, res) => {
@@ -86,7 +85,6 @@ const getTeamInfo = async (req, res) => {
 
 const joinTeam = async (req, res) => {
   const teamService = new TeamService()
-  const userService = new UserService()
   const teamId = parseInt(req.params.id)
   const userId = req.token.id
   const {
