@@ -44,7 +44,6 @@ class ApplyModel {
     })
     return rows
   }
-
 }
 
 module.exports = ApplyModel
