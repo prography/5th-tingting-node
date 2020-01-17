@@ -63,6 +63,11 @@ const localLogin = async (req, res) => {
     body: { local_id, password }
   } = req
   try {
+    if (!local_id || !password) {
+      return res.status(400).json({
+        errorMessage: '아이디와 비밀번호를 입력해주세요!'
+      })
+    }
     const authInfo = await userService.findAuthInfoByLocalId(local_id)
     if (authInfo) {
       // local_id, password 일치 확인
