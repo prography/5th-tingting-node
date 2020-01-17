@@ -38,7 +38,10 @@ const getMatchingTeamInfo = async (req, res) => {
           errorMessage: '해당 팀은 팀인원 미달로 매칭 자격이 상실되었습니다.'
         })
       } else {
-        const teamMembers = await teamService.getTeamMembersInfo(teamId)
+        const teamMembers = await teamService.getTeamMembersInfo(
+          teamId,
+          teamInfo.owner_id
+        )
         const isHeartSent = await matchingService.checkIsHeartSent(
           myTeamId,
           teamId
