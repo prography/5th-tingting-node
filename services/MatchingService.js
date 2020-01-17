@@ -106,6 +106,18 @@ class MatchingService {
       throw new Error(error)
     }
   }
+
+  async saveNewAccept (userId, matchingId) {
+    try {
+      const prevAccept = await this.acceptModel.findAcceptByUserIdAndMatchingId(userId, matchingId)
+      if (!prevAccept) {
+        await this.acceptModel.saveAccept(userId, matchingId)
+      }
+    } catch (error) {
+      console.log(error)
+      throw new Error(error)
+    }
+  }
 }
 
 module.exports = MatchingService
