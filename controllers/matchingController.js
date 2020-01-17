@@ -43,7 +43,32 @@ const getMatchingTeamInfo = (req, res) => {}
 }
 */
 
+const sendHeartForFirst = async (req, res) => {
+  try {
+    const userId = req.token.id
+    const { sendTeamId, receiveTeamId, message } = req.body
+    const meService = new MeService()
+    const matchingService = new MatchingService()
+    const myTeamList = await meService.getMyTeamList(userId)
+    const myTeamIdList = myTeamList.map(team => team.id)
+    if (!myTeamIdList.includes(sendTeamId)) {
+      return res.status(403).json({ errorMessage: '팀에 속해있지 않습니다!' })
+    }
+    const matchingList = await matchingService.findAllMatchingList(userId)
+    const availableTeamIdList = matchingList.map(matchingTeam => matchingTeam.id)
+    if (!availableTeamIdList.includes(receiveTeamId)) {
+      return res.status(400).json({ errorMessage: '매칭을 신청할 수 있는 팀이 아닙니다!' })
+    }
+    await matchingService.saveNewMatching(userId, sendTeamId, receiveTeamId, message)
+    res.sendStatus(201)
+  } catch (error) {
+    console.log(error)
+    res.status(500).json({ errorMessage: '매칭 신청하기 실패' })
+  }
+}
+
 module.exports = {
   getMatchingList,
-  getMatchingTeamInfo
+  getMatchingTeamInfo,
+  sendHeartForFirst
 }
