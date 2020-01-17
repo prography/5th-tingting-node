@@ -84,5 +84,28 @@ class MatchingService {
       throw new Error(error)
     }
   }
+
+  async getMatchingInfo (matchingId) {
+    try {
+      const matchingInfo = await this.matchingModel.findMatching(matchingId)
+      return matchingInfo
+    } catch (error) {
+      console.log(error)
+      throw new Error(error)
+    }
+  }
+
+  async saveNewApply (userId, matchingId) {
+    try {
+      const prevApply = await this.applyModel.findApplyByUserIdAndMatchingId(userId, matchingId)
+      if (!prevApply) {
+        await this.applyModel.saveApply(userId, matchingId)
+      }
+    } catch (error) {
+      console.log(error)
+      throw new Error(error)
+    }
+  }
 }
+
 module.exports = MatchingService
