@@ -113,10 +113,11 @@ class TeamModel {
     const gathered = await Team.findOne({
       where: {
         id,
-        is_verified: 1
+        is_verified: 1,
+        is_deleted: 0
       }
     })
-    const isGathered = gathered.length !== null
+    const isGathered = gathered !== null
     return isGathered
   }
 

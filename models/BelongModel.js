@@ -54,7 +54,7 @@ class BelongModel {
     })
     const users = team.users
     for (const idx in users) {
-      delete users[idx].dataValues.Belongs
+      delete users[idx].dataValues.belongs
     }
     return users
   }
