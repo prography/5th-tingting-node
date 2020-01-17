@@ -69,11 +69,11 @@ const getTeamInfo = async (req, res) => {
     if (teamInfo === null) {
       res.status(404).json({ errorMessage: '팀이 존재하지 않습니다.' })
     } else {
-      const teamMember = await teamService.getTeamMembersInfo(teamId)
+      const teamMembers = await teamService.getTeamMembersInfo(teamId)
       res.status(200).json({
         data: {
           teamInfo,
-          teamMember
+          teamMembers
           // 매칭 정보
         }
       })
