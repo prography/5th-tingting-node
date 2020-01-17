@@ -25,13 +25,26 @@ class MatchingService {
     }
   }
 
-  async checkIsHeartSent (myTeamId, teamId) {
+  async checkIsHeartSent (sendTeamId, receiveTeamId) {
     try {
       const isHeartSent = await this.matchingModel.checkIsHeartSent(
-        myTeamId,
-        teamId
+        sendTeamId,
+        receiveTeamId
       )
       return isHeartSent
+    } catch (error) {
+      console.log(error)
+      throw new Error(error)
+    }
+  }
+
+  async checkIsValidityOfHeart (sendTeamId, receiveTeamId) {
+    try {
+      const isValdityOfHeart = await this.matchingModel.checkIsValidityOfHeart(
+        sendTeamId,
+        receiveTeamId
+      )
+      return isValdityOfHeart
     } catch (error) {
       console.log(error)
       throw new Error(error)
@@ -90,7 +103,11 @@ class MatchingService {
 
   async saveNewMatching (userId, sendTeamId, receiveTeamId, message) {
     try {
-      const matchingId = await this.matchingModel.saveMatching(sendTeamId, receiveTeamId, message)
+      const matchingId = await this.matchingModel.saveMatching(
+        sendTeamId,
+        receiveTeamId,
+        message
+      )
       await this.applyModel.saveApply(userId, matchingId)
     } catch (error) {
       console.log(error)
@@ -108,9 +125,25 @@ class MatchingService {
     }
   }
 
+  async getMessage (sendTeamId, receiveTeamId) {
+    try {
+      const message = await this.matchingModel.findMessage(
+        sendTeamId,
+        receiveTeamId
+      )
+      return message
+    } catch (error) {
+      console.log(error)
+      throw new Error(error)
+    }
+  }
+
   async saveNewApply (userId, matchingId, sendTeamId) {
     try {
-      const prevApply = await this.applyModel.findApplyByUserIdAndMatchingId(userId, matchingId)
+      const prevApply = await this.applyModel.findApplyByUserIdAndMatchingId(
+        userId,
+        matchingId
+      )
       if (!prevApply) {
         await this.applyModel.saveApply(userId, matchingId)
         const applys = await this.applyModel.findApplysByMatchingId(matchingId)
@@ -127,10 +160,15 @@ class MatchingService {
 
   async saveNewAccept (userId, matchingId, receiveTeamId) {
     try {
-      const prevAccept = await this.acceptModel.findAcceptByUserIdAndMatchingId(userId, matchingId)
+      const prevAccept = await this.acceptModel.findAcceptByUserIdAndMatchingId(
+        userId,
+        matchingId
+      )
       if (!prevAccept) {
         await this.acceptModel.saveAccept(userId, matchingId)
-        const accepts = await this.acceptModel.findAcceptsByMatchingId(matchingId)
+        const accepts = await this.acceptModel.findAcceptsByMatchingId(
+          matchingId
+        )
         const teamInfo = await this.teamModel.findTeamInfo(receiveTeamId)
         if (accepts.length === teamInfo.max_member_number + 1) {
           await this.matchingModel.setMatchingReceiveAcceptAll(matchingId)
