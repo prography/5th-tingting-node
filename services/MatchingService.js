@@ -84,7 +84,63 @@ class MatchingService {
       return matchingList
     } catch (error) {
       console.log(error)
+      throw new Error(error)
+    }
+  }
+
+  async saveNewMatching (userId, sendTeamId, receiveTeamId, message) {
+    try {
+      const matchingId = await this.matchingModel.saveMatching(sendTeamId, receiveTeamId, message)
+      await this.applyModel.saveApply(userId, matchingId)
+    } catch (error) {
+      console.log(error)
+      throw new Error(error)
+    }
+  }
+
+  async getMatchingInfo (matchingId) {
+    try {
+      const matchingInfo = await this.matchingModel.findMatching(matchingId)
+      return matchingInfo
+    } catch (error) {
+      console.log(error)
+      throw new Error(error)
+    }
+  }
+
+  async saveNewApply (userId, matchingId, sendTeamId) {
+    try {
+      const prevApply = await this.applyModel.findApplyByUserIdAndMatchingId(userId, matchingId)
+      if (!prevApply) {
+        await this.applyModel.saveApply(userId, matchingId)
+        const applys = await this.applyModel.findApplysByMatchingId(matchingId)
+        const teamInfo = await this.teamModel.findTeamInfo(sendTeamId)
+        if (applys.length === teamInfo.max_member_number + 1) {
+          await this.matchingModel.setMatchingSendAcceptAll(matchingId)
+        }
+      }
+    } catch (error) {
+      console.log(error)
+      throw new Error(error)
+    }
+  }
+
+  async saveNewAccept (userId, matchingId, receiveTeamId) {
+    try {
+      const prevAccept = await this.acceptModel.findAcceptByUserIdAndMatchingId(userId, matchingId)
+      if (!prevAccept) {
+        await this.acceptModel.saveAccept(userId, matchingId)
+        const accepts = await this.acceptModel.findAcceptsByMatchingId(matchingId)
+        const teamInfo = await this.teamModel.findTeamInfo(receiveTeamId)
+        if (accepts.length === teamInfo.max_member_number + 1) {
+          await this.matchingModel.setMatchingReceiveAcceptAll(matchingId)
+        }
+      }
+    } catch (error) {
+      console.log(error)
+      throw new Error(error)
     }
   }
 }
+
 module.exports = MatchingService

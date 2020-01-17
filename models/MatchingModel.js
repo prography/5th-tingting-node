@@ -92,5 +92,44 @@ class MatchingModel {
     })
     return matchings
   }
+
+  async saveMatching (sendTeamId, receiveTeamId, message) {
+    const result = await Matching.create({
+      send_team_id: sendTeamId,
+      receive_team_id: receiveTeamId,
+      message
+    })
+    return result.id
+  }
+
+  async findMatching (matchingId) {
+    const matching = await Matching.findOne({
+      where: {
+        is_deleted: 0,
+        id: matchingId
+      },
+      raw: true
+    })
+    return matching
+  }
+
+  async setMatchingSendAcceptAll (matchingId) {
+    await Matching.update(
+      {
+        send_accept_all: 1
+      },
+      { where: { id: matchingId } }
+    )
+  }
+
+  async setMatchingReceiveAcceptAll (matchingId) {
+    await Matching.update(
+      {
+        receive_accept_all: 1
+      },
+      { where: { id: matchingId } }
+    )
+  }
+
 }
 module.exports = MatchingModel

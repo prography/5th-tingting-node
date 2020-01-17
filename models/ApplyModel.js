@@ -16,5 +16,35 @@ class ApplyModel {
     })
     return rows
   }
+
+  async findApplyByUserIdAndMatchingId (userId, matchingId) {
+    const apply = await Apply.findOne({
+      where: {
+        sender_id: userId,
+        matching_id: matchingId
+      },
+      raw: true
+    })
+    return apply
+  }
+
+  async saveApply (userId, matchingId) {
+    await Apply.create({
+      sender_id: userId,
+      matching_id: matchingId
+    })
+  }
+
+  async findApplysByMatchingId (matchingId) {
+    const rows = await Apply.findAll({
+      where: {
+        matching_id: matchingId
+      },
+      raw: true
+    })
+    return rows
+  }
+
 }
+
 module.exports = ApplyModel

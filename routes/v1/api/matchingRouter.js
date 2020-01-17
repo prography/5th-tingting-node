@@ -2,14 +2,17 @@ const express = require('express')
 const { verifyToken } = require('../../../middlewares/auth')
 const {
   getMatchingList,
-  getMatchingTeamInfo
+  getMatchingTeamInfo,
+  sendHeartForFirst,
+  sendHeart,
+  receiveHeart
 } = require('../../../controllers/matchingController')
 const router = express.Router()
 
 router.get('/teams', verifyToken, getMatchingList)
 router.get('/teams/:id', verifyToken, getMatchingTeamInfo)
-// router.post('/send-heart/first')
-// router.post('/send-heart')
-// router.post('/receive-heart')
+router.post('/send-heart/first', verifyToken, sendHeartForFirst)
+router.post('/send-heart', verifyToken, sendHeart)
+router.post('/receive-heart', verifyToken, receiveHeart)
 
 module.exports = router

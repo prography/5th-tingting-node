@@ -18,6 +18,9 @@ const Matching = db.define(
       type: Sequelize.INTEGER,
       allowNull: false
     },
+    message: {
+      type: Sequelize.STRING(200)
+    },
     send_accept_all: {
       type: Sequelize.INTEGER(1),
       allowNull: false,

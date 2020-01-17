@@ -6,5 +6,34 @@ class AcceptModel {
       where: { matching_id }
     })
   }
+
+  async findAcceptByUserIdAndMatchingId (userId, matchingId) {
+    const accept = await Accept.findOne({
+      where: {
+        accepter_id: userId,
+        matching_id: matchingId
+      },
+      raw: true
+    })
+    return accept
+  }
+
+  async saveAccept (userId, matchingId) {
+    await Accept.create({
+      accepter_id: userId,
+      matching_id: matchingId
+    })
+  }
+
+  async findAcceptsByMatchingId (matchingId) {
+    const rows = await Accept.findAll({
+      where: {
+        matching_id: matchingId
+      },
+      raw: true
+    })
+    return rows
+  }
 }
+
 module.exports = AcceptModel
