@@ -25,6 +25,19 @@ class MatchingService {
     }
   }
 
+  async checkIsHeartSent (myTeamId, teamId) {
+    try {
+      const isHeartSent = await this.matchingModel.checkIsHeartSent(
+        myTeamId,
+        teamId
+      )
+      return isHeartSent
+    } catch (error) {
+      console.log(error)
+      throw new Error(error)
+    }
+  }
+
   async deleteMatchingdata (teamId) {
     try {
       // matching id 찾기 matching deleted 1
