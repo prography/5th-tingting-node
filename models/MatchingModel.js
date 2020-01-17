@@ -7,7 +7,7 @@ Matching.belongsTo(Team, { foreignKey: 'send_team_id', as: 'sendTeam' })
 Matching.belongsTo(Team, { foreignKey: 'receive_team_id', as: 'receiveTeam' })
 
 class MatchingModel {
-  async checkIsMatched(teamId) {
+  async checkIsMatched (teamId) {
     const accepts = await Matching.findAll({
       where: {
         receive_team_id: teamId,
@@ -19,7 +19,7 @@ class MatchingModel {
     return isMatched
   }
 
-  async checkIsHeartSent(myTeamId, teamId) {
+  async checkIsHeartSent (myTeamId, teamId) {
     const matching = await Matching.findOne({
       where: {
         send_team_id: myTeamId,
@@ -32,7 +32,7 @@ class MatchingModel {
     return isHeartSent
   }
 
-  async findMatchedTeams() {
+  async findMatchedTeams () {
     const teams = await Matching.findAll({
       attributes: ['send_team_id', 'receive_team_id'],
       where: {
@@ -44,7 +44,7 @@ class MatchingModel {
     return teams
   }
 
-  async findMatchingsIdsByTeamId(teamId) {
+  async findMatchingsIdsByTeamId (teamId) {
     const matchings = await Matching.findAll({
       where: {
         [Op.or]: [{ send_team_id: teamId }, { receive_team_id: teamId }],
@@ -55,7 +55,7 @@ class MatchingModel {
     return matchings
   }
 
-  async deleteMatchingByTeamId(teamId) {
+  async deleteMatchingByTeamId (teamId) {
     await Matching.update(
       {
         is_deleted: 1,
@@ -69,7 +69,7 @@ class MatchingModel {
     )
   }
 
-  async findMatchingInfosByTeamId(teamId, userId) {
+  async findMatchingInfosByTeamId (teamId, userId) {
     const matchings = await Matching.findAll({
       attributes: ['id'],
       where: {
