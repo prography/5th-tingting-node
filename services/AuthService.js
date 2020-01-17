@@ -28,6 +28,7 @@ class AuthService {
       //     "msg": "this access token does not exist", //토큰 길이가 너무 길다 등등
       //     "code": -401
       //   }
+      return kakaoId
     } catch (error) {
       console.log(error)
       throw new Error(error)
@@ -183,9 +184,9 @@ class AuthService {
     }
   }
 
-  async saveNameAndAuthenticatedEmail (name, email) {
+  async saveAuthenticatedEmail (email) {
     try {
-      await this.authModel.saveNameAndAuthenticatedEmail(name, email)
+      await this.authModel.saveAuthenticatedEmail(email)
     } catch (error) {
       console.log(error)
       throw new Error(error)
