@@ -37,7 +37,6 @@ class MeService {
       const teamsWithMember = await this.belongModel.findTeamsByUserId(userId)
       const teamList = teamsWithOwner.concat(teamsWithMember)
       for (const team of teamList) {
-        console.log(team.id)
         const teamId = team.id
         let matchingsSent = await this.matchingModel.findMatchingsSentByTeamId(
           teamId
@@ -50,7 +49,6 @@ class MeService {
           if (isApplied) delete matchingsSent[idx]
         }
         team.matchingsSent = matchingsSent
-        console.log(team.matchingsSent)
       }
       return teamList
     } catch (error) {
