@@ -7,7 +7,7 @@ Matching.belongsTo(Team, { foreignKey: 'send_team_id', as: 'sendTeam' })
 Matching.belongsTo(Team, { foreignKey: 'receive_team_id', as: 'receiveTeam' })
 
 class MatchingModel {
-  async checkIsMatched(teamId) {
+  async checkIsMatched (teamId) {
     const accepts = await Matching.findAll({
       where: {
         receive_team_id: teamId,
@@ -19,7 +19,7 @@ class MatchingModel {
     return isMatched
   }
 
-  async checkIsHeartSent(myTeamId, teamId) {
+  async checkIsHeartSent (myTeamId, teamId) {
     const matching = await Matching.findOne({
       where: {
         send_team_id: myTeamId,
@@ -32,7 +32,7 @@ class MatchingModel {
     return isHeartSent
   }
 
-  async findMatchedTeams() {
+  async findMatchedTeams () {
     const teams = await Matching.findAll({
       attributes: ['send_team_id', 'receive_team_id'],
       where: {
@@ -44,7 +44,7 @@ class MatchingModel {
     return teams
   }
 
-  async findMatchingsIdsByTeamId(teamId) {
+  async findMatchingsIdsByTeamId (teamId) {
     const matchings = await Matching.findAll({
       where: {
         [Op.or]: [{ send_team_id: teamId }, { receive_team_id: teamId }],
@@ -55,7 +55,7 @@ class MatchingModel {
     return matchings
   }
 
-  async deleteMatchingByTeamId(teamId) {
+  async deleteMatchingByTeamId (teamId) {
     await Matching.update(
       {
         is_deleted: 1,
@@ -69,7 +69,7 @@ class MatchingModel {
     )
   }
 
-  async findMatchingsSentByTeamId(teamId) {
+  async findMatchingsSentByTeamId (teamId) {
     const matchings = await Matching.findAll({
       attributes: ['id', 'created_at'],
       where: {
@@ -80,6 +80,11 @@ class MatchingModel {
       include: [
         {
           model: Team,
+          as: 'sendTeam',
+          attributes: ['id', 'name']
+        },
+        {
+          model: Team,
           as: 'receiveTeam',
           attributes: ['id', 'name']
         }
@@ -88,7 +93,7 @@ class MatchingModel {
     return matchings
   }
 
-  async saveMatching(sendTeamId, receiveTeamId, message) {
+  async saveMatching (sendTeamId, receiveTeamId, message) {
     const result = await Matching.create({
       send_team_id: sendTeamId,
       receive_team_id: receiveTeamId,
@@ -97,7 +102,7 @@ class MatchingModel {
     return result.id
   }
 
-  async findMatching(matchingId) {
+  async findMatching (matchingId) {
     const matching = await Matching.findOne({
       where: {
         is_deleted: 0,
@@ -108,7 +113,7 @@ class MatchingModel {
     return matching
   }
 
-  async setMatchingSendAcceptAll(matchingId) {
+  async setMatchingSendAcceptAll (matchingId) {
     await Matching.update(
       {
         send_accept_all: 1
@@ -117,7 +122,7 @@ class MatchingModel {
     )
   }
 
-  async setMatchingReceiveAcceptAll(matchingId) {
+  async setMatchingReceiveAcceptAll (matchingId) {
     await Matching.update(
       {
         receive_accept_all: 1

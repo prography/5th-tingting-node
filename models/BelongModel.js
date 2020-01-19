@@ -7,7 +7,7 @@ Team.belongsToMany(User, { through: 'belongs' })
 
 class BelongModel {
   // 개별 팀 팀원 리스트
-  async findTeamMemberIdListWhoBelongto(team_id) {
+  async findTeamMemberIdListWhoBelongto (team_id) {
     const belongs = await Belong.findAll({
       attributes: ['user_id'],
       where: {
@@ -20,7 +20,7 @@ class BelongModel {
   }
 
   // 내가 팀원으로 속한 팀 찾기
-  async findTeamsByUserId(userId) {
+  async findTeamsByUserId (userId) {
     const user = await User.findOne({
       where: {
         id: userId
@@ -41,7 +41,7 @@ class BelongModel {
   }
 
   // 팀멤버 찾기
-  async findUsersByTeamId(teamId) {
+  async findUsersByTeamId (teamId) {
     const team = await Team.findOne({
       where: {
         id: teamId
@@ -60,7 +60,7 @@ class BelongModel {
     return users
   }
 
-  async deleteBelongByTeamId(team_id) {
+  async deleteBelongByTeamId (team_id) {
     await Belong.destroy({
       where: {
         team_id
@@ -68,7 +68,7 @@ class BelongModel {
     })
   }
 
-  async deleteBelongByUserIdAndTeamId(data) {
+  async deleteBelongByUserIdAndTeamId (data) {
     await Belong.destroy({
       where: {
         team_id: data.teamId,
@@ -77,7 +77,7 @@ class BelongModel {
     })
   }
 
-  async createTeamMember(data) {
+  async createTeamMember (data) {
     await Belong.create({
       team_id: data.teamId,
       user_id: data.userId
