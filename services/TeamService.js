@@ -128,6 +128,17 @@ class TeamService {
   async getTeamMatchingInfo (teamId) {
     try {
       const teamReceivedList = await this.matchingModel.findTeamReceivedList(teamId)
+     
+      for (const team of teamReceivedList) {
+        const membersInfo = await this.belongModel.findUsersByTeamId(team.send_team_id)
+        const ownerInfo = await this.userModel.findUserInfo(team.sendTeam.owner_id)
+        membersInfo.push({
+          id: team.sendTeam.owner_id,
+          name: ownerInfo.name,
+          thumbnail: ownerInfo.thumbnail
+        })
+        team.membersInfo = membersInfo
+      }
       return teamReceivedList
     } catch (error) {
       console.log(error)
