@@ -76,12 +76,7 @@ const getTeamInfo = async (req, res) => {
       res.status(200).json({
         data: {
           teamInfo,
-<<<<<<< HEAD
           teamMembers
-          // 매칭 정보
-=======
-          teamMember
->>>>>>> team Receive MatchingList
         }
       })
     }

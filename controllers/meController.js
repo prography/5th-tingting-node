@@ -47,20 +47,16 @@ const getMyTeamInfo = async (req, res) => {
       const myTeamIdList = myTeamList.map(team => team.id)
       const isMember = myTeamIdList.includes(teamId)
       if (isMember) {
-<<<<<<< HEAD
-        const teamMember = await teamService.getTeamMembersInfo(
+        const teamMembers = await teamService.getTeamMembersInfo(
           req.params.id,
           teamInfo.owner_id
         )
-=======
-        const teamMember = await teamService.getTeamMembersInfo(req.params.id)
-        const teamMatching = await teamService.getTeamMatchingInfo(teamId)
->>>>>>> team Receive MatchingList
+        const teamMatchings = await teamService.getTeamMatchingInfo(teamId)
         res.status(200).json({
           data: {
             teamInfo,
-            teamMember,
-            teamMatching
+            teamMembers,
+            teamMatchings
           }
         })
       } else {
@@ -98,7 +94,7 @@ const updateMyTeam = async (req, res) => {
       res.status(201).json({
         data: {
           message: '내 팀 수정에 성공했습니다.'
-        } // 수정 팀 data
+        }
       })
     } else {
       res
