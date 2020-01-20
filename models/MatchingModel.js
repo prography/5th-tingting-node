@@ -159,18 +159,19 @@ class MatchingModel {
     )
   }
 
-  async findTeamReceivedList (teamId) {
+  async findReceivedMatchingList (teamId) {
     const teams = await Matching.findAll({
       attributes: ['id'],
       where: {
         receive_team_id: teamId,
+        send_accept_all: 1,
         receive_accept_all: 0,
         is_deleted: 0
       },
       include: [{
         model: Team,
         as: 'sendTeam',
-        attributes: ['id', 'name', 'owner_id', 'max_member_number'] // 장소 추가
+        attributes: ['id', 'name', 'place', 'owner_id', 'max_member_number']
       }]
     })
     return teams

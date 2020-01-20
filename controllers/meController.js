@@ -76,7 +76,7 @@ const updateMyTeam = async (req, res) => {
   const teamId = parseInt(req.params.id)
   const userId = req.token.id
   const {
-    body: { name, chat_address, intro, password, max_member_number }
+    body: { name, chat_address, intro, place, password, max_member_number }
   } = req
   try {
     const myTeamList = await myService.getMyTeamList(userId)
@@ -88,6 +88,7 @@ const updateMyTeam = async (req, res) => {
         name,
         chat_address,
         intro,
+        place,
         password,
         max_member_number
       })
