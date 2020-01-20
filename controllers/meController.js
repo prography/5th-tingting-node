@@ -8,10 +8,12 @@ const getMyInfo = async (req, res) => {
   try {
     const myInfo = await myService.getMyInfo(userId)
     const myTeamList = await myService.getMyTeamList(userId)
+    const sentMatchings = await myService.getMySentMatchings(userId, myTeamList)
     res.status(200).json({
       data: {
         myInfo,
-        myTeamList
+        myTeamList,
+        sentMatchings
       }
     })
   } catch (error) {
@@ -47,15 +49,14 @@ const getMyTeamInfo = async (req, res) => {
       const myTeamIdList = myTeamList.map(team => team.id)
       const isMember = myTeamIdList.includes(teamId)
       if (isMember) {
-        const teamMember = await teamService.getTeamMembersInfo(
+        const teamMembers = await teamService.getTeamMembersInfo(
           req.params.id,
           teamInfo.owner_id
         )
         res.status(200).json({
           data: {
             teamInfo,
-            teamMember
-            // 매칭 정보
+            teamMembers
           }
         })
       } else {

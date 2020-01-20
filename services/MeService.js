@@ -36,17 +36,29 @@ class MeService {
       const teamsWithOwner = await this.teamModel.findTeamsOwnedByUserId(userId)
       const teamsWithMember = await this.belongModel.findTeamsByUserId(userId)
       const teamList = teamsWithOwner.concat(teamsWithMember)
+      return teamList
+    } catch (error) {
+      console.log(error)
+      throw new Error(error)
+    }
+  }
+
+  async getMySentMatchings (userId, teamList) {
+    try {
+      let sentMatchings = []
       for (const team of teamList) {
         const teamId = team.id
-        let matchingInfos = await this.matchingModel.findMatchingInfosByTeamId(teamId)
+        const matchings = await this.matchingModel.findMatchingsSentByTeamId(
+          teamId
+        )
         const myApplys = await this.applyModel.findMyApplys(userId)
         const appliedMatchingIds = myApplys.map(apply => apply.matching_id)
-        matchingInfos = matchingInfos.filter(matchingInfo => {
-          return !(appliedMatchingIds.includes(matchingInfo.dataValues.id))
+        matchings = matchings.filter(matching => {
+          return !(appliedMatchingIds.includes(matching.dataValues.id))
         })
-        team.matchingInfos = matchingInfos
+        sentMatchings = sentMatchings.concat(matchings)
       }
-      return teamList
+      return sentMatchings
     } catch (error) {
       console.log(error)
       throw new Error(error)
