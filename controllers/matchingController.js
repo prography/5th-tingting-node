@@ -20,7 +20,7 @@ const getMatchingList = async (req, res) => {
 const getMatchingTeamInfo = async (req, res) => {
   try {
     const {
-      body: { myTeamId }
+      query: { myTeamId }
     } = req
     const teamId = req.params.id
     const teamService = new TeamService()
@@ -62,7 +62,7 @@ const getMatchingTeamInfo = async (req, res) => {
 const getAppliedTeamInfo = async (req, res) => {
   try {
     const {
-      body: { myTeamId }
+      query: { myTeamId }
     } = req
     const teamId = req.params.id
     const teamService = new TeamService()
