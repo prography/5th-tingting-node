@@ -2,7 +2,6 @@ const MeService = require('../services/MeService')
 const MatchingService = require('../services/MatchingService')
 const TeamService = require('../services/TeamService')
 
-// 전체 매칭 리스트
 const getMatchingList = async (req, res) => {
   try {
     const userId = req.token.id
@@ -70,12 +69,21 @@ const sendHeartForFirst = async (req, res) => {
       return res.status(403).json({ errorMessage: '팀에 속해있지 않습니다!' })
     }
     const matchingList = await matchingService.findAllMatchingList(userId)
-    const availableTeamIdList = matchingList.map(matchingTeam => matchingTeam.id)
+    const availableTeamIdList = matchingList.map(
+      matchingTeam => matchingTeam.id
+    )
     if (!availableTeamIdList.includes(receiveTeamId)) {
-      return res.status(400).json({ errorMessage: '매칭을 신청할 수 있는 팀이 아닙니다!' })
+      return res
+        .status(400)
+        .json({ errorMessage: '매칭을 신청할 수 있는 팀이 아닙니다!' })
     }
-    await matchingService.saveNewMatching(userId, sendTeamId, receiveTeamId, message)
-    res.sendStatus(201)
+    await matchingService.saveNewMatching(
+      userId,
+      sendTeamId,
+      receiveTeamId,
+      message
+    )
+    res.status(201).json({ data: { message: '매칭 신청하기 성공' } })
   } catch (error) {
     console.log(error)
     res.status(500).json({ errorMessage: '매칭 신청하기 실패' })
@@ -93,7 +101,9 @@ const sendHeart = async (req, res) => {
       return res.status(400).json({ errorMessage: '매칭 정보가 없습니다!' })
     }
     if (matchingInfo.send_accept_all === 1) {
-      return res.status(400).json({ errorMessage: '이미 전원이 하트를 보냈습니다!' })
+      return res
+        .status(400)
+        .json({ errorMessage: '이미 전원이 하트를 보냈습니다!' })
     }
     const sendTeamId = matchingInfo.send_team_id
     const myTeamList = await meService.getMyTeamList(userId)
@@ -102,7 +112,7 @@ const sendHeart = async (req, res) => {
       return res.status(403).json({ errorMessage: '팀에 속해있지 않습니다!' })
     }
     await matchingService.saveNewApply(userId, matchingId, sendTeamId)
-    res.sendStatus(201)
+    res.status(201).json({ data: { message: '매칭 신청하기 성공' } })
   } catch (error) {
     console.log(error)
     res.status(500).json({ errorMessage: '매칭 신청하기 실패' })
@@ -120,7 +130,9 @@ const receiveHeart = async (req, res) => {
       return res.status(400).json({ errorMessage: '매칭 정보가 없습니다!' })
     }
     if (matchingInfo.send_accept_all === 0) {
-      return res.status(400).json({ errorMessage: '아직 신청이 완료된 매칭이 아니에요!' })
+      return res
+        .status(400)
+        .json({ errorMessage: '아직 신청이 완료된 매칭이 아니에요!' })
     }
     if (matchingInfo.receive_accept_all === 1) {
       return res.status(400).json({ errorMessage: '이미 전원이 수락했습니다!' })
@@ -132,10 +144,10 @@ const receiveHeart = async (req, res) => {
       return res.status(403).json({ errorMessage: '팀에 속해있지 않습니다!' })
     }
     await matchingService.saveNewAccept(userId, matchingId, receiveTeamId)
-    res.sendStatus(201)
+    res.status(201).json({ data: { message: '매칭 수락하기 성공' } })
   } catch (error) {
     console.log(error)
-    res.status(500).json({ errorMessage: '매칭 신청하기 실패' })
+    res.status(500).json({ errorMessage: '매칭 수락하기 실패' })
   }
 }
 
