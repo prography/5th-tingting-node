@@ -52,6 +52,12 @@ class TeamService {
         const teamMembersInfo = await this.belongModel.findUsersByTeamId(
           teamList[idx].id
         )
+        const ownerInfo = await this.userModel.findUserInfo(teamList[idx].owner_id)
+        teamMembersInfo.push({
+          id: teamList[idx].owner_id,
+          name: ownerInfo.name,
+          thumbnail: ownerInfo.thumbnail
+        })
         teamList[idx].teamMembersInfo = teamMembersInfo
       }
       return teamList
