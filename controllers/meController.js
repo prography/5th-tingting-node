@@ -47,15 +47,16 @@ const getMyTeamInfo = async (req, res) => {
       const myTeamIdList = myTeamList.map(team => team.id)
       const isMember = myTeamIdList.includes(teamId)
       if (isMember) {
-        const teamMember = await teamService.getTeamMembersInfo(
+        const teamMembers = await teamService.getTeamMembersInfo(
           req.params.id,
           teamInfo.owner_id
         )
+        const teamMatchings = await teamService.getTeamMatchingInfo(teamId)
         res.status(200).json({
           data: {
             teamInfo,
-            teamMember
-            // 매칭 정보
+            teamMembers,
+            teamMatchings
           }
         })
       } else {
@@ -75,7 +76,7 @@ const updateMyTeam = async (req, res) => {
   const teamId = parseInt(req.params.id)
   const userId = req.token.id
   const {
-    body: { name, chat_address, intro, password, max_member_number }
+    body: { name, chat_address, intro, place, password, max_member_number }
   } = req
   try {
     const myTeamList = await myService.getMyTeamList(userId)
@@ -87,13 +88,14 @@ const updateMyTeam = async (req, res) => {
         name,
         chat_address,
         intro,
+        place,
         password,
         max_member_number
       })
       res.status(201).json({
         data: {
           message: '내 팀 수정에 성공했습니다.'
-        } // 수정 팀 data
+        }
       })
     } else {
       res

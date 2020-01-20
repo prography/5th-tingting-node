@@ -40,6 +40,7 @@ class TeamModel {
       owner_id: data.owner_id,
       intro: data.intro,
       gender: data.gender,
+      place: data.place,
       password: data.password, // 수정 필요
       max_member_number: data.max_member_number
     })
@@ -67,6 +68,7 @@ class TeamModel {
         'owner_id',
         'intro',
         'gender',
+        'place',
         'password',
         'max_member_number',
         'is_verified'
@@ -100,6 +102,7 @@ class TeamModel {
         name: data.name,
         chat_address: data.chat_address,
         intro: data.intro,
+        place: data.place,
         password: data.password,
         max_member_number: data.max_member_number
       },

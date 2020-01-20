@@ -24,7 +24,7 @@ const createTeam = async (req, res) => {
   const teamService = new TeamService()
   const userId = req.token.id
   const {
-    body: { name, chat_address, intro, password, max_member_number }
+    body: { name, chat_address, intro, place, password, max_member_number }
   } = req
   try {
     await teamService.saveTeam({
@@ -32,6 +32,7 @@ const createTeam = async (req, res) => {
       chat_address,
       owner_id: userId,
       intro,
+      place,
       password,
       max_member_number
     })
@@ -77,7 +78,6 @@ const getTeamInfo = async (req, res) => {
         data: {
           teamInfo,
           teamMembers
-          // 매칭 정보
         }
       })
     }

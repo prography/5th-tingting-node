@@ -31,6 +31,10 @@ const Team = db.define(
       type: Sequelize.INTEGER(1),
       allowNull: false
     },
+    place: {
+      type: Sequelize.STRING(12),
+      allowNull: true
+    },
     password: {
       type: Sequelize.STRING(45),
       allowNull: true,
