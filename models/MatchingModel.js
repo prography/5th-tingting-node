@@ -97,9 +97,9 @@ class MatchingModel {
     )
   }
 
-  async findMatchingInfosByTeamId (teamId, userId) {
+  async findMatchingsSentByTeamId (teamId) {
     const matchings = await Matching.findAll({
-      attributes: ['id'],
+      attributes: ['id', 'created_at'],
       where: {
         send_team_id: teamId,
         send_accept_all: 0,

@@ -63,6 +63,7 @@ class TeamModel {
   async findTeamInfo (id) {
     const teamInfo = await Team.findOne({
       attributes: [
+        'id',
         'name',
         'chat_address',
         'owner_id',
