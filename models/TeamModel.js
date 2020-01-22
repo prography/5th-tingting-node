@@ -21,7 +21,7 @@ class TeamModel {
   // 아직 매칭되지 않은 이성 팀 리스트 찾기
   async findVerifiedTeamsWithOppositeGender (gender) {
     const teams = await Team.findAll({
-      attributes: ['id', 'owner_id', 'name', 'max_member_number'],
+      attributes: ['id', 'owner_id', 'name', 'place', 'max_member_number'],
       where: {
         gender: !gender,
         is_verified: 1,
