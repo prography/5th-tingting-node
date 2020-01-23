@@ -20,7 +20,7 @@ const getMatchingList = async (req, res) => {
 const getMatchingTeamInfo = async (req, res) => {
   try {
     const {
-      body: { myTeamId }
+      query: { myTeamId }
     } = req
     const teamId = req.params.id
     const teamService = new TeamService()
@@ -62,7 +62,7 @@ const getMatchingTeamInfo = async (req, res) => {
 const getAppliedTeamInfo = async (req, res) => {
   try {
     const {
-      body: { myTeamId }
+      query: { myTeamId }
     } = req
     const teamId = req.params.id
     const teamService = new TeamService()
@@ -121,7 +121,7 @@ const sendHeartForFirst = async (req, res) => {
       receiveTeamId,
       message
     )
-    res.sendStatus(201)
+    res.status(201).json({ data: { message: '매칭 신청하기 성공' } })
   } catch (error) {
     console.log(error)
     res.status(500).json({ errorMessage: '매칭 신청하기 실패' })
@@ -150,7 +150,7 @@ const sendHeart = async (req, res) => {
       return res.status(403).json({ errorMessage: '팀에 속해있지 않습니다!' })
     }
     await matchingService.saveNewApply(userId, matchingId, sendTeamId)
-    res.sendStatus(201)
+    res.status(201).json({ data: { message: '매칭 신청하기 성공' } })
   } catch (error) {
     console.log(error)
     res.status(500).json({ errorMessage: '매칭 신청하기 실패' })
@@ -182,10 +182,10 @@ const receiveHeart = async (req, res) => {
       return res.status(403).json({ errorMessage: '팀에 속해있지 않습니다!' })
     }
     await matchingService.saveNewAccept(userId, matchingId, receiveTeamId)
-    res.sendStatus(201)
+    res.status(201).json({ data: { message: '매칭 수락하기 성공' } })
   } catch (error) {
     console.log(error)
-    res.status(500).json({ errorMessage: '매칭 신청하기 실패' })
+    res.status(500).json({ errorMessage: '매칭 수락하기 실패' })
   }
 }
 
