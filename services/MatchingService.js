@@ -109,6 +109,11 @@ class MatchingService {
         message
       )
       await this.applyModel.saveApply(userId, matchingId)
+      const applys = await this.applyModel.findApplysByMatchingId(matchingId)
+      const teamInfo = await this.teamModel.findTeamInfo(sendTeamId)
+      if (applys.length === teamInfo.max_member_number + 1) {
+        await this.matchingModel.setMatchingSendAcceptAll(matchingId)
+      }
     } catch (error) {
       console.log(error)
       throw new Error(error)
