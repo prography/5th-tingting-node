@@ -111,7 +111,7 @@ class MatchingService {
       await this.applyModel.saveApply(userId, matchingId)
       const applys = await this.applyModel.findApplysByMatchingId(matchingId)
       const teamInfo = await this.teamModel.findTeamInfo(sendTeamId)
-      if (applys.length === teamInfo.max_member_number + 1) {
+      if (applys.length === teamInfo.max_member_number) {
         await this.matchingModel.setMatchingSendAcceptAll(matchingId)
       }
     } catch (error) {
@@ -153,7 +153,7 @@ class MatchingService {
         await this.applyModel.saveApply(userId, matchingId)
         const applys = await this.applyModel.findApplysByMatchingId(matchingId)
         const teamInfo = await this.teamModel.findTeamInfo(sendTeamId)
-        if (applys.length === teamInfo.max_member_number + 1) {
+        if (applys.length === teamInfo.max_member_number) {
           await this.matchingModel.setMatchingSendAcceptAll(matchingId)
         }
       }
@@ -175,7 +175,7 @@ class MatchingService {
           matchingId
         )
         const teamInfo = await this.teamModel.findTeamInfo(receiveTeamId)
-        if (accepts.length === teamInfo.max_member_number + 1) {
+        if (accepts.length === teamInfo.max_member_number) {
           await this.matchingModel.setMatchingReceiveAcceptAll(matchingId)
         }
       }
