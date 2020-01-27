@@ -186,7 +186,6 @@ class MatchingModel {
       delete team.dataValues.accepts
       team.dataValues.is_matched = team.verified_at !== null
       delete team.dataValues.verified_at
-      console.log(team)
     })
     return teams
   }
