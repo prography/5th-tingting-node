@@ -1,3 +1,6 @@
+const fs = require('fs')
+const path = require('path')
+
 const UserService = require('../services/UserService')
 const AuthService = require('../services/AuthService')
 
@@ -221,6 +224,7 @@ const confirmEmailToken = async (req, res) => {
     )
     res.send(confirmSchool)
   } catch (error) {
+    console.log(error)
     res.status(500).json({ errorMessage: '서버 에러' })
   }
 }
