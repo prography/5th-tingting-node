@@ -215,7 +215,11 @@ const confirmEmailToken = async (req, res) => {
   const { token } = req
   try {
     await authServcie.setIsAuthenticatedOfAuth(token)
-    res.status(201).json({ data: { message: '이메일 인증이 완료되었습니다.' } })
+    const confirmSchool = fs.readFileSync(
+      path.resolve(__dirname, '../public/html/confirmSchool.html'),
+      'utf8'
+    )
+    res.send(confirmSchool)
   } catch (error) {
     res.status(500).json({ errorMessage: '서버 에러' })
   }
