@@ -1,10 +1,12 @@
 import Matching from './entities/Matching.entity'
 import Team from './entities/Team.entity'
+import Accept from './entities/Accept.entity'
 const Sequelize = require('sequelize')
 const Op = Sequelize.Op
 
 Matching.belongsTo(Team, { foreignKey: 'send_team_id', as: 'sendTeam' })
 Matching.belongsTo(Team, { foreignKey: 'receive_team_id', as: 'receiveTeam' })
+Matching.hasMany(Accept, { foreignKey: 'matching_id' })
 
 class MatchingModel {
   async checkIsMatched (teamId) {
@@ -161,7 +163,7 @@ class MatchingModel {
 
   async findReceivedMatchingList (teamId) {
     const teams = await Matching.findAll({
-      attributes: ['id'],
+      attributes: ['id', 'verified_at'],
       where: {
         receive_team_id: teamId,
         send_accept_all: 1,
@@ -171,8 +173,19 @@ class MatchingModel {
       include: [{
         model: Team,
         as: 'sendTeam',
-        attributes: ['id', 'name', 'place', 'owner_id', 'max_member_number']
-      }]
+        attributes: ['id', 'name', 'place', 'owner_id', 'max_member_number', 'chat_address']
+      },
+      {
+        model: Accept,
+        attributes: ['accepter_id']
+      }
+      ]
+    })
+    teams.forEach(team => {
+      team.dataValues.accepter_number = team.accepts.length
+      delete team.dataValues.accepts
+      team.dataValues.is_matched = team.verified_at !== null
+      delete team.dataValues.verified_at
     })
     return teams
   }
