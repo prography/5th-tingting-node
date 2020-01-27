@@ -103,14 +103,14 @@ const sendHeartForFirst = async (req, res) => {
     const matchingService = new MatchingService()
     const myTeamList = await meService.getMyTeamList(userId)
     const myTeamIdList = myTeamList.map(team => team.id)
-    if (!myTeamIdList.includes(sendTeamId)) {
+    if (!myTeamIdList.includes(Number(sendTeamId))) {
       return res.status(403).json({ errorMessage: '팀에 속해있지 않습니다!' })
     }
     const matchingList = await matchingService.findAllMatchingList(userId)
     const availableTeamIdList = matchingList.map(
       matchingTeam => matchingTeam.id
     )
-    if (!availableTeamIdList.includes(receiveTeamId)) {
+    if (!availableTeamIdList.includes(Number(receiveTeamId))) {
       return res
         .status(400)
         .json({ errorMessage: '매칭을 신청할 수 있는 팀이 아닙니다!' })
