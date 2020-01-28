@@ -65,14 +65,12 @@ class TeamModel {
       attributes: [
         'id',
         'name',
-        'chat_address',
         'owner_id',
         'intro',
         'gender',
         'place',
         'password',
-        'max_member_number',
-        'is_verified'
+        'max_member_number'
       ],
       where: {
         id,
