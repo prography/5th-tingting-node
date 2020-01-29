@@ -31,6 +31,7 @@ class UserModel {
     // attributes: { exclude: ['baz'] } 적용?
     const user = await User.findOne({
       attributes: [
+        'id',
         'name',
         'birth',
         'height',
