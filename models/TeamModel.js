@@ -149,7 +149,7 @@ class TeamModel {
   async updateTeamIsVerified (data) {
     await Team.update(
       {
-        is_verified: data.isVerified
+        is_verified: data.is_verified
       },
       { where: { id: data.teamId } }
     )
