@@ -92,7 +92,8 @@ const updateMyTeam = async (req, res) => {
         intro,
         place,
         password,
-        max_member_number
+        max_member_number,
+        chat_address
       })
       res.status(201).json({
         data: {

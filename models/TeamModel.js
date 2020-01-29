@@ -70,6 +70,7 @@ class TeamModel {
         'gender',
         'place',
         'password',
+        'chat_address',
         'max_member_number'
       ],
       where: {

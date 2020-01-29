@@ -155,7 +155,8 @@ class MatchingModel {
   async setMatchingReceiveAcceptAll (matchingId) {
     await Matching.update(
       {
-        receive_accept_all: 1
+        receive_accept_all: 1,
+        verified_at: new Date()
       },
       { where: { id: matchingId } }
     )
