@@ -31,7 +31,11 @@ const updateMyInfo = async (req, res) => {
       height,
       thumbnail
     })
-    res.sendStatus(204)
+    res.status(201).json({
+      data: {
+        message: '내 정보 수정에 성공했습니다.'
+      }
+    })
   } catch (error) {
     res.status(500).json({ errorMessage: '내 정보 수정하기 실패' })
   }
