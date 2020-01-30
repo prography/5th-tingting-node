@@ -24,10 +24,11 @@ const getMyInfo = async (req, res) => {
 const updateMyInfo = async (req, res) => {
   const myService = new MeService()
   const userId = req.token.id
-  const { height, thumbnail } = req.body
+  const { name, height, thumbnail } = req.body
   try {
     await myService.updateMyInfo({
       userId,
+      name,
       height,
       thumbnail
     })
@@ -96,8 +97,7 @@ const updateMyTeam = async (req, res) => {
         intro,
         place,
         password,
-        max_member_number,
-        chat_address
+        max_member_number
       })
       res.status(201).json({
         data: {
