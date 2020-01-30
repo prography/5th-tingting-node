@@ -61,7 +61,7 @@ class MatchingModel {
     return teams
   }
 
-  async findMatchingsIdsByTeamId (teamId) {
+  async findMatchingsByTeamId (teamId) {
     const matchings = await Matching.findAll({
       where: {
         [Op.or]: [{ send_team_id: teamId }, { receive_team_id: teamId }],
