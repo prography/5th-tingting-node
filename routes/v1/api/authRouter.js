@@ -3,7 +3,7 @@ const {
   kakaoLogin,
   localLogin,
   localSignup,
-  //localSignupFinal,
+  uploadThumbnail,
   checkDuplicateLocalId,
   checkDuplicateName,
   checkValidityAndSendEmail,
@@ -16,8 +16,8 @@ const router = express.Router()
 
 router.post('/kakao/login', kakaoLogin)
 router.post('/local/login', localLogin)
-// router.post('/local/signup', localSignup, upload.single('thumbnail'), localSignupFinal)
-router.post('/local/signup', upload.single('thumbnail'), localSignup)
+router.post('/local/signup', localSignup)
+router.post('/thumbnail-img', verifyToken, upload.single('thumbnail'), uploadThumbnail)
 router.get('/duplicate-id', checkDuplicateLocalId)
 router.get('/duplicate-name', checkDuplicateName)
 router.post('/school', checkValidityAndSendEmail)

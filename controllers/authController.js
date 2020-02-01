@@ -123,7 +123,6 @@ const localLogin = async (req, res) => {
 const localSignup = async (req, res, next) => {
   const userService = new UserService()
   const authService = new AuthService()
-  const thumbnail = req.file.location
   const {
     body: {
       local_id,
@@ -151,6 +150,7 @@ const localSignup = async (req, res, next) => {
         console.log({ errorMessage })
         return res.status(401).json({ errorMessage })
       }
+<<<<<<< HEAD
       // else {
       //   next()
       // }
@@ -170,35 +170,24 @@ const localSignup = async (req, res, next) => {
       const data = { message: '회원가입에 성공했습니다.', token }
       console.log(data)
       res.status(201).json({ data })
+=======
+      const token = authService.makeToken(local_id)
+      res
+        .status(201)
+        .json({ data: { message: '회원인증에 성공했습니다 -- thumbnail로 가세요', token } })
+>>>>>>> upload thumbnail
     }
   } catch (error) {
     const errorMessage = '회원가입에 실패하였습니다.'
     console.log({ errorMessage })
     console.log(error)
+<<<<<<< HEAD
     return res.status(500).json({ errorMessage })
+=======
+    res.status(500).json({ data: { message: '회원인증에 실패하였습니다.' } })
+>>>>>>> upload thumbnail
   }
 }
-
-// 로컬 회원가입 - 저장
-// const localSignupFinal = async(req, res) => {
-//   const thumbnail = req.file.location
-//   await userService.saveUserByLocal({
-//     local_id,
-//     password: encryptInfo.encryptedPassword,
-//     salt: encryptInfo.salt,
-//     name,
-//     birth,
-//     height,
-//     thumbnail,
-//     authenticated_address,
-//     gender
-//   })
-//   const userId = await userService.findUserIdByLocalId(local_id)
-//   const token = authService.makeToken(userId)
-//   res
-//     .status(201)
-//     .json({ data: { message: '회원가입에 성공했습니다.', token } })
-// }
 
 // 로컬 아이디 중복 확인
 const checkDuplicateLocalId = async (req, res) => {
@@ -308,14 +297,55 @@ const checkEmailAuth = async (req, res) => {
   }
 }
 
+const uploadThumbnail = async (req, res) =>{
+  try{
+    const { token } = req
+    const thumbnail = req.file.location // 바꾸기 key로 
+    const {
+      body: {
+        local_id,
+        password,
+        name,
+        birth,
+        height,
+        authenticated_address,
+        gender
+      }
+    } = req
+
+    if (local_id.length !== 0){
+    await userService.saveUserByLocal({
+      local_id,
+      password: encryptInfo.encryptedPassword,
+      salt: encryptInfo.salt,
+      name,
+      birth,
+      height,
+      thumbnail,
+      authenticated_address,
+      gender
+    })
+    const userId = await userService.findUserIdByLocalId(local_id)
+    const token = authService.makeToken(userId)
+    res
+      .status(201)
+      .json({ data: { message: 'local 회원가입에 성공했습니다.', token } })
+  }
+      //kakao
+  }catch (error) {
+    console.log(error)
+    res.status(500).json({ data: { message: '회원가입에 실패하였습니다.' } })
+  }
+}
+
 module.exports = {
   kakaoLogin,
   localLogin,
   localSignup,
-  //localSignupFinal,
   checkDuplicateLocalId,
   checkDuplicateName,
   checkValidityAndSendEmail,
   confirmEmailToken,
-  checkEmailAuth
+  checkEmailAuth,
+  uploadThumbnail
 }
