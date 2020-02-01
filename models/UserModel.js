@@ -96,6 +96,7 @@ class UserModel {
   async updateUserInfo (data) {
     await User.update(
       {
+        name: data.name,
         height: data.height,
         thumbnail: data.thumbnail
       },
