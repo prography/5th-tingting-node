@@ -16,24 +16,26 @@ const kakaoLogin = async (req, res, next) => {
       body: { name, birth, height, thumbnail, authenticated_address, gender }
     } = req
     if (!kakaoId) {
-      res.status(401).json({ errorMeesage: '유효하지 않은 토큰입니다.' })
+      const errorMessage = '유효하지 않은 토큰입니다.'
+      console.log({ errorMessage })
+      return res.status(401).json({ errorMessage })
     } else {
       const exUserId = await userService.findUserIdByKaKaoId(kakaoId)
       if (exUserId) {
         // 이미 로그인된 경우
         const token = authService.makeToken(exUserId)
-        res
-          .status(200)
-          .json({ data: { message: '로그인에 성공했습니다.', token } })
+        const data = { message: '로그인에 성공했습니다.', token }
+        console.log(data)
+        res.status(200).json({ data })
       } else {
         // 회원가입하는 경우
         const isAuthenticated = await authService.checkIsAuthenticatedByEmail(
           authenticated_address
         )
         if (!isAuthenticated) {
-          return res
-            .status(401)
-            .json({ errorMessage: '인증된 이메일이 아닙니다.' })
+          const errorMessage = '인증된 이메일이 아닙니다.'
+          console.log({ errorMessage })
+          return res.status(401).json({ errorMessage })
         }
         await userService.saveUserByKakao({
           kakao_id: kakaoId,
@@ -46,15 +48,16 @@ const kakaoLogin = async (req, res, next) => {
         })
         const userId = await userService.findUserIdByKaKaoId(kakaoId)
         const token = authService.makeToken(userId)
-        res
-          .status(201)
-          .json({ data: { message: '회원가입에 성공했습니다.', token } })
+        const data = { message: '회원가입에 성공했습니다.', token }
+        console.log(data)
+        res.status(201).json({ data })
       }
     }
   } catch (error) {
-    res
-      .status(500)
-      .json({ errorMessage: '로그인 혹은 회원가입에 실패했습니다.' })
+    const errorMessage = '로그인 혹은 회원가입에 실패했습니다.'
+    console.log({ errorMessage })
+    console.log(error)
+    res.status(500).json({ errorMessage })
   }
 }
 
@@ -67,9 +70,9 @@ const localLogin = async (req, res) => {
   } = req
   try {
     if (!local_id || !password) {
-      return res.status(400).json({
-        errorMessage: '아이디와 비밀번호를 입력해주세요!'
-      })
+      const errorMessage = '아이디와 비밀번호를 입력해주세요!'
+      console.log({ errorMessage })
+      return res.status(400).json({ errorMessage })
     }
     const authInfo = await userService.findAuthInfoByLocalId(local_id)
     if (authInfo) {
@@ -81,26 +84,27 @@ const localLogin = async (req, res) => {
       )
       if (isCorrectPassword) {
         const token = authService.makeToken(authInfo.id)
-        res.status(200).json({
-          data: {
-            message: '로그인에 성공했습니다. & 토큰이 발행되었습니다.',
-            token
-          }
-        })
+        const data = {
+          message: '로그인에 성공했습니다. & 토큰이 발행되었습니다.',
+          token
+        }
+        console.log(data)
+        res.status(200).json({ data })
       } else {
-        res.status(401).json({
-          errorMessage: '비밀번호가 틀렸습니다.'
-        })
+        const errorMessage = '비밀번호가 틀렸습니다.'
+        console.log({ errorMessage })
+        return res.status(401).json({ errorMessage })
       }
     } else {
-      res.status(400).json({
-        errorMessage: '존재하지 않는 아이디입니다.'
-      })
+      const errorMessage = '존재하지 않는 아이디입니다.'
+      console.log({ errorMessage })
+      return res.status(400).json({ errorMessage })
     }
   } catch (error) {
-    res.status(500).json({
-      errorMessage: '로그인에 실패했습니다.'
-    })
+    const errorMessage = '로그인에 실패했습니다.'
+    console.log({ errorMessage })
+    console.log(error)
+    return res.status(500).json({ errorMessage })
   }
 }
 
@@ -123,18 +127,18 @@ const localSignup = async (req, res) => {
   try {
     const exUserId = await userService.findUserIdByLocalId(local_id)
     if (exUserId) {
-      return res
-        .status(400)
-        .json({ data: { message: '이미 가입된 사용자입니다.' } })
+      const errorMessage = '이미 가입된 사용자입니다.'
+      console.log({ errorMessage })
+      return res.status(400).json({ errorMessage })
     } else {
       const encryptInfo = await authService.encryptPassword(password)
       const isAuthenticated = await authService.checkIsAuthenticatedByEmail(
         authenticated_address
       )
       if (!isAuthenticated) {
-        return res
-          .status(401)
-          .json({ errorMessage: '인증된 이메일이 아닙니다.' })
+        const errorMessage = '인증된 이메일이 아닙니다.'
+        console.log({ errorMessage })
+        return res.status(401).json({ errorMessage })
       }
       await userService.saveUserByLocal({
         local_id,
@@ -149,13 +153,15 @@ const localSignup = async (req, res) => {
       })
       const userId = await userService.findUserIdByLocalId(local_id)
       const token = authService.makeToken(userId)
-      res
-        .status(201)
-        .json({ data: { message: '회원가입에 성공했습니다.', token } })
+      const data = { message: '회원가입에 성공했습니다.', token }
+      console.log(data)
+      res.status(201).json({ data })
     }
   } catch (error) {
+    const errorMessage = '회원가입에 실패하였습니다.'
+    console.log({ errorMessage })
     console.log(error)
-    res.status(500).json({ data: { message: '회원가입에 실패하였습니다.' } })
+    return res.status(500).json({ errorMessage })
   }
 }
 
@@ -169,9 +175,13 @@ const checkDuplicateLocalId = async (req, res) => {
     local_id
   )
   if (isDuplicatedLocalId) {
-    res.status(400).json({ errorMessage: '이미 존재하는 아이디입니다.' })
+    const errorMessage = '이미 존재하는 아이디입니다.'
+    console.log({ errorMessage })
+    res.status(400).json({ errorMessage })
   } else {
-    res.status(200).json({ data: { message: '사용 가능한 아이디입니다.' } })
+    const data = { message: '사용 가능한 아이디입니다.' }
+    console.log(data)
+    res.status(200).json({ data })
   }
 }
 
@@ -183,9 +193,13 @@ const checkDuplicateName = async (req, res) => {
   } = req
   const isDuplicatedName = await authService.checkIsDuplicatedName(name)
   if (isDuplicatedName) {
-    res.status(400).json({ errorMessage: '이미 존재하는 이름입니다.' })
+    const errorMessage = '이미 존재하는 이름입니다.'
+    console.log({ errorMessage })
+    res.status(400).json({ errorMessage })
   } else {
-    res.status(200).json({ data: { message: '사용 가능한 이름입니다.' } })
+    const data = { message: '사용 가능한 이름입니다.' }
+    console.log(data)
+    res.status(200).json({ data })
   }
 }
 
@@ -199,16 +213,23 @@ const checkValidityAndSendEmail = async (req, res) => {
     const isValid = await authService.checkValidityOfEmail(email)
     const isDuplicated = await authService.checkIsDuplicatedEmail(email)
     if (isDuplicated) {
-      res.status(400).json({ errorMessage: '이미 가입된 이메일입니다.' })
+      const errorMessage = '이미 가입된 이메일입니다.'
+      console.log({ errorMessage })
+      res.status(400).json({ errorMessage })
     } else if (!isValid) {
-      res.status(401).json({ errorMessage: '가입이 불가능한 이메일입니다.' })
+      const errorMessage = '가입이 불가능한 이메일입니다.'
+      console.log({ errorMessage })
+      res.status(401).json({ errorMessage })
     } else {
       await authService.saveAuthenticatedEmail(email)
       await authService.sendEmail(email)
-      res.status(201).json({ data: { message: '인증메일을 전송했습니다.' } })
+      const data = { message: '인증메일을 전송했습니다.' }
+      console.log(data)
+      res.status(201).json({ data })
     }
-  } catch (err) {
-    res.status(500).json({ errMessage: '서버 에러' })
+  } catch (error) {
+    console.log(error)
+    res.status(500).json({ errorMessage: '서버 에러' })
   }
 }
 
@@ -238,12 +259,17 @@ const checkEmailAuth = async (req, res) => {
   try {
     const isAuthenticated = await authServcie.checkIsAuthenticatedByEmail(email)
     if (isAuthenticated) {
-      res.status(200).json({ data: { message: '인증이 완료된 이메일입니다.' } })
+      const data = { message: '인증이 완료된 이메일입니다.' }
+      console.log(data)
+      res.status(200).json({ data })
     } else {
-      res.status(401).json({ errorMessage: '인증이 필요한 이메일입니다.' })
+      const errorMessage = '인증이 필요한 이메일입니다.'
+      console.log({ errorMessage })
+      res.status(401).json({ errorMessage })
     }
   } catch (error) {
-    res.status(500).json({ errorMessage: '서버 에러!' })
+    console.log(error)
+    res.status(500).json({ errorMessage: '서버 에러' })
   }
 }
 

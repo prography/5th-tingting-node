@@ -9,6 +9,7 @@ const getRule = async (req, res) => {
     )
     res.send(rule)
   } catch (error) {
+    console.log(error)
     res.sendStatus(500)
   }
 }
@@ -21,6 +22,7 @@ const getPrivacy = async (req, res) => {
     )
     res.send(privacy)
   } catch (error) {
+    console.log(error)
     res.sendStatus(500)
   }
 }

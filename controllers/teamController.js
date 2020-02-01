@@ -8,14 +8,17 @@ const getTeamList = async (req, res) => {
     const teamService = new TeamService()
     const teamList = await teamService.findAllTeamListWithoutMe(userId)
     if (teamList.length === 0) {
-      res.status(404).json({ errorMessage: '팀이 존재하지 않습니다.' })
+      const errorMessage = '팀이 존재하지 않습니다.'
+      console.log({ errorMessage })
+      res.status(404).json({ errorMessage })
     } else {
-      res.status(200).json({
-        data: { teamList }
-      })
+      const data = { teamList }
+      console.log(data)
+      res.status(200).json({ data })
     }
   } catch (error) {
-    res.status(500).json({ errorMessage: '팀 리스트 불러오기 실패' })
+    console.log(error)
+    res.status(500).json({ errorMessage: '서버 에러' })
   }
 }
 
@@ -36,14 +39,12 @@ const createTeam = async (req, res) => {
       password,
       max_member_number
     })
-    res.status(201).json({
-      data: {
-        message: '팀 생성 성공'
-      }
-    }) // 생성된 팀 정보(name) name으로 id 찾아서 정보 반환 --> 기능 찾아서 추가
+    const data = { message: '팀 생성 성공' }
+    console.log(data)
+    res.status(201).json({ data }) // 생성된 팀 정보(name) name으로 id 찾아서 정보 반환 --> 기능 찾아서 추가
   } catch (error) {
     console.log(error)
-    res.status(500).json({ errorMessage: '팀 생성 실패' })
+    res.status(500).json({ errorMessage: '서버 에러' })
   }
 }
 
@@ -55,9 +56,13 @@ const checkDuplicateTeamName = async (req, res) => {
   } = req
   const isDuplicated = await teamService.checkIsDuplicatedTeamName(name)
   if (isDuplicated) {
-    res.status(400).json({ errorMessage: '이미 존재하는 팀명입니다.' })
+    const errorMessage = '이미 존재하는 팀명입니다.'
+    console.log({ errorMessage })
+    res.status(401).json({ errorMessage })
   } else {
-    res.status(200).json({ data: { message: '사용 가능한 팀명입니다.' } })
+    const data = { message: '사용 가능한 팀명입니다.' }
+    console.log(data)
+    res.status(200).json({ data })
   }
 }
 
@@ -68,21 +73,24 @@ const getTeamInfo = async (req, res) => {
     const teamId = req.params.id
     const teamInfo = await teamService.getTeamInfo(teamId)
     if (teamInfo === null) {
-      res.status(404).json({ errorMessage: '팀이 존재하지 않습니다.' })
+      const errorMessage = '팀이 존재하지 않습니다.'
+      console.log({ errorMessage })
+      res.status(404).json({ errorMessage })
     } else {
       const teamMembers = await teamService.getTeamMembersInfo(
         teamId,
         teamInfo.owner_id
       )
-      res.status(200).json({
-        data: {
-          teamInfo,
-          teamMembers
-        }
-      })
+      const data = {
+        teamInfo,
+        teamMembers
+      }
+      console.log(data)
+      res.status(200).json({ data })
     }
   } catch (error) {
-    res.status(500).json({ errorMessage: '해당 팀 정보 불러오기 실패' })
+    console.log(error)
+    res.status(500).json({ errorMessage: '서버 에러' })
   }
 }
 
@@ -108,34 +116,34 @@ const joinTeam = async (req, res) => {
           // 비밀번호가 있는 경우
           if (teamPassword === password) {
             await teamService.joinTeamToBelong(teamId, userId)
-            res.status(201).json({
-              data: { message: '합류에 성공했습니다.' }
-            })
+            const data = { message: '합류에 성공했습니다.' }
+            console.log(data)
+            res.status(201).json({ data })
           } else {
-            res.status(403).json({
-              errorMessage: '비밀번호가 틀렸습니다.'
-            })
+            const errorMessage = '비밀번호가 틀렸습니다.'
+            console.log({ errorMessage })
+            res.status(403).json({ errorMessage })
           }
         } else {
           // 비밀번호가 없는 경우
           await teamService.joinTeamToBelong(teamId, userId)
-          res.status(201).json({
-            data: { message: '합류에 성공했습니다.' }
-          })
+          const data = { message: '합류에 성공했습니다.' }
+          console.log(data)
+          res.status(201).json({ data })
         }
       } else {
-        res.status(403).json({
-          errorMessage: '합류가 불가능한 팀입니다.'
-        })
+        const errorMessage = '합류가 불가능한 팀입니다.'
+        console.log({ errorMessage })
+        res.status(403).json({ errorMessage })
       }
     } else {
-      res.status(404).json({
-        errorMessage: '합류할 수 있는 팀이 존재하지 않습니다.'
-      })
+      const errorMessage = '합류할 수 있는 팀이 존재하지 않습니다.'
+      console.log({ errorMessage })
+      res.status(404).json({ errorMessage })
     }
   } catch (error) {
     console.log(error)
-    res.status(500).json({ errorMessage: '합류에 실패하였습니다.' })
+    res.status(500).json({ errorMessage: '서버 에러' })
   }
 }
 
