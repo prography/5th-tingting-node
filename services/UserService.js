@@ -72,6 +72,17 @@ class UserService {
       throw new Error(error)
     }
   }
+
+  async getUserThumbnailUrl (userId) {
+    try {
+      const user = await this.userModel.findUserInfo(userId)
+      if (!user) return null
+      return user.thumbnail
+    } catch (error) {
+      console.log(error)
+      throw new Error(error)
+    }
+  }
 }
 
 module.exports = UserService

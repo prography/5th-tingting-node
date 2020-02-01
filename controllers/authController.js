@@ -35,6 +35,7 @@ const kakaoLogin = async (req, res, next) => {
             .status(401)
             .json({ errorMessage: '인증된 이메일이 아닙니다.' })
         }
+        //upload
         await userService.saveUserByKakao({
           kakao_id: kakaoId,
           name,
@@ -81,6 +82,7 @@ const localLogin = async (req, res) => {
       )
       if (isCorrectPassword) {
         const token = authService.makeToken(authInfo.id)
+        next()
         res.status(200).json({
           data: {
             message: '로그인에 성공했습니다. & 토큰이 발행되었습니다.',
@@ -105,9 +107,10 @@ const localLogin = async (req, res) => {
 }
 
 // 로컬 회원가입
-const localSignup = async (req, res) => {
+const localSignup = async (req, res, next) => {
   const userService = new UserService()
   const authService = new AuthService()
+  const thumbnail = req.file.location
   const {
     body: {
       local_id,
@@ -115,7 +118,6 @@ const localSignup = async (req, res) => {
       name,
       birth,
       height,
-      thumbnail,
       authenticated_address,
       gender
     }
@@ -136,6 +138,9 @@ const localSignup = async (req, res) => {
           .status(401)
           .json({ errorMessage: '인증된 이메일이 아닙니다.' })
       }
+      // else {
+      //   next()
+      // }
       await userService.saveUserByLocal({
         local_id,
         password: encryptInfo.encryptedPassword,
@@ -158,6 +163,27 @@ const localSignup = async (req, res) => {
     res.status(500).json({ data: { message: '회원가입에 실패하였습니다.' } })
   }
 }
+
+// 로컬 회원가입 - 저장
+// const localSignupFinal = async(req, res) => {
+//   const thumbnail = req.file.location
+//   await userService.saveUserByLocal({
+//     local_id,
+//     password: encryptInfo.encryptedPassword,
+//     salt: encryptInfo.salt,
+//     name,
+//     birth,
+//     height,
+//     thumbnail,
+//     authenticated_address,
+//     gender
+//   })
+//   const userId = await userService.findUserIdByLocalId(local_id)
+//   const token = authService.makeToken(userId)
+//   res
+//     .status(201)
+//     .json({ data: { message: '회원가입에 성공했습니다.', token } })
+// }
 
 // 로컬 아이디 중복 확인
 const checkDuplicateLocalId = async (req, res) => {
@@ -251,6 +277,7 @@ module.exports = {
   kakaoLogin,
   localLogin,
   localSignup,
+  //localSignupFinal,
   checkDuplicateLocalId,
   checkDuplicateName,
   checkValidityAndSendEmail,
