@@ -2,7 +2,6 @@ const AWS = require('aws-sdk')
 const multer = require('multer')
 const multerS3 = require('multer-s3')
 const path = require('path')
-const fs = require('fs')
 const md5 = require('md5')
 
 AWS.config.update({
@@ -17,8 +16,7 @@ const upload = multer({
     bucket: process.env.BUCKET,
     contentType: multerS3.AUTO_CONTENT_TYPE,
     key(req, file, cb) {
-      console.log(file)
-      cb(null, `${md5(file)}`);
+      cb(null, `${+new Date()}${path.basename(file.originalname)}`);
     },
   }),
   limits: { fileSize: 200 * 1024 * 1024 },
