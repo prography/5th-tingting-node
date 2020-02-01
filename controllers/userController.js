@@ -5,16 +5,17 @@ const getUserInfo = async (req, res) => {
   try {
     const userInfo = await userService.getUserInfo(req.params.id)
     if (userInfo === null) {
-      res.status(404).json({ errorMessage: '사용자가 존재하지 않음' })
+      const errorMessage = '사용자가 존재하지 않음'
+      console.log({ errorMessage })
+      res.status(404).json({ errorMessage })
     } else {
-      res.status(200).json({
-        data: {
-          userInfo
-        }
-      })
+      const data = { userInfo }
+      console.log(data)
+      res.status(200).json({ data })
     }
   } catch (error) {
-    res.status(500).json({ errorMessage: '사용자 불러오기 실패' })
+    console.log(error)
+    res.status(500).json({ errorMessage: '서버 에러' })
   }
 }
 
