@@ -7,7 +7,10 @@ const {
   checkDuplicateName,
   checkValidityAndSendEmail,
   confirmEmailToken,
-  checkEmailAuth
+  checkEmailAuth,
+  checkValidityForIdAndSendEmail,
+  checkValidityForPassword,
+  resetPassword
 } = require('../../../controllers/authController')
 const { verifyEmailToken } = require('../../../middlewares/auth')
 const router = express.Router()
@@ -20,5 +23,8 @@ router.get('/duplicate-name', checkDuplicateName)
 router.post('/school', checkValidityAndSendEmail)
 router.get('/school/confirm', verifyEmailToken, confirmEmailToken)
 router.get('/school/complete', checkEmailAuth)
+router.get('/find/id', checkValidityForIdAndSendEmail)
+router.get('/find/password', checkValidityForPassword)
+router.post('/reset/password', resetPassword)
 
 module.exports = router

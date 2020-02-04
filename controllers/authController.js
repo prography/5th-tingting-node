@@ -273,6 +273,37 @@ const checkEmailAuth = async (req, res) => {
   }
 }
 
+// 아이디 찾기
+const checkValidityForIdAndSendEmail = async (req, res) => {
+  const userService = new UserService()
+  const authService = new AuthService()
+  const {
+    body: { email }
+  } = req
+  try {
+    const localId = await userService.findLocalIdByEmail(email)
+    if (!localId) {
+      const errorMessage = '존재하지 않는 이메일입니다.'
+      console.log({ errorMessage })
+      res.status(400).json({ errorMessage })
+    } else {
+      await authService.sendEmailToFindId(email, localId)
+      const data = { message: '아이디 찾기 메일을 전송했습니다.' }
+      console.log(data)
+      res.status(200).json({ data })
+    }
+  } catch (error) {
+    console.log(error)
+    res.status(500).json({ errorMessage: '서버 에러' })
+  }
+}
+
+// 비밀번호 찾기 - 유저 존재 여부
+const checkValidityForPassword = async (req, res) => {}
+
+// 비밀번호 찾기 - 비밀번호 재설정
+const resetPassword = async (req, res) => {}
+
 module.exports = {
   kakaoLogin,
   localLogin,
@@ -281,5 +312,8 @@ module.exports = {
   checkDuplicateName,
   checkValidityAndSendEmail,
   confirmEmailToken,
-  checkEmailAuth
+  checkEmailAuth,
+  checkValidityForIdAndSendEmail,
+  checkValidityForPassword,
+  resetPassword
 }

@@ -58,7 +58,7 @@ const checkDuplicateTeamName = async (req, res) => {
   if (isDuplicated) {
     const errorMessage = '이미 존재하는 팀명입니다.'
     console.log({ errorMessage })
-    res.status(401).json({ errorMessage })
+    res.status(400).json({ errorMessage })
   } else {
     const data = { message: '사용 가능한 팀명입니다.' }
     console.log(data)
