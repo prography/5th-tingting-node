@@ -8,7 +8,12 @@ const {
   checkDuplicateName,
   checkValidityAndSendEmail,
   confirmEmailToken,
-  checkEmailAuth
+  checkEmailAuth,
+  checkValidityForIdAndSendEmail,
+  checkValidityForPasswordAndSendEmail,
+  confirmEmailTokenForPassword,
+  checkEmailAuthForPassword,
+  resetPassword
 } = require('../../../controllers/authController')
 const { verifyEmailToken, verifyToken } = require('../../../middlewares/auth')
 const { uploadThumbnailToS3 } = require('../../../middlewares/profileImg')
@@ -23,5 +28,11 @@ router.get('/duplicate-name', checkDuplicateName)
 router.post('/school', checkValidityAndSendEmail)
 router.get('/school/confirm', verifyEmailToken, confirmEmailToken)
 router.get('/school/complete', checkEmailAuth)
+
+router.get('/find/id', checkValidityForIdAndSendEmail)
+router.get('/find/password', checkValidityForPasswordAndSendEmail)
+router.get('/find/password/confirm', verifyEmailToken, confirmEmailTokenForPassword)
+router.get('/find/password/complete', checkEmailAuthForPassword)
+router.post('/reset/password', resetPassword)
 
 module.exports = router

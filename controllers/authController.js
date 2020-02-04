@@ -294,6 +294,121 @@ const uploadThumbnail = async (req, res) => {
   }
 }
 
+// 아이디 찾기
+const checkValidityForIdAndSendEmail = async (req, res) => {
+  const userService = new UserService()
+  const authService = new AuthService()
+  const {
+    body: { email }
+  } = req
+  try {
+    const localId = await userService.findLocalIdByEmail(email)
+    if (!localId) {
+      const errorMessage = '존재하지 않는 이메일입니다.'
+      console.log({ errorMessage })
+      res.status(400).json({ errorMessage })
+    } else {
+      await authService.sendEmailToFindId(email, localId)
+      const data = { message: '아이디 찾기 메일을 전송했습니다.' }
+      console.log(data)
+      res.status(200).json({ data })
+    }
+  } catch (error) {
+    console.log(error)
+    res.status(500).json({ errorMessage: '서버 에러' })
+  }
+}
+
+// 비밀번호 찾기 - 유저 존재 여부
+const checkValidityForPasswordAndSendEmail = async (req, res) => {
+  const userService = new UserService()
+  const authService = new AuthService()
+  const {
+    body: { localId, email }
+  } = req
+  try {
+    const exUserId = await userService.findUserByLocalIdAndEmail(localId, email)
+    if (!exUserId) {
+      const errorMessage = '잘못된 아이디 또는 이메일입니다.'
+      console.log({ errorMessage })
+      res.status(400).json({ errorMessage })
+    } else {
+      await authService.saveAuthenticatedEmailToResetPassword(email)
+      await authService.sendEmailToResetPassword(email)
+      const data = { message: '비밀번호 재설정 메일을 전송했습니다.' }
+      console.log(data)
+      res.status(201).json({ data })
+    }
+  } catch (error) {
+    console.log(error)
+    res.status(500).json({ errorMessage: '서버 에러' })
+  }
+}
+
+const confirmEmailTokenForPassword = async (req, res) => {
+  const authServcie = new AuthService()
+  const { token } = req
+  try {
+    await authServcie.setIsAuthenticatedOfAuthToResetPassword(token)
+    const confirmPassword = fs.readFileSync(
+      path.resolve(__dirname, '../public/html/confirmPassword.html'),
+      'utf8'
+    )
+    res.send(confirmPassword)
+  } catch (error) {
+    console.log(error)
+    res.status(500).json({ errorMessage: '서버 에러' })
+  }
+}
+
+const checkEmailAuthForPassword = async (req, res) => {
+  const authServcie = new AuthService()
+  const {
+    query: { email }
+  } = req
+  try {
+    const isAuthenticated = await authServcie.checkIsAuthenticatedByEmailForPassword(email)
+    if (isAuthenticated) {
+      const data = { message: '인증이 완료된 이메일입니다.' }
+      console.log(data)
+      res.status(200).json({ data })
+    } else {
+      const errorMessage = '인증이 필요한 이메일입니다.'
+      console.log({ errorMessage })
+      res.status(401).json({ errorMessage })
+    }
+  } catch (error) {
+    console.log(error)
+    res.status(500).json({ errorMessage: '서버 에러' })
+  }
+}
+
+// 비밀번호 찾기 - 비밀번호 재설정
+const resetPassword = async (req, res) => {
+  const userService = new UserService()
+  const authService = new AuthService()
+  const {
+    body: { password, email }
+  } = req
+  try {
+    const isAuthenticated = await authService.checkIsAuthenticatedByEmailForPassword(email)
+    if (isAuthenticated) {
+      const encryptInfo = await authService.encryptPassword(password)
+      await userService.updatePasswordByEmail(email, encryptInfo)
+      const data = { message: '비밀번호를 재설정하였습니다.' }
+      console.log(data)
+      res.status(201).json({ data })
+    } else {
+      const errorMessage = '인증이 필요한 이메일입니다.'
+      console.log({ errorMessage })
+      res.status(401).json({ errorMessage })
+    }
+  } catch (error) {
+    console.log(error)
+    res.status(500).json({ errorMessage: '서버 에러' })
+  }
+}
+
 module.exports = {
   kakaoLogin,
   localLogin,
@@ -303,5 +418,10 @@ module.exports = {
   checkValidityAndSendEmail,
   confirmEmailToken,
   checkEmailAuth,
-  uploadThumbnail
+  uploadThumbnail,
+  checkValidityForIdAndSendEmail,
+  checkValidityForPasswordAndSendEmail,
+  confirmEmailTokenForPassword,
+  checkEmailAuthForPassword,
+  resetPassword
 }
