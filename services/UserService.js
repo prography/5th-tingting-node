@@ -2,13 +2,13 @@ const UserModel = require('../models/UserModel')
 const AvailableEmailModel = require('../models/AvailableEmailModel')
 const ProfileImgModel = require('../models/ProfileImgModel')
 class UserService {
-  constructor () {
+  constructor() {
     this.userModel = new UserModel()
     this.availableEmailModel = new AvailableEmailModel()
     this.profileImgModel = new ProfileImgModel()
   }
 
-  async getUserInfo (userId) {
+  async getUserInfo(userId) {
     try {
       const userInfo = await this.userModel.findUserInfo(userId)
       const email = userInfo.authenticated_address
@@ -27,7 +27,7 @@ class UserService {
     }
   }
 
-  async findUserIdByKaKaoId (kakaoId) {
+  async findUserIdByKaKaoId(kakaoId) {
     try {
       const user = await this.userModel.findUserByKaKaoId(kakaoId)
       const userId = user ? user.id : null
@@ -38,7 +38,7 @@ class UserService {
     }
   }
 
-  async findUserIdByLocalId (localId) {
+  async findUserIdByLocalId(localId) {
     try {
       const user = await this.userModel.findUserByLocalId(localId)
       const userId = user ? user.id : null
@@ -49,7 +49,7 @@ class UserService {
     }
   }
 
-  async findAuthInfoByLocalId (localId) {
+  async findAuthInfoByLocalId(localId) {
     try {
       const authInfo = await this.userModel.findAuthInfoByLocalId(localId)
       return authInfo
@@ -59,7 +59,17 @@ class UserService {
     }
   }
 
-  async saveUserByKakao (data) {
+  async findLocalIdByEmail(email) {
+    try {
+      const localId = await this.userModel.findLocalIdByEmail(email)
+      return localId.local_id
+    } catch (error) {
+      console.log(error)
+      throw new Error(error)
+    }
+  }
+
+  async saveUserByKakao(data) {
     try {
       await this.userModel.saveUserByKakao(data)
     } catch (error) {
@@ -68,7 +78,7 @@ class UserService {
     }
   }
 
-  async saveUserByLocal (data) {
+  async saveUserByLocal(data) {
     try {
       await this.userModel.saveUserByLocal(data)
     } catch (error) {
