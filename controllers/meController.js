@@ -1,6 +1,9 @@
 const MeService = require('../services/MeService')
 const TeamService = require('../services/TeamService')
 const MatchingService = require('../services/MatchingService')
+const UserService = require('../services/UserService')
+
+const AWS = require('aws-sdk')
 
 const getMyInfo = async (req, res) => {
   const userId = req.token.id
@@ -178,10 +181,72 @@ const leaveMyTeam = async (req, res) => {
   }
 }
 
+const updateMyThumbnailImg = async (req, res) => {
+  const userService = new UserService()
+  const thumbnail = req.file.key
+  const userId = req.token.id
+  try {
+    const key = await userService.getUserThumbnailUrl(userId)
+    var s3 = new AWS.S3()
+    await s3.deleteObject({
+      Bucket: process.env.BUCKET,
+      Key: key
+    }).promise()
+    await userService.saveUserThumbnail({ thumbnail, userId })
+    const data = { message: '이미지 수정에 성공했습니다.' }
+    console.log(data)
+    res.status(201).json({ data })
+  } catch (error) {
+    console.log(error)
+    res.status(500).json({ errorMessage: '서버 에러' })
+  }
+}
+
+const saveMyProfileImg = async (req, res) => {
+  const myService = new MeService()
+  const profileImg = req.file.key
+  const userId = req.token.id
+  try {
+    await myService.saveMyProfileImg({ profileImg, userId })
+    const data = { message: '이미지 저장에 성공하였습니다.' }
+    console.log(data)
+    res.status(201).json({ data })
+  } catch (error) {
+    const errorMessage = '이미지 저장에 실패하였습니다.'
+    console.log({ errorMessage })
+    console.log(error)
+    return res.status(500).json({ errorMessage })
+  }
+}
+
+const updateMyProfileImg = async (req, res) => {
+  const myService = new MeService()
+  const profileImg = req.file.key
+  const imgId = req.params.imgId
+  try {
+    const key = await myService.getMyProfileImgUrl(imgId)
+    var s3 = new AWS.S3()
+    await s3.deleteObject({
+      Bucket: process.env.BUCKET,
+      Key: key
+    }).promise()
+    await myService.updateMyProfileImg({ profileImg, imgId })
+    const data = { message: '이미지 수정에 성공했습니다.' }
+    console.log(data)
+    res.status(201).json({ data })
+  } catch (error) {
+    console.log(error)
+    res.status(500).json({ errorMessage: '서버 에러' })
+  }
+}
+
 module.exports = {
   getMyInfo,
   updateMyInfo,
   updateMyTeam,
   getMyTeamInfo,
-  leaveMyTeam
+  leaveMyTeam,
+  updateMyThumbnailImg,
+  saveMyProfileImg,
+  updateMyProfileImg
 }

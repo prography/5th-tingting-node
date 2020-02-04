@@ -1,10 +1,11 @@
 const UserModel = require('../models/UserModel')
 const AvailableEmailModel = require('../models/AvailableEmailModel')
-
+const ProfileImgModel = require('../models/ProfileImgModel')
 class UserService {
   constructor () {
     this.userModel = new UserModel()
     this.availableEmailModel = new AvailableEmailModel()
+    this.profileImgModel = new ProfileImgModel()
   }
 
   async getUserInfo (userId) {
@@ -15,6 +16,8 @@ class UserService {
       const school = await this.availableEmailModel.findSchoolByDomain(domain)
       const schoolName = school.name
       userInfo.schoolName = schoolName
+      const profileImg = await this.profileImgModel.findProfileImgIdByUserId(userId)
+      userInfo.profileImg = profileImg
       delete userInfo.authenticated_address
       return userInfo
     } catch (error) {
@@ -73,11 +76,10 @@ class UserService {
     }
   }
 
-
-  async saveUserThumbnail(thumbnail){
-    try{
-      await this.userModel.saveUserThumbnail(thumbnail)
-    }catch(error){
+  async saveUserThumbnail (data) {
+    try {
+      await this.userModel.updateUserThumbnail(data)
+    } catch (error) {
       console.log(error)
       throw new Error(error)
     }
@@ -88,6 +90,22 @@ class UserService {
       const user = await this.userModel.findUserInfo(userId)
       if (!user) return null
       return user.thumbnail
+    } catch (error) {
+      console.log(error)
+      throw new Error(error)
+    }
+  }
+
+  async getUserProfileImgUrl (data) {
+    const userId = data.userId
+    const imgId = data.imgId
+    try {
+      const user = await this.userModel.findUserInfo(userId)
+      if (!user) return null
+      else {
+        const profileImg = await this.profileImgModel.findProfileImg(imgId)
+        return profileImg.url
+      }
     } catch (error) {
       console.log(error)
       throw new Error(error)

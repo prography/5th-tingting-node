@@ -13,7 +13,7 @@ const kakaoLogin = async (req, res, next) => {
     const accessToken = schema.replace('Bearer ', '')
     const kakaoId = await authService.getKakaoId(accessToken)
     const {
-      body: { name, birth, height, thumbnail, authenticated_address, gender }
+      body: { name, birth, height, authenticated_address, gender }
     } = req
     if (!kakaoId) {
       const errorMessage = '유효하지 않은 토큰입니다.'
@@ -37,19 +37,18 @@ const kakaoLogin = async (req, res, next) => {
           console.log({ errorMessage })
           return res.status(401).json({ errorMessage })
         }
-        //upload
+        // upload
         await userService.saveUserByKakao({
           kakao_id: kakaoId,
           name,
           birth,
           height,
-          thumbnail,
           authenticated_address,
           gender
         })
         const userId = await userService.findUserIdByKaKaoId(kakaoId)
         const token = authService.makeToken(userId)
-        const data = { message: '회원가입에 성공했습니다.', token }
+        const data = { message: '회원가입에 성공했습니다. 이미지를 추가해주세요.', token }
         console.log(data)
         res.status(201).json({ data })
       }
@@ -85,22 +84,12 @@ const localLogin = async (req, res) => {
       )
       if (isCorrectPassword) {
         const token = authService.makeToken(authInfo.id)
-<<<<<<< HEAD
         const data = {
           message: '로그인에 성공했습니다. & 토큰이 발행되었습니다.',
           token
         }
         console.log(data)
         res.status(200).json({ data })
-=======
-        next()
-        res.status(200).json({
-          data: {
-            message: '로그인에 성공했습니다. & 토큰이 발행되었습니다.',
-            token
-          }
-        })
->>>>>>> 이미지 처리
       } else {
         const errorMessage = '비밀번호가 틀렸습니다.'
         console.log({ errorMessage })
@@ -150,13 +139,6 @@ const localSignup = async (req, res, next) => {
         console.log({ errorMessage })
         return res.status(401).json({ errorMessage })
       }
-<<<<<<< HEAD
-<<<<<<< HEAD
-      // else {
-      //   next()
-      // }
-=======
->>>>>>> rebase 전
       await userService.saveUserByLocal({
         local_id,
         password: encryptInfo.encryptedPassword,
@@ -164,44 +146,20 @@ const localSignup = async (req, res, next) => {
         name,
         birth,
         height,
-<<<<<<< HEAD
-        thumbnail,
-=======
->>>>>>> rebase 전
         authenticated_address,
         gender
       })
       const userId = await userService.findUserIdByLocalId(local_id)
       const token = authService.makeToken(userId)
-<<<<<<< HEAD
-      const data = { message: '회원가입에 성공했습니다.', token }
+      const data = { message: '회원가입에 성공했습니다. 이미지를 추가해주세요.', token }
       console.log(data)
       res.status(201).json({ data })
-=======
-      const token = authService.makeToken(local_id)
-      res
-        .status(201)
-        .json({ data: { message: '회원인증에 성공했습니다 -- thumbnail로 가세요', token } })
->>>>>>> upload thumbnail
-=======
-      res
-        .status(201)
-        .json({ data: { message: '회원가입에 성공했습니다. 이제 이미지를 등록해 주세요', token } })
->>>>>>> rebase 전
     }
   } catch (error) {
     const errorMessage = '회원가입에 실패하였습니다.'
     console.log({ errorMessage })
     console.log(error)
-<<<<<<< HEAD
-<<<<<<< HEAD
     return res.status(500).json({ errorMessage })
-=======
-    res.status(500).json({ data: { message: '회원인증에 실패하였습니다.' } })
->>>>>>> upload thumbnail
-=======
-    res.status(500).json({ data: { message: '회원가입에 실패하였습니다.' } })
->>>>>>> rebase 전
   }
 }
 
@@ -313,19 +271,20 @@ const checkEmailAuth = async (req, res) => {
   }
 }
 
-const uploadThumbnail = async (req, res) =>{
-  try{
-    thumbnail = req.file.key
-    userId = req.token.id
-    await userService.saveUserThumbnail(thumbnail,userId)
-    // const userId = await userService.findUserIdByLocalId(local_id)
-    //   const token = authService.makeToken(userId)
-    //   res
-    //     .status(201)
-    //     .json({ data: { message: '회원가입에 성공했습니다.', token } })
-  }catch (error) {
+const uploadThumbnail = async (req, res) => {
+  const userService = new UserService()
+  const thumbnail = req.file.key
+  const userId = req.token.id
+  try {
+    await userService.saveUserThumbnail({ thumbnail, userId })
+    const data = { message: '이미지 저장에 성공하였습니다.' }
+    console.log(data)
+    res.status(201).json({ data })
+  } catch (error) {
+    const errorMessage = '이미지 저장에 실패하였습니다.'
+    console.log({ errorMessage })
     console.log(error)
-    res.status(500).json({ data: { message: '회원가입에 실패하였습니다.' } })
+    return res.status(500).json({ errorMessage })
   }
 }
 

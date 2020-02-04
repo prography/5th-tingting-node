@@ -95,7 +95,6 @@ class UserModel {
   async updateUserInfo (data) {
     await User.update(
       {
-        name: data.name,
         height: data.height,
         thumbnail: data.thumbnail
       },
@@ -114,15 +113,14 @@ class UserModel {
     return row
   }
 
-  async saveUserThumbnail(thumbnail){
+  async updateUserThumbnail (data) {
     await User.update(
       {
-        thumbnail
+        thumbnail: data.thumbnail
       },
-      { where:{}}
+      { where: { id: data.userId } }
     )
   }
-
 }
 
 module.exports = UserModel

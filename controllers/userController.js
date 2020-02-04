@@ -21,9 +21,9 @@ const getUserInfo = async (req, res) => {
 }
 
 const getUserThumbnailImg = async (req, res) => {
+  const userService = new UserService()
   try {
     const userId = req.params.userId
-    const userService = new UserService()
     const key = await userService.getUserThumbnailUrl(userId)
     const stream = await download(key)
     if (stream === false) {
@@ -38,11 +38,11 @@ const getUserThumbnailImg = async (req, res) => {
 }
 
 const getUserProfileImg = async (req, res) => {
+  const userService = new UserService()
   try {
     const userId = req.params.userId
     const imgId = req.params.imgId
-    const userService = new UserService()
-    const key = await userService.getUserThumbnailUrl(userId)
+    const key = await userService.getUserProfileImgUrl({ userId, imgId })
     const stream = await download(key)
     if (stream === false) {
       res.status(404).json({ errorMessage: '사진이 존재하지 않음' })
