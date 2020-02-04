@@ -37,7 +37,6 @@ const kakaoLogin = async (req, res, next) => {
           console.log({ errorMessage })
           return res.status(401).json({ errorMessage })
         }
-        // upload
         await userService.saveUserByKakao({
           kakao_id: kakaoId,
           name,
