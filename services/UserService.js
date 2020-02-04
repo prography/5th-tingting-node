@@ -73,6 +73,16 @@ class UserService {
     }
   }
 
+
+  async saveUserThumbnail(thumbnail){
+    try{
+      await this.userModel.saveUserThumbnail(thumbnail)
+    }catch(error){
+      console.log(error)
+      throw new Error(error)
+    }
+  }
+
   async getUserThumbnailUrl (userId) {
     try {
       const user = await this.userModel.findUserInfo(userId)

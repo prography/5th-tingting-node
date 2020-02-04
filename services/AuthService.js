@@ -7,9 +7,6 @@ const UserModel = require('../models/UserModel.js')
 const fs = require('fs')
 const path = require('path')
 const axios = require('axios')
-const AWS = require('aws-sdk')
-const multer = require('multer')
-const multerS3 = require('multer-s3')
 
 class AuthService {
   constructor () {
@@ -201,55 +198,6 @@ class AuthService {
       const { email } = token
       await this.authModel.setIsAuthenticatedByEmail(email)
     } catch (error) {
-      console.log(error)
-      throw new Error(error)
-    }
-  }
-
-  async saveThumbnail(thumbnail){
-    try{
-      // AWS.config.update({
-      //   region: 'ap-northeast-2',
-      //   accessKeyId: process.env.S3_ACCESS_KEY_ID,
-      //   secretAccessKey: process.env.S3_SECRET_ACCESS_KEY,
-      // });
-
-      const s3 = new AWS.S3({
-        region: 'ap-northeast-2',
-        accessKeyId: process.env.S3_ACCESS_KEY_ID,
-        secretAccessKey: process.env.S3_SECRET_ACCESS_KEY,
-    });
-      
-      // const upload = multer({
-      //   storage: multerS3({
-      //     s3: new AWS.S3(),
-      //     bucket: 'tingting-profile-img',
-      //     contentType: multerS3.AUTO_CONTENT_TYPE,
-      //     key(req, file, cb) {
-      //       cb(null, `origin/${+new Date()}${path.basename(file.originalname)}`);
-      //     },
-      //   }),
-      //   limits: { fileSize: 200 * 1024 * 1024 },
-      // });
-
-      var param = {
-        'Bucket':'tingting-profile-img',
-        'Key': 'origin/${+new Date()}${path.basename(file.originalname)}',
-        'Body': thumbnail,
-        //'ACL':'public-read',
-        //'Body':fs.createReadStream('94.png'),
-        //'ContentType':'image/png'
-        //'Limits': { fileSize: 200 * 1024 * 1024 }
-    }
-
-    s3.upload(param, function(err, data){
-      if(err) {
-          console.log(err);
-      }
-      console.log(data);
-  });
-  return data
-    }catch(error){
       console.log(error)
       throw new Error(error)
     }

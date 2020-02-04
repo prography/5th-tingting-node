@@ -151,9 +151,12 @@ const localSignup = async (req, res, next) => {
         return res.status(401).json({ errorMessage })
       }
 <<<<<<< HEAD
+<<<<<<< HEAD
       // else {
       //   next()
       // }
+=======
+>>>>>>> rebase 전
       await userService.saveUserByLocal({
         local_id,
         password: encryptInfo.encryptedPassword,
@@ -161,12 +164,16 @@ const localSignup = async (req, res, next) => {
         name,
         birth,
         height,
+<<<<<<< HEAD
         thumbnail,
+=======
+>>>>>>> rebase 전
         authenticated_address,
         gender
       })
       const userId = await userService.findUserIdByLocalId(local_id)
       const token = authService.makeToken(userId)
+<<<<<<< HEAD
       const data = { message: '회원가입에 성공했습니다.', token }
       console.log(data)
       res.status(201).json({ data })
@@ -176,16 +183,25 @@ const localSignup = async (req, res, next) => {
         .status(201)
         .json({ data: { message: '회원인증에 성공했습니다 -- thumbnail로 가세요', token } })
 >>>>>>> upload thumbnail
+=======
+      res
+        .status(201)
+        .json({ data: { message: '회원가입에 성공했습니다. 이제 이미지를 등록해 주세요', token } })
+>>>>>>> rebase 전
     }
   } catch (error) {
     const errorMessage = '회원가입에 실패하였습니다.'
     console.log({ errorMessage })
     console.log(error)
 <<<<<<< HEAD
+<<<<<<< HEAD
     return res.status(500).json({ errorMessage })
 =======
     res.status(500).json({ data: { message: '회원인증에 실패하였습니다.' } })
 >>>>>>> upload thumbnail
+=======
+    res.status(500).json({ data: { message: '회원가입에 실패하였습니다.' } })
+>>>>>>> rebase 전
   }
 }
 
@@ -299,39 +315,14 @@ const checkEmailAuth = async (req, res) => {
 
 const uploadThumbnail = async (req, res) =>{
   try{
-    const { token } = req
-    const thumbnail = req.file.location // 바꾸기 key로 
-    const {
-      body: {
-        local_id,
-        password,
-        name,
-        birth,
-        height,
-        authenticated_address,
-        gender
-      }
-    } = req
-
-    if (local_id.length !== 0){
-    await userService.saveUserByLocal({
-      local_id,
-      password: encryptInfo.encryptedPassword,
-      salt: encryptInfo.salt,
-      name,
-      birth,
-      height,
-      thumbnail,
-      authenticated_address,
-      gender
-    })
-    const userId = await userService.findUserIdByLocalId(local_id)
-    const token = authService.makeToken(userId)
-    res
-      .status(201)
-      .json({ data: { message: 'local 회원가입에 성공했습니다.', token } })
-  }
-      //kakao
+    thumbnail = req.file.key
+    userId = req.token.id
+    await userService.saveUserThumbnail(thumbnail,userId)
+    // const userId = await userService.findUserIdByLocalId(local_id)
+    //   const token = authService.makeToken(userId)
+    //   res
+    //     .status(201)
+    //     .json({ data: { message: '회원가입에 성공했습니다.', token } })
   }catch (error) {
     console.log(error)
     res.status(500).json({ data: { message: '회원가입에 실패하였습니다.' } })

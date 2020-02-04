@@ -9,7 +9,6 @@ class UserModel {
       name: data.name,
       birth: data.birth,
       height: data.height,
-      thumbnail: data.thumbnail,
       authenticated_address: data.authenticated_address,
       gender: data.gender
     })
@@ -114,6 +113,16 @@ class UserModel {
     })
     return row
   }
+
+  async saveUserThumbnail(thumbnail){
+    await User.update(
+      {
+        thumbnail
+      },
+      { where:{}}
+    )
+  }
+
 }
 
 module.exports = UserModel
