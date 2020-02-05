@@ -35,8 +35,21 @@ class ProfileImgModel {
       {
         url: data.profileImg
       },
-      { where: { id: data.imgId } }
-    )
+      {
+        where: {
+          id: data.imgId,
+          user_id: data.userId
+        }
+      })
+  }
+
+  async deleteUserProfileImg (data) {
+    await ProfileImg.destroy({
+      where: {
+        id: data.imgId,
+        user_id: data.userId
+      }
+    })
   }
 }
 

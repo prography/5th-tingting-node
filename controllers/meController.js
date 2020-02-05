@@ -223,6 +223,7 @@ const saveMyProfileImg = async (req, res) => {
 const updateMyProfileImg = async (req, res) => {
   const myService = new MeService()
   const profileImg = req.file.key
+  const userId = req.token.id
   const imgId = req.params.imgId
   try {
     const key = await myService.getMyProfileImgUrl(imgId)
@@ -231,8 +232,29 @@ const updateMyProfileImg = async (req, res) => {
       Bucket: process.env.BUCKET,
       Key: key
     }).promise()
-    await myService.updateMyProfileImg({ profileImg, imgId })
+    await myService.updateMyProfileImg({ profileImg, imgId, userId })
     const data = { message: '이미지 수정에 성공했습니다.' }
+    console.log(data)
+    res.status(201).json({ data })
+  } catch (error) {
+    console.log(error)
+    res.status(500).json({ errorMessage: '서버 에러' })
+  }
+}
+
+const deleteMyProfileImg = async (req, res) => {
+  const myService = new MeService()
+  const userId = req.token.id
+  const imgId = req.params.imgId
+  try {
+    const key = await myService.getMyProfileImgUrl(imgId)
+    var s3 = new AWS.S3()
+    await s3.deleteObject({
+      Bucket: process.env.BUCKET,
+      Key: key
+    }).promise()
+    await myService.deleteMyProfileImg({ userId, imgId })
+    const data = { message: '이미지 삭제에 성공했습니다.' }
     console.log(data)
     res.status(201).json({ data })
   } catch (error) {
@@ -249,5 +271,6 @@ module.exports = {
   leaveMyTeam,
   updateMyThumbnailImg,
   saveMyProfileImg,
-  updateMyProfileImg
+  updateMyProfileImg,
+  deleteMyProfileImg
 }

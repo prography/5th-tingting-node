@@ -78,8 +78,7 @@ class TeamService {
         teamInfo.hasPassword = teamInfo.password !== null && teamInfo.password !== ''
         delete teamInfo.password
       }
-      if (teamInfo) 
-      return teamInfo
+      if (teamInfo) { return teamInfo }
     } catch (error) {
       console.log(error)
       throw new Error(error)
