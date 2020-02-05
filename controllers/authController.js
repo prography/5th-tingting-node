@@ -320,28 +320,19 @@ const checkValidityForIdAndSendEmail = async (req, res) => {
 }
 
 // 비밀번호 찾기 - 유저 존재 여부
-<<<<<<< HEAD
 const checkValidityForPasswordAndSendEmail = async (req, res) => {
-=======
-const checkValidityForPassword = async (req, res) => {
->>>>>>> find and reset password
   const userService = new UserService()
   const authService = new AuthService()
   const {
     body: { localId, email }
   } = req
   try {
-<<<<<<< HEAD
     const exUserId = await userService.findUserByLocalIdAndEmail(localId, email)
-=======
-    const exUserId = await userService.findUserByLocalIdAndEmail(localId, email) // 추가
->>>>>>> find and reset password
     if (!exUserId) {
       const errorMessage = '잘못된 아이디 또는 이메일입니다.'
       console.log({ errorMessage })
       res.status(400).json({ errorMessage })
     } else {
-<<<<<<< HEAD
       await authService.saveAuthenticatedEmailToResetPassword(email)
       await authService.sendEmailToResetPassword(email)
       const data = { message: '비밀번호 재설정 메일을 전송했습니다.' }
@@ -385,15 +376,6 @@ const checkEmailAuthForPassword = async (req, res) => {
       const errorMessage = '인증이 필요한 이메일입니다.'
       console.log({ errorMessage })
       res.status(401).json({ errorMessage })
-=======
-      const token = authService.makeToken(exUserId)
-      const data = {
-        message: '존재하는 사용자이므로 비밀번호 재설정을 진행합니다. ',
-        token
-      }
-      console.log(data)
-      res.status(200).json({ data })
->>>>>>> find and reset password
     }
   } catch (error) {
     console.log(error)
@@ -405,7 +387,6 @@ const checkEmailAuthForPassword = async (req, res) => {
 const resetPassword = async (req, res) => {
   const userService = new UserService()
   const authService = new AuthService()
-<<<<<<< HEAD
   const {
     body: { password, email }
   } = req
@@ -422,18 +403,6 @@ const resetPassword = async (req, res) => {
       console.log({ errorMessage })
       res.status(401).json({ errorMessage })
     }
-=======
-  const id = req.token.id
-  const {
-    body: { password }
-  } = req
-  try {
-    const encryptInfo = await authService.encryptPassword(password)
-    await userService.updatePassword(id, encryptInfo)
-    const data = { message: '비밀번호를 재설정하였습니다.' }
-    console.log(data)
-    res.status(200).json({ data })
->>>>>>> find and reset password
   } catch (error) {
     console.log(error)
     res.status(500).json({ errorMessage: '서버 에러' })
