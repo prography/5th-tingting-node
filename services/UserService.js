@@ -2,12 +2,12 @@ const UserModel = require('../models/UserModel')
 const AvailableEmailModel = require('../models/AvailableEmailModel')
 
 class UserService {
-  constructor () {
+  constructor() {
     this.userModel = new UserModel()
     this.availableEmailModel = new AvailableEmailModel()
   }
 
-  async getUserInfo (userId) {
+  async getUserInfo(userId) {
     try {
       const userInfo = await this.userModel.findUserInfo(userId)
       const email = userInfo.authenticated_address
@@ -23,7 +23,7 @@ class UserService {
     }
   }
 
-  async findUserIdByKaKaoId (kakaoId) {
+  async findUserIdByKaKaoId(kakaoId) {
     try {
       const user = await this.userModel.findUserByKaKaoId(kakaoId)
       const userId = user ? user.id : null
@@ -34,7 +34,7 @@ class UserService {
     }
   }
 
-  async findUserIdByLocalId (localId) {
+  async findUserIdByLocalId(localId) {
     try {
       const user = await this.userModel.findUserByLocalId(localId)
       const userId = user ? user.id : null
@@ -45,7 +45,7 @@ class UserService {
     }
   }
 
-  async findAuthInfoByLocalId (localId) {
+  async findAuthInfoByLocalId(localId) {
     try {
       const authInfo = await this.userModel.findAuthInfoByLocalId(localId)
       return authInfo
@@ -55,17 +55,18 @@ class UserService {
     }
   }
 
-  async findLocalIdByEmail (email) {
+  async findLocalIdByEmail(email) {
     try {
-      const localId = await this.userModel.findLocalIdByEmail(email)
-      return localId.local_id
+      const user = await this.userModel.findUserByEmail(email)
+      const localId = user ? user.local_id : null
+      return localId
     } catch (error) {
       console.log(error)
       throw new Error(error)
     }
   }
 
-  async findUserByLocalIdAndEmail (localId, email) {
+  async findUserByLocalIdAndEmail(localId, email) {
     try {
       const user = await this.userModel.findUserByLocalIdAndEmail(
         localId,
@@ -79,7 +80,7 @@ class UserService {
     }
   }
 
-  async saveUserByKakao (data) {
+  async saveUserByKakao(data) {
     try {
       await this.userModel.saveUserByKakao(data)
     } catch (error) {
@@ -88,7 +89,7 @@ class UserService {
     }
   }
 
-  async saveUserByLocal (data) {
+  async saveUserByLocal(data) {
     try {
       await this.userModel.saveUserByLocal(data)
     } catch (error) {
@@ -97,7 +98,7 @@ class UserService {
     }
   }
 
-  async updatePassword (id, encryptInfo) {
+  async updatePassword(id, encryptInfo) {
     try {
       await this.userModel.updatePassword(id, encryptInfo)
     } catch (error) {
