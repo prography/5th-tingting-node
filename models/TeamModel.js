@@ -6,7 +6,7 @@ class TeamModel {
   // 전체 팀 리스트 찾기(User is not owner)
   async findTeamsWithNoneOwner (userId, gender) {
     const teams = await Team.findAll({
-      attributes: ['id', 'owner_id', 'name', 'max_member_number'],
+      attributes: ['id', 'owner_id', 'name', 'place', 'max_member_number'],
       where: {
         owner_id: { [Op.ne]: userId },
         gender,

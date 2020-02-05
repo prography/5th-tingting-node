@@ -37,7 +37,8 @@ const User = db.define(
     },
     thumbnail: {
       type: Sequelize.STRING(45),
-      allowNull: false
+      allowNull: true,
+      defaultValue: null
     },
     authenticated_address: {
       type: Sequelize.STRING(45),

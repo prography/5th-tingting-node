@@ -1,4 +1,5 @@
 const UserService = require('../services/UserService')
+const download = require('../utils/download')
 
 const getUserInfo = async (req, res) => {
   const userService = new UserService()
@@ -19,6 +20,43 @@ const getUserInfo = async (req, res) => {
   }
 }
 
+const getUserThumbnailImg = async (req, res) => {
+  const userService = new UserService()
+  try {
+    const userId = req.params.userId
+    const key = await userService.getUserThumbnailUrl(userId)
+    const stream = await download(key)
+    if (stream === false) {
+      res.status(404).json({ errorMessage: '사진이 존재하지 않음' })
+    } else {
+      res.attachment(key)
+      stream.pipe(res)
+    }
+  } catch (error) {
+    res.status(500).json({ errorMessage: '사용자 불러오기 실패' })
+  }
+}
+
+const getUserProfileImg = async (req, res) => {
+  const userService = new UserService()
+  try {
+    const userId = req.params.userId
+    const imgId = req.params.imgId
+    const key = await userService.getUserProfileImgUrl({ userId, imgId })
+    const stream = await download(key)
+    if (stream === false) {
+      res.status(404).json({ errorMessage: '사진이 존재하지 않음' })
+    } else {
+      res.attachment(key)
+      stream.pipe(res)
+    }
+  } catch (error) {
+    res.status(500).json({ errorMessage: '사용자 불러오기 실패' })
+  }
+}
+
 module.exports = {
-  getUserInfo
+  getUserInfo,
+  getUserThumbnailImg,
+  getUserProfileImg
 }
