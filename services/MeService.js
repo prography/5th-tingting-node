@@ -4,6 +4,7 @@ const BelongModel = require('../models/BelongModel')
 const AvailableEmailModel = require('../models/AvailableEmailModel')
 const MatchingModel = require('../models/MatchingModel')
 const ApplyModel = require('../models/ApplyModel')
+const ProfileImgModel = require('../models/ProfileImgModel')
 
 class MeService {
   constructor () {
@@ -13,6 +14,7 @@ class MeService {
     this.availableEmailModel = new AvailableEmailModel()
     this.matchingModel = new MatchingModel()
     this.applyModel = new ApplyModel()
+    this.profileImgModel = new ProfileImgModel()
   }
 
   async getMyInfo (userId) {
@@ -23,6 +25,8 @@ class MeService {
       const school = await this.availableEmailModel.findSchoolByDomain(domain)
       const schoolName = school.name
       myInfo.schoolName = schoolName
+      const profileImgIds = await this.profileImgModel.findProfileImgIdsByUserId(userId)
+      myInfo.profileImgIds = profileImgIds
       delete myInfo.authenticated_address
       return myInfo
     } catch (error) {
@@ -113,6 +117,43 @@ class MeService {
     try {
       await this.belongModel.deleteBelongByUserIdAndTeamId(data)
       await this.teamModel.updateTeamIsVerified({ teamId, isVerified })
+    } catch (error) {
+      console.log(error)
+      throw new Error(error)
+    }
+  }
+
+  async saveMyThumbnail (data) {
+    try {
+      await this.userModel.updateUserThumbnail(data)
+    } catch (error) {
+      console.log(error)
+      throw new Error(error)
+    }
+  }
+
+  async saveMyProfileImg (data) {
+    try {
+      await this.profileImgModel.saveUserProfileImg(data)
+    } catch (error) {
+      console.log(error)
+      throw new Error(error)
+    }
+  }
+
+  async getMyProfileImgUrl (imgId) {
+    try {
+      const profileImg = await this.profileImgModel.findProfileImg(imgId)
+      return profileImg.url
+    } catch (error) {
+      console.log(error)
+      throw new Error(error)
+    }
+  }
+
+  async updateMyProfileImg (data) {
+    try {
+      await this.profileImgModel.updateUserProfileImg(data)
     } catch (error) {
       console.log(error)
       throw new Error(error)

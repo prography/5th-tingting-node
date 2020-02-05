@@ -9,7 +9,6 @@ class UserModel {
       name: data.name,
       birth: data.birth,
       height: data.height,
-      thumbnail: data.thumbnail,
       authenticated_address: data.authenticated_address,
       gender: data.gender
     })
@@ -21,7 +20,6 @@ class UserModel {
       name: data.name,
       birth: data.birth,
       height: data.height,
-      thumbnail: data.thumbnail,
       authenticated_address: data.authenticated_address,
       gender: data.gender
     })
@@ -96,7 +94,6 @@ class UserModel {
   async updateUserInfo (data) {
     await User.update(
       {
-        name: data.name,
         height: data.height,
         thumbnail: data.thumbnail
       },
@@ -113,6 +110,15 @@ class UserModel {
       raw: true
     })
     return row
+  }
+
+  async updateUserThumbnail (data) {
+    await User.update(
+      {
+        thumbnail: data.thumbnail
+      },
+      { where: { id: data.userId } }
+    )
   }
 }
 
