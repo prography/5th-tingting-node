@@ -49,6 +49,10 @@ class TeamService {
         return !teamIdListWithMember.includes(team.id)
       })
       for (const idx in teamList) {
+        const teamPassword = await this.teamModel.findTeamPassword(
+          teamList[idx].id
+        )
+        teamList[idx].hasPassword = teamPassword !== null && teamPassword !== '' // legacy
         const teamMembersInfo = await this.belongModel.findUsersByTeamId(
           teamList[idx].id
         )
@@ -70,7 +74,11 @@ class TeamService {
   async getTeamInfo (teamId) {
     try {
       const teamInfo = await this.teamModel.findTeamInfo(teamId)
-      if (teamInfo) delete teamInfo.password
+      if (teamInfo) {
+        teamInfo.hasPassword = teamInfo.password !== null && teamInfo.password !== ''
+        delete teamInfo.password
+      }
+      if (teamInfo) 
       return teamInfo
     } catch (error) {
       console.log(error)

@@ -112,7 +112,7 @@ const joinTeam = async (req, res) => {
       })
       if (isTeamPossibleToJoin) {
         const teamPassword = await teamService.getTeamPassword(teamId)
-        if (teamPassword !== null) {
+        if (teamPassword !== null && teamPassword !== '') {
           // 비밀번호가 있는 경우
           if (teamPassword === password) {
             await teamService.joinTeamToBelong(teamId, userId)
