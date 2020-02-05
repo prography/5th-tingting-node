@@ -2,6 +2,7 @@ const fs = require('fs')
 const path = require('path')
 
 const UserService = require('../services/UserService')
+const MeService = require('../services/MeService')
 const AuthService = require('../services/AuthService')
 
 // 카카오 로그인 및 회원가입
@@ -271,11 +272,11 @@ const checkEmailAuth = async (req, res) => {
 }
 
 const uploadThumbnail = async (req, res) => {
-  const userService = new UserService()
+  const meService = new MeService()
   const thumbnail = req.file.key
   const userId = req.token.id
   try {
-    await userService.saveUserThumbnail({ thumbnail, userId })
+    await meService.saveMyThumbnail({ thumbnail, userId })
     const data = { message: '이미지 저장에 성공하였습니다.' }
     console.log(data)
     res.status(201).json({ data })

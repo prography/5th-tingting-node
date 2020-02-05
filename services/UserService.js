@@ -76,15 +76,6 @@ class UserService {
     }
   }
 
-  async saveUserThumbnail (data) {
-    try {
-      await this.userModel.updateUserThumbnail(data)
-    } catch (error) {
-      console.log(error)
-      throw new Error(error)
-    }
-  }
-
   async getUserThumbnailUrl (userId) {
     try {
       const user = await this.userModel.findUserInfo(userId)

@@ -123,6 +123,15 @@ class MeService {
     }
   }
 
+  async saveMyThumbnail (data) {
+    try {
+      await this.userModel.updateUserThumbnail(data)
+    } catch (error) {
+      console.log(error)
+      throw new Error(error)
+    }
+  }
+
   async saveMyProfileImg (data) {
     try {
       await this.profileImgModel.saveUserProfileImg(data)

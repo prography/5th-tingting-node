@@ -183,6 +183,7 @@ const leaveMyTeam = async (req, res) => {
 
 const updateMyThumbnailImg = async (req, res) => {
   const userService = new UserService()
+  const myService = new MeService()
   const thumbnail = req.file.key
   const userId = req.token.id
   try {
@@ -192,7 +193,7 @@ const updateMyThumbnailImg = async (req, res) => {
       Bucket: process.env.BUCKET,
       Key: key
     }).promise()
-    await userService.saveUserThumbnail({ thumbnail, userId })
+    await myService.saveMyThumbnail({ thumbnail, userId })
     const data = { message: '이미지 수정에 성공했습니다.' }
     console.log(data)
     res.status(201).json({ data })
