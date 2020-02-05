@@ -339,7 +339,7 @@ const resetPassword = async (req, res) => {
     await userService.updatePassword(id, encryptInfo)
     const data = { message: '비밀번호를 재설정하였습니다.' }
     console.log(data)
-    res.status(200).json({ data })
+    res.status(201).json({ data })
   } catch (error) {
     console.log(error)
     res.status(500).json({ errorMessage: '서버 에러' })
