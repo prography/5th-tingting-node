@@ -61,8 +61,9 @@ class UserService {
 
   async findLocalIdByEmail (email) {
     try {
-      const localId = await this.userModel.findLocalIdByEmail(email)
-      return localId.local_id
+      const user = await this.userModel.findUserByEmail(email)
+      const localId = user ? user.local_id : null
+      return localId
     } catch (error) {
       console.log(error)
       throw new Error(error)
@@ -101,7 +102,6 @@ class UserService {
     }
   }
 
-<<<<<<< HEAD
   async getUserThumbnailUrl (userId) {
     try {
       const user = await this.userModel.findUserInfo(userId)
@@ -123,16 +123,21 @@ class UserService {
         const profileImg = await this.profileImgModel.findProfileImg(imgId)
         return profileImg.url
       }
-=======
-  async updatePassword (id, encryptInfo) {
-    try {
-      await this.userModel.updatePassword(id, encryptInfo)
->>>>>>> find and reset password
     } catch (error) {
       console.log(error)
       throw new Error(error)
     }
   }
+
+  async updatePasswordByEmail (email, encryptInfo) {
+    try {
+      await this.userModel.updatePassword(email, encryptInfo)
+    } catch (error) {
+      console.log(error)
+      throw new Error(error)
+    }
+ }
+
 }
 
 module.exports = UserService
