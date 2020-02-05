@@ -12,7 +12,7 @@ const {
   checkValidityForPassword,
   resetPassword
 } = require('../../../controllers/authController')
-const { verifyEmailToken } = require('../../../middlewares/auth')
+const { verifyToken, verifyEmailToken } = require('../../../middlewares/auth')
 const router = express.Router()
 
 router.post('/kakao/login', kakaoLogin)
@@ -25,6 +25,6 @@ router.get('/school/confirm', verifyEmailToken, confirmEmailToken)
 router.get('/school/complete', checkEmailAuth)
 router.get('/find/id', checkValidityForIdAndSendEmail)
 router.get('/find/password', checkValidityForPassword)
-router.post('/reset/password', resetPassword)
+router.post('/reset/password', verifyToken, resetPassword)
 
 module.exports = router
