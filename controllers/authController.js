@@ -5,7 +5,7 @@ const UserService = require('../services/UserService')
 const AuthService = require('../services/AuthService')
 
 // 카카오 로그인 및 회원가입
-const kakaoLogin = async (req, res, next) => {
+const kakaoLogin = async (req, res) => {
   const userService = new UserService()
   const authService = new AuthService()
   try {
@@ -108,7 +108,7 @@ const localLogin = async (req, res) => {
 }
 
 // 로컬 회원가입
-const localSignup = async (req, res, next) => {
+const localSignup = async (req, res) => {
   const userService = new UserService()
   const authService = new AuthService()
   const {

@@ -11,7 +11,7 @@ class ProfileImgModel {
     return row
   }
 
-  async findProfileImgIdByUserId (user_id) {
+  async findProfileImgIdsByUserId (user_id) {
     const imgIds = await ProfileImg.findAll({
       attributes: ['id'],
       where: {

@@ -16,8 +16,8 @@ class UserService {
       const school = await this.availableEmailModel.findSchoolByDomain(domain)
       const schoolName = school.name
       userInfo.schoolName = schoolName
-      const profileImg = await this.profileImgModel.findProfileImgIdByUserId(userId)
-      userInfo.profileImg = profileImg
+      const profileImgIds = await this.profileImgModel.findProfileImgIdsByUserId(userId)
+      userInfo.profileImgIds = profileImgIds
       delete userInfo.authenticated_address
       return userInfo
     } catch (error) {
