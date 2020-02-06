@@ -2,75 +2,33 @@
 <html>
 
 <head>
-  <style>
-    table {
-      width: 600px;
-    }
-    div {
-      text-align: center;
-    }
-    hr {
-      width: 600px;
-      color: #FF7D70;
-      border: thin solid;
-    }
-    span {
-      color: #FF7D70;
-    }
-    a {
-      font-size: 10px;
-      color: rgb(235, 154, 146);
-      text-decoration: none;
-    }
-    button {
-      width: 300px;
-      height: 35px;
-      border: #FF7D70 2px solid;
-      background-color: white;
-      color: #FF7D70;
-      text-align: center;
-      border-radius: 4px;
-      cursor: pointer;
-    }
-    button:hover {
-      background-color: #FF7D70;
-      color: white;
-    }
-    .small {
-      font-size: 10px;
-    }
-    .notice {
-      font-size: 10px;
-      color: darkgray;
-    }
-  </style>
 </head>
 
 <body>
-  <table align=center>
+  <table align=center style="width: 600px;text-align: center;">
     <tr>
       <td>
         <img src="tingtinglogo.png" alt="TingTing " width="150" height="50"><br />
-        <hr>
+        <hr style="width: 600px;color: #FF7D70;border: thin solid;">
         <div>
           <br />
           안녕하세요.<br />
-          팅팅 회원가입을 위한 <span>인증 메일</span>입니다. <br /><br />
+          팅팅 회원가입을 위한 <span style="color: #FF7D70;">인증 메일</span>입니다. <br /><br />
           <strong>아래 버튼을 클릭하여 이메일 인증을 완료하세요.</strong><br /><br />
-          <hr><br />
+          <hr style="width: 600px;color: #FF7D70;border: thin solid;"><br />
           <a href="http://api.tingting.kr/api/v1/auth/school/confirm?token=">
             <button
-              onclick="document.getElementById('after').innerHTML = '인증되었습니다!!!!! 앱으로 돌아가서 남은 회원가입을 완료하세요!!!!!!!!';">
+              onclick="document.getElementById('after').innerHTML = '인증되었습니다!!!!! 앱으로 돌아가서 남은 회원가입을 완료하세요!!!!!!!!';"
+              style=" width: 300px;height: 35px;border: #FF7D70 2px solid;background-color: white;color: #FF7D70;text-align: center;border-radius: 4px;cursor: pointer;"
+              onMouseOver="this.style.color='#FFFFFF';this.style.backgroundColor ='#FF7D70';" onMouseOut="this.style.color='#FF7D70';this.style.backgroundColor ='#FFFFFF';">
               인증하기
             </button>
           </a>
           <p id="after"></p>
-        </div>
-        <div>
-          <p class="small">* 이 링크는 30분 동안 유효합니다. 30분이 지난 후에는 다시 인증받으세요.</p><br /><br />
-          <p class="notice">본 메일은 발신 전용 메일로 회신되지 않습니다.</p><br /><br />
-          <a href="https://api.tingting.kr/api/v1/policy/rule">●서비스 이용 약관 </a>
-          <a href="https://api.tingting.kr/api/v1/policy/privacy">●개인정보 처리방침</a>
+          <p style="font-size: 10px;">* 이 링크는 30분 동안 유효합니다. 30분이 지난 후에는 다시 인증받으세요.</p><br /><br />
+          <p style="font-size: 10px;color: darkgray;">본 메일은 발신 전용 메일로 회신되지 않습니다.</p><br /><br />
+          <a href="https://api.tingting.kr/api/v1/policy/rule" style="font-size: 10px;color: rgb(235, 154, 146);text-decoration: none;">●서비스 이용 약관 </a>
+          <a href="https://api.tingting.kr/api/v1/policy/privacy" style="font-size: 10px;color: rgb(235, 154, 146);text-decoration: none;">●개인정보 처리방침</a>
         </div>
       </td>
     </tr>
