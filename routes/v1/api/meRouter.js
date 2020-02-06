@@ -9,7 +9,8 @@ const {
   leaveMyTeam,
   updateMyThumbnailImg,
   saveMyProfileImg,
-  updateMyProfileImg
+  updateMyProfileImg,
+  deleteMyProfileImg
 } = require('../../../controllers/meController')
 
 const router = express.Router()
@@ -22,5 +23,6 @@ router.post('/teams/:id/leave', verifyToken, leaveMyTeam) // 내 팀 떠나기
 router.patch('/thumbnail-img', verifyToken, upload.single('thumbnail'), updateMyThumbnailImg) // 내 썸네일 사진 수정
 router.post('/profile-img', verifyToken, upload.single('profileImg'), saveMyProfileImg)// 내 프로필 이미지 저장
 router.patch('/profile-img/:imgId', verifyToken, upload.single('profileImg'), updateMyProfileImg)// 내 프로필 이미지 수정
+router.delete('/profile-img/:imgId', verifyToken, deleteMyProfileImg)// 내 프로필 이미지 삭제
 
 module.exports = router

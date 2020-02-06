@@ -159,6 +159,15 @@ class MeService {
       throw new Error(error)
     }
   }
+
+  async deleteMyProfileImg (data) {
+    try {
+      await this.profileImgModel.deleteUserProfileImg(data)
+    } catch (error) {
+      console.log(error)
+      throw new Error(error)
+    }
+  }
 }
 
 module.exports = MeService
