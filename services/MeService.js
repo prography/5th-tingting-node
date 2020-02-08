@@ -111,12 +111,12 @@ class MeService {
 
   async removeMeFromTeam (data) {
     // belong table delete by userId,teamId
-    const isVerified = 0
+    const is_verified = 0
     const teamId = data.teamId
     // team is_verifiied false
     try {
       await this.belongModel.deleteBelongByUserIdAndTeamId(data)
-      await this.teamModel.updateTeamIsVerified({ teamId, isVerified })
+      await this.teamModel.updateTeamIsVerified({ teamId, is_verified })
     } catch (error) {
       console.log(error)
       throw new Error(error)
