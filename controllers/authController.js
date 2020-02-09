@@ -48,7 +48,10 @@ const kakaoLogin = async (req, res) => {
         })
         const userId = await userService.findUserIdByKaKaoId(kakaoId)
         const token = authService.makeToken(userId)
-        const data = { message: '회원가입에 성공했습니다. 이미지를 추가해주세요.', token }
+        const data = {
+          message: '회원가입에 성공했습니다. 이미지를 추가해주세요.',
+          token
+        }
         console.log(data)
         res.status(201).json({ data })
       }
@@ -151,7 +154,10 @@ const localSignup = async (req, res) => {
       })
       const userId = await userService.findUserIdByLocalId(local_id)
       const token = authService.makeToken(userId)
-      const data = { message: '회원가입에 성공했습니다. 이미지를 추가해주세요.', token }
+      const data = {
+        message: '회원가입에 성공했습니다. 이미지를 추가해주세요.',
+        token
+      }
       console.log(data)
       res.status(201).json({ data })
     }
@@ -273,6 +279,7 @@ const checkEmailAuth = async (req, res) => {
 
 const uploadThumbnail = async (req, res) => {
   const meService = new MeService()
+  console.log(req.file) //여기 수정
   const thumbnail = req.file.key
   const userId = req.token.id
   try {
