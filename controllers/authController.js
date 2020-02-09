@@ -279,7 +279,6 @@ const checkEmailAuth = async (req, res) => {
 
 const uploadThumbnail = async (req, res) => {
   const meService = new MeService()
-  console.log(req.file) //여기 수정
   const thumbnail = req.file.key
   const userId = req.token.id
   try {
@@ -291,7 +290,7 @@ const uploadThumbnail = async (req, res) => {
     const errorMessage = '이미지 저장에 실패하였습니다.'
     console.log({ errorMessage })
     console.log(error)
-    return res.status(500).json({ errorMessage })
+    res.status(500).json({ errorMessage })
   }
 }
 
