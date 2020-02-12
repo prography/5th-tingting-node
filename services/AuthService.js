@@ -42,7 +42,7 @@ class AuthService {
       },
       process.env.JWT_SECRET,
       {
-        expiresIn: 365 * 24 * 60 * 60 * 1000, // 1년
+        expiresIn: 365 * 24 * 60 * 60, // 1년
         issuer: 'tingting'
       }
     )
@@ -56,7 +56,7 @@ class AuthService {
       },
       process.env.JWT_SECRET_EMAIL,
       {
-        expiresIn: 30 * 60 * 1000, // 30분
+        expiresIn: 30 * 60, // 30분
         issuer: 'tingting'
       }
     )
