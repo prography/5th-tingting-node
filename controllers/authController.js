@@ -48,7 +48,10 @@ const kakaoLogin = async (req, res) => {
         })
         const userId = await userService.findUserIdByKaKaoId(kakaoId)
         const token = authService.makeToken(userId)
-        const data = { message: '회원가입에 성공했습니다. 이미지를 추가해주세요.', token }
+        const data = {
+          message: '회원가입에 성공했습니다. 이미지를 추가해주세요.',
+          token
+        }
         console.log(data)
         res.status(201).json({ data })
       }
@@ -151,7 +154,10 @@ const localSignup = async (req, res) => {
       })
       const userId = await userService.findUserIdByLocalId(local_id)
       const token = authService.makeToken(userId)
-      const data = { message: '회원가입에 성공했습니다. 이미지를 추가해주세요.', token }
+      const data = {
+        message: '회원가입에 성공했습니다. 이미지를 추가해주세요.',
+        token
+      }
       console.log(data)
       res.status(201).json({ data })
     }
@@ -284,7 +290,7 @@ const uploadThumbnail = async (req, res) => {
     const errorMessage = '이미지 저장에 실패하였습니다.'
     console.log({ errorMessage })
     console.log(error)
-    return res.status(500).json({ errorMessage })
+    res.status(500).json({ errorMessage })
   }
 }
 
