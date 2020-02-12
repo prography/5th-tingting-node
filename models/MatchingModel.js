@@ -168,18 +168,25 @@ class MatchingModel {
       where: {
         receive_team_id: teamId,
         send_accept_all: 1,
-        receive_accept_all: 0,
         is_deleted: 0
       },
-      include: [{
-        model: Team,
-        as: 'sendTeam',
-        attributes: ['id', 'name', 'place', 'owner_id', 'max_member_number', 'chat_address']
-      },
-      {
-        model: Accept,
-        attributes: ['accepter_id']
-      }
+      include: [
+        {
+          model: Team,
+          as: 'sendTeam',
+          attributes: [
+            'id',
+            'name',
+            'place',
+            'owner_id',
+            'max_member_number',
+            'chat_address'
+          ]
+        },
+        {
+          model: Accept,
+          attributes: ['accepter_id']
+        }
       ]
     })
     teams.forEach(team => {
