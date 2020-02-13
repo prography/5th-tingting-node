@@ -28,6 +28,7 @@ class MeService {
       const profileImgIds = await this.profileImgModel.findProfileImgIdsByUserId(userId)
       myInfo.profileImgIds = profileImgIds
       delete myInfo.authenticated_address
+      myInfo.thumbnail = `https://api.tingting.kr/api/v1/users/${userId}/thumbnail-img`
       return myInfo
     } catch (error) {
       console.log(error)

@@ -43,7 +43,6 @@ class UserModel {
       },
       raw: true
     })
-    user.thumbnail = `https://api.tingting.kr/api/v1/${user.id}/thumbnail-img`
     return user
   }
 
