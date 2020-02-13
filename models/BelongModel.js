@@ -56,6 +56,8 @@ class BelongModel {
     const users = team.users
     for (const idx in users) {
       delete users[idx].dataValues.belongs
+      const userId = users[idx].id
+      users[idx].dataValues.thumbnail = `https://api.tingting.kr/api/v1/${userId}/thumbnail-img`
     }
     return users
   }
