@@ -189,10 +189,12 @@ const updateMyThumbnailImg = async (req, res) => {
   try {
     const key = await userService.getUserThumbnailUrl(userId)
     var s3 = new AWS.S3()
-    await s3.deleteObject({
-      Bucket: process.env.BUCKET,
-      Key: key
-    }).promise()
+    if (key) {
+      await s3.deleteObject({
+        Bucket: process.env.BUCKET,
+        Key: key
+      }).promise()
+    }
     await myService.saveMyThumbnail({ thumbnail, userId })
     const data = { message: '이미지 수정에 성공했습니다.' }
     console.log(data)

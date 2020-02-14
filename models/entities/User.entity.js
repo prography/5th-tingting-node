@@ -24,8 +24,7 @@ const User = db.define(
     },
     name: {
       type: Sequelize.STRING(24),
-      allowNull: false,
-      unique: true
+      allowNull: false
     },
     birth: {
       type: Sequelize.DATEONLY,
