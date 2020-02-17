@@ -95,7 +95,6 @@ class UserModel {
     await User.update(
       {
         height: data.height,
-        thumbnail: data.thumbnail
       },
       { where: { id: data.userId } }
     )
