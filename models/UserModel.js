@@ -91,12 +91,49 @@ class UserModel {
     return authInfo
   }
 
+  async findUserByEmail (email) {
+    const row = await User.findOne({
+      where: {
+        authenticated_address: email,
+        is_deleted: 0
+      },
+      raw: true
+    })
+    return row
+  }
+
+  async findUserByLocalIdAndEmail (local_id, email) {
+    const user = await User.findOne({
+      where: {
+        local_id,
+        authenticated_address: email,
+        is_deleted: 0
+      },
+      raw: true
+    })
+    return user
+  }
+
   async updateUserInfo (data) {
     await User.update(
       {
         height: data.height,
       },
       { where: { id: data.userId } }
+    )
+  }
+
+  async updatePassword (email, encryptInfo) {
+    await User.update(
+      {
+        password: encryptInfo.encryptedPassword,
+        salt: encryptInfo.salt
+      },
+      {
+        where: {
+          authenticated_address: email
+        }
+      }
     )
   }
 
