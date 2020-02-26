@@ -4,13 +4,15 @@ const TeamService = require('../services/TeamService')
 
 const getMatchingList = async (req, res) => {
   try {
+    const limit = 20
+    const page = req.query.page || 1
     const userId = req.token.id
     const meService = new MeService()
     const matchingService = new MatchingService()
     const myTeamList = await meService.getMyTeamList(userId)
     const matchingList = await matchingService.findAllMatchingList(userId)
     res.status(200).json({
-      data: { myTeamList, matchingList }
+      data: { myTeamList, matchingList: matchingList.slice((page - 1) * limit, page * limit) }
     })
   } catch (error) {
     console.log(error)

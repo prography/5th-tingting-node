@@ -4,6 +4,8 @@ const TeamService = require('../services/TeamService')
 const getTeamList = async (req, res) => {
   try {
     // 팀ID 리스트 생성
+    const limit = 20
+    const page = req.query.page || 1
     const userId = req.token.id
     const teamService = new TeamService()
     const teamList = await teamService.findAllTeamListWithoutMe(userId)
@@ -12,7 +14,7 @@ const getTeamList = async (req, res) => {
       console.log({ errorMessage })
       res.status(404).json({ errorMessage })
     } else {
-      const data = { teamList }
+      const data = { teamList: teamList.slice((page - 1) * limit, page * limit) }
       console.log(data)
       res.status(200).json({ data })
     }
