@@ -2,7 +2,7 @@ const Sequelize = require('sequelize')
 const db = require('../../loaders/dbLoader')
 
 const AuthPassword = db.define(
-  'auth',
+  'authPassword',
   {
     id: {
       type: Sequelize.INTEGER,
