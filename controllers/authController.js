@@ -424,4 +424,8 @@ module.exports = {
   confirmEmailTokenForPassword,
   checkEmailAuthForPassword,
   resetPassword
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> c226fa62b5878a5c505afe18da28112fd8e6fc03

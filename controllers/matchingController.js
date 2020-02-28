@@ -225,4 +225,8 @@ module.exports = {
   sendHeart,
   receiveHeart,
   refuseHeart
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> c226fa62b5878a5c505afe18da28112fd8e6fc03

@@ -38,4 +38,8 @@ router.get('/find/password/complete', checkEmailAuthForPassword)
 
 router.post('/reset/password', resetPassword)
 
+<<<<<<< HEAD
 module.exports = router
+=======
+module.exports = router
+>>>>>>> c226fa62b5878a5c505afe18da28112fd8e6fc03
