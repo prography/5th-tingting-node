@@ -391,7 +391,6 @@ const resetPassword = async (req, res) => {
     body: { password, email }
   } = req
   try {
-<<<<<<< HEAD
     const isAuthenticated = await authService.checkIsAuthenticatedByEmailForPassword(email)
     if (isAuthenticated) {
       const encryptInfo = await authService.encryptPassword(password)
@@ -404,13 +403,6 @@ const resetPassword = async (req, res) => {
       console.log({ errorMessage })
       res.status(401).json({ errorMessage })
     }
-=======
-    const encryptInfo = await authService.encryptPassword(password)
-    await userService.updatePassword(id, encryptInfo)
-    const data = { message: '비밀번호를 재설정하였습니다.' }
-    console.log(data)
-    res.status(201).json({ data })
->>>>>>> linting
   } catch (error) {
     console.log(error)
     res.status(500).json({ errorMessage: '서버 에러' })

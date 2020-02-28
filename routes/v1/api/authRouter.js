@@ -23,8 +23,10 @@ router.post('/kakao/login', kakaoLogin)
 router.post('/local/login', localLogin)
 router.post('/local/signup', localSignup)
 router.post('/thumbnail-img', verifyToken, uploadThumbnailToS3, uploadThumbnail)
+
 router.get('/duplicate-id', checkDuplicateLocalId)
 router.get('/duplicate-name', checkDuplicateName)
+
 router.post('/school', checkValidityAndSendEmail)
 router.get('/school/confirm', verifyEmailToken, confirmEmailToken)
 router.get('/school/complete', checkEmailAuth)
@@ -33,6 +35,7 @@ router.get('/find/id', checkValidityForIdAndSendEmail)
 router.get('/find/password', checkValidityForPasswordAndSendEmail)
 router.get('/find/password/confirm', verifyEmailToken, confirmEmailTokenForPassword)
 router.get('/find/password/complete', checkEmailAuthForPassword)
+
 router.post('/reset/password', resetPassword)
 
 module.exports = router
