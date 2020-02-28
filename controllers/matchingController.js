@@ -4,7 +4,7 @@ const TeamService = require('../services/TeamService')
 
 const getMatchingList = async (req, res) => {
   try {
-    const limit = 20
+    const limit = req.query.limit || 20
     const page = req.query.page || 1
     const userId = req.token.id
     const meService = new MeService()

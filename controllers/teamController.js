@@ -4,7 +4,7 @@ const TeamService = require('../services/TeamService')
 const getTeamList = async (req, res) => {
   try {
     // 팀ID 리스트 생성
-    const limit = 20
+    const limit = req.query.limit || 20
     const page = req.query.page || 1
     const userId = req.token.id
     const teamService = new TeamService()
