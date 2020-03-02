@@ -74,12 +74,12 @@ class TeamService {
     }
   }
 
-  async getTeamInfo (teamId) {
+  async getTeamInfo (teamId, withoutPassword = true) {
     try {
       const teamInfo = await this.teamModel.findTeamInfo(teamId)
       if (teamInfo) {
         teamInfo.hasPassword = teamInfo.password !== null && teamInfo.password !== ''
-        delete teamInfo.password
+        if (withoutPassword) delete teamInfo.password
       }
       if (teamInfo) { return teamInfo }
     } catch (error) {

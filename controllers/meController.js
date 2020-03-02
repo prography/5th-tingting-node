@@ -51,7 +51,7 @@ const getMyTeamInfo = async (req, res) => {
   try {
     const userId = req.token.id
     const teamId = parseInt(req.params.id)
-    const teamInfo = await teamService.getTeamInfo(teamId)
+    const teamInfo = await teamService.getTeamInfo(teamId, false)
     if (teamInfo !== null) {
       const myTeamList = await myService.getMyTeamList(userId)
       const myTeamIdList = myTeamList.map(team => team.id)
