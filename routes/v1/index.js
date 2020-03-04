@@ -7,6 +7,8 @@ const matchingRouter = require('./api/matchingRouter')
 const policyRouter = require('./api/policyRouter')
 const outlinkRouter = require('./api/outlinkRouter')
 
+const mainRouter = require('./api/mainRouter')
+
 const router = express.Router()
 
 router.use('/auth', authRouter)
@@ -16,5 +18,7 @@ router.use('/teams', teamRouter)
 router.use('/matching', matchingRouter)
 router.use('/policy', policyRouter)
 router.use('/outlink', outlinkRouter)
+
+router.use('/main', mainRouter)
 
 module.exports = router
