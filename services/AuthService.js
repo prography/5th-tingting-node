@@ -120,7 +120,7 @@ class AuthService {
 
   async checkIsAuthenticatedByCodeForPassword (code) {
     try {
-      const auth = await this.authPasswordModel.findLastAuthByCode(code)
+      const auth = await this.authPasswordModel.findAuthByCode(code)
       const isAuthenticated = auth && auth.is_authenticated === 1
       return isAuthenticated
     } catch (error) {

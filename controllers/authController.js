@@ -366,9 +366,7 @@ const confirmEmailCodeForPassword = async (req, res) => {
 
 const checkEmailAuthForPassword = async (req, res) => {
   const authService = new AuthService()
-  const {
-    query: { code }
-  } = req
+  const code = req.headers.authorization
   try {
     const isAuthenticated = await authService.checkIsAuthenticatedByCodeForPassword(code)
     if (isAuthenticated) {
@@ -399,10 +397,10 @@ const resetPassword = async (req, res) => {
       const isAuthenticated = await authService.checkIsAuthenticatedByCodeForPassword(code)
       if (isAuthenticated) {
         const encryptInfo = await authService.encryptPassword(password)
-        await userService.updatePasswordByEmail(email, encryptInfo)
+        await userService.updatePassword(email, encryptInfo)
         const data = { message: '비밀번호를 재설정하였습니다.' }
         console.log(data)
-        res.status(200).json({ data })
+        return res.status(200).json({ data })
       }
     }
     const errorMessage = '인증이 필요한 이메일입니다.'

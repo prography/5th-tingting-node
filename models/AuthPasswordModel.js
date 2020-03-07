@@ -21,16 +21,14 @@ class AuthPasswordModel {
     )
   }
 
-  async findLastAuthByCode (code) {
-    const rows = await AuthPassword.findAll({
-      limit: 1,
+  async findAuthByCode (code) {
+    const row = await AuthPassword.findOne({
       where: {
         code
       },
-      order: [['created_at', 'DESC']],
       raw: true
     })
-    const auth = rows ? null : rows
+    const auth = row ? row : null
     return auth
   }
 }
