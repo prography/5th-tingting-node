@@ -37,17 +37,6 @@ class AuthService {
     }
   }
 
-  async getCodeByEmail (email) {
-    try {
-      const auth = await this.authPasswordModel.findLastAuthByEmail(email)
-      const code = auth.code
-      return code
-    } catch (error) {
-      console.log(error)
-      throw new Error(error)
-    }
-  }
-
   makeToken (id) {
     const token = jwt.sign(
       {
@@ -132,17 +121,6 @@ class AuthService {
   async checkIsAuthenticatedByCodeForPassword (code) {
     try {
       const auth = await this.authPasswordModel.findLastAuthByCode(code)
-      const isAuthenticated = auth && auth.is_authenticated === 1
-      return isAuthenticated
-    } catch (error) {
-      console.log(error)
-      throw new Error(error)
-    }
-  }
-
-  async checkIsAuthenticatedByEmailForPassword (email) {
-    try {
-      const auth = await this.authPasswordModel.findLastAuthByEmail(email)
       const isAuthenticated = auth && auth.is_authenticated === 1
       return isAuthenticated
     } catch (error) {
@@ -301,7 +279,7 @@ class AuthService {
 
   async saveAuthenticatedEmailAndCode (email, code) {
     try { 
-      await this.authPasswordModel.saveAuthenticatedEmailAndCode(email, code)
+      await this.authPasswordModel.saveAuthPassword(email, code)
     } catch (error) {
       console.log(error)
       throw new Error(error)

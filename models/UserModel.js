@@ -123,7 +123,7 @@ class UserModel {
     )
   }
 
-  async updatePassword (email, encryptInfo) {
+  async updatePasswordByEmail (email, encryptInfo) {
     await User.update(
       {
         password: encryptInfo.encryptedPassword,
@@ -131,6 +131,7 @@ class UserModel {
       },
       {
         where: {
+          is_deleted: 0,
           authenticated_address: email
         }
       }

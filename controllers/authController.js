@@ -1,4 +1,5 @@
 const fs = require('fs')
+const qs = require('qs')
 const path = require('path')
 
 const UserService = require('../services/UserService')
@@ -239,10 +240,10 @@ const checkValidityAndSendEmail = async (req, res) => {
 
 // 이메일 토큰 확인
 const confirmEmailToken = async (req, res) => {
-  const authServcie = new AuthService()
+  const authService = new AuthService()
   const { token } = req
   try {
-    await authServcie.setIsAuthenticatedOfAuth(token)
+    await authService.setIsAuthenticatedOfAuth(token)
     const confirmSchool = fs.readFileSync(
       path.resolve(__dirname, '../public/html/confirmSchool.html'),
       'utf8'
@@ -256,12 +257,12 @@ const confirmEmailToken = async (req, res) => {
 
 // 이메일 인증 여부 재확인
 const checkEmailAuth = async (req, res) => {
-  const authServcie = new AuthService()
+  const authService = new AuthService()
   const {
     query: { email }
   } = req
   try {
-    const isAuthenticated = await authServcie.checkIsAuthenticatedByEmail(email)
+    const isAuthenticated = await authService.checkIsAuthenticatedByEmail(email)
     if (isAuthenticated) {
       const data = { message: '인증이 완료된 이메일입니다.' }
       console.log(data)
@@ -327,16 +328,16 @@ const checkValidityForPasswordAndSendEmail = async (req, res) => {
     body: { localId, email }
   } = req
   try {
-    const exUserId = await userService.findUserByLocalIdAndEmail(localId, email)
+    const exUserId = await userService.findUserIdByLocalIdAndEmail(localId, email)
     if (!exUserId) {
       const errorMessage = '잘못된 아이디 또는 이메일입니다.'
       console.log({ errorMessage })
       res.status(400).json({ errorMessage })
     } else {
       const code = authService.makeCode(email)
-      await authService.saveAuthenticatedEmailAndCode(email, code) //내부 수정 필요
+      await authService.saveAuthenticatedEmailAndCode(email, code)
       await authService.sendEmailToResetPassword(email, code)
-      const data = { message: '비밀번호 재설정 메일을 전송했습니다.' }
+      const data = { code }
       console.log(data)
       res.status(201).json({ data })
     }
@@ -347,12 +348,11 @@ const checkValidityForPasswordAndSendEmail = async (req, res) => {
 }
 
 const confirmEmailCodeForPassword = async (req, res) => {
-  const authServcie = new AuthService()
-  const { 
-    query: { code } 
-  } = req
+  const authService = new AuthService()
+  const query = req._parsedUrl.query
+  const code = query.substr(5)
   try {
-    await authServcie.setIsAuthenticatedOfAuthToResetPassword(code)
+    await authService.setIsAuthenticatedOfAuthToResetPassword(code)
     const confirmPassword = fs.readFileSync(
       path.resolve(__dirname, '../public/html/confirmPassword.html'),
       'utf8'
@@ -365,15 +365,14 @@ const confirmEmailCodeForPassword = async (req, res) => {
 }
 
 const checkEmailAuthForPassword = async (req, res) => {
-  const authServcie = new AuthService()
+  const authService = new AuthService()
   const {
-    query: { email }
+    query: { code }
   } = req
   try {
-    const isAuthenticated = await authServcie.checkIsAuthenticatedByEmailForPassword(email)
+    const isAuthenticated = await authService.checkIsAuthenticatedByCodeForPassword(code)
     if (isAuthenticated) {
-      const code = await authServcie.getCodeByEmail(email)
-      const data = { code }
+      const data = { message: '인증이 완료된 이메일입니다.' }
       console.log(data)
       res.status(200).json({ data })
     } else {
@@ -403,7 +402,7 @@ const resetPassword = async (req, res) => {
         await userService.updatePasswordByEmail(email, encryptInfo)
         const data = { message: '비밀번호를 재설정하였습니다.' }
         console.log(data)
-        res.status(201).json({ data })
+        res.status(200).json({ data })
       }
     }
     const errorMessage = '인증이 필요한 이메일입니다.'

@@ -70,7 +70,7 @@ class UserService {
     }
   }
 
-  async findUserByLocalIdAndEmail (localId, email) {
+  async findUserIdByLocalIdAndEmail (localId, email) {
     try {
       const user = await this.userModel.findUserByLocalIdAndEmail(
         localId,
@@ -129,9 +129,9 @@ class UserService {
     }
   }
 
-  async updatePasswordByEmail (email, encryptInfo) {
+  async updatePassword (email, encryptInfo) {
     try {
-      await this.userModel.updatePassword(email, encryptInfo)
+      await this.userModel.updatePasswordByEmail(email, encryptInfo)
     } catch (error) {
       console.log(error)
       throw new Error(error)

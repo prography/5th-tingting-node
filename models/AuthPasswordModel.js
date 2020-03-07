@@ -1,7 +1,7 @@
 import AuthPassword from './entities/AuthPassword.entity'
 
 class AuthPasswordModel {
-  async saveAuthenticatedEmailAndCode (email, code) {
+  async saveAuthPassword (email, code) { 
     await AuthPassword.create({
       authenticated_email: email,
       code
@@ -30,19 +30,8 @@ class AuthPasswordModel {
       order: [['created_at', 'DESC']],
       raw: true
     })
-    return rows[0]
-  }
-  
-  async findLastAuthByEmail (email) {
-    const rows = await AuthPassword.findAll({
-      limit: 1,
-      where: {
-        authenticated_email: email
-      },
-      order: [['created_at', 'DESC']],
-      raw: true
-    })
-    return rows[0]
+    const auth = rows ? null : rows
+    return auth
   }
 }
 
