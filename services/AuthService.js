@@ -37,6 +37,17 @@ class AuthService {
     }
   }
 
+  async getCodeByEmail (email) {
+    try {
+      const auth = await this.authPasswordModel.findLastAuthByEmail(email)
+      const code = auth.code
+      return code
+    } catch (error) {
+      console.log(error)
+      throw new Error(error)
+    }
+  }
+
   makeToken (id) {
     const token = jwt.sign(
       {
@@ -63,6 +74,15 @@ class AuthService {
       }
     )
     return token
+  }
+
+  makeCode (email) {
+    const now = new Date()
+    const salt = process.env.SALT
+    const code = crypto
+        .pbkdf2Sync(email+now, salt, 100000, 64, 'sha512')
+        .toString('base64')
+    return code
   }
 
   encryptPassword (password) {
@@ -101,6 +121,17 @@ class AuthService {
   async checkIsAuthenticatedByEmail (email) {
     try {
       const auth = await this.authModel.findLastAuthByEmail(email)
+      const isAuthenticated = auth && auth.is_authenticated === 1
+      return isAuthenticated
+    } catch (error) {
+      console.log(error)
+      throw new Error(error)
+    }
+  }
+
+  async checkIsAuthenticatedByCodeForPassword (code) {
+    try {
+      const auth = await this.authPasswordModel.findLastAuthByCode(code)
       const isAuthenticated = auth && auth.is_authenticated === 1
       return isAuthenticated
     } catch (error) {
@@ -195,7 +226,7 @@ class AuthService {
     }
   }
 
-  async sendEmailToResetPassword (email, localId) {
+  async sendEmailToResetPassword (email, code) {
     const mailConfig = {
       service: 'Naver',
       host: 'smtp.naver.com',
@@ -210,9 +241,8 @@ class AuthService {
       'utf8'
     )
     try {
-      const token = this._makeEmailToken(email)
-      const splitedHtml = html.split('token=')
-      const finalHtml = splitedHtml[0] + 'token=' + token + splitedHtml[1]
+      const splitedHtml = html.split('code=')
+      const finalHtml = splitedHtml[0] + 'code=' + code + splitedHtml[1]
       const message = {
         from: process.env.SMTP_EMAIL,
         to: email,
@@ -269,9 +299,9 @@ class AuthService {
     }
   }
 
-  async saveAuthenticatedEmailToResetPassword (email) {
-    try {
-      await this.authPasswordModel.saveAuthenticatedEmail(email)
+  async saveAuthenticatedEmailAndCode (email, code) {
+    try { 
+      await this.authPasswordModel.saveAuthenticatedEmailAndCode(email, code)
     } catch (error) {
       console.log(error)
       throw new Error(error)
@@ -288,10 +318,9 @@ class AuthService {
     }
   }
 
-  async setIsAuthenticatedOfAuthToResetPassword (token) {
+  async setIsAuthenticatedOfAuthToResetPassword (code) {
     try {
-      const { email } = token
-      await this.authPasswordModel.setIsAuthenticatedByEmail(email)
+      await this.authPasswordModel.setIsAuthenticatedByCode(code)
     } catch (error) {
       console.log(error)
       throw new Error(error)

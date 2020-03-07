@@ -11,7 +11,7 @@ const {
   checkEmailAuth,
   checkValidityForIdAndSendEmail,
   checkValidityForPasswordAndSendEmail,
-  confirmEmailTokenForPassword,
+  confirmEmailCodeForPassword,
   checkEmailAuthForPassword,
   resetPassword
 } = require('../../../controllers/authController')
@@ -31,9 +31,9 @@ router.post('/school', checkValidityAndSendEmail)
 router.get('/school/confirm', verifyEmailToken, confirmEmailToken)
 router.get('/school/complete', checkEmailAuth)
 
-router.get('/find/id', checkValidityForIdAndSendEmail)
-router.get('/find/password', checkValidityForPasswordAndSendEmail)
-router.get('/find/password/confirm', verifyEmailToken, confirmEmailTokenForPassword)
+router.get('/find/id', checkValidityForIdAndSendEmail) 
+router.get('/find/password', checkValidityForPasswordAndSendEmail) 
+router.get('/find/password/confirm', confirmEmailCodeForPassword)
 router.get('/find/password/complete', checkEmailAuthForPassword)
 
 router.post('/reset/password', resetPassword)

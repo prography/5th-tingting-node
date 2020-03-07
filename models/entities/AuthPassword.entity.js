@@ -14,6 +14,10 @@ const AuthPassword = db.define(
       type: Sequelize.STRING(45),
       allowNull: false
     },
+    code: {
+      type: Sequelize.STRING(100),
+      allowNull: false
+    },
     is_authenticated: {
       type: Sequelize.INTEGER(1)
     },
