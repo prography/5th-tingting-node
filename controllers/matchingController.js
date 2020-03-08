@@ -215,11 +215,16 @@ const receiveHeart = async (req, res) => {
   }
 }
 
+const refuseHeart = async (req, res) => {
+  res.json('refuseHeart')
+}
+
 module.exports = {
   getMatchingList,
   getMatchingTeamInfo,
   getAppliedTeamInfo,
   sendHeartForFirst,
   sendHeart,
-  receiveHeart
+  receiveHeart,
+  refuseHeart
 }

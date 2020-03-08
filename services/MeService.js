@@ -53,13 +53,13 @@ class MeService {
       let sentMatchings = []
       for (const team of teamList) {
         const teamId = team.id
-        const matchings = await this.matchingModel.findMatchingsSentByTeamId(
+        let matchings = await this.matchingModel.findMatchingsSentByTeamId(
           teamId
         )
         const myApplys = await this.applyModel.findMyApplys(userId)
         const appliedMatchingIds = myApplys.map(apply => apply.matching_id)
         matchings = matchings.filter(matching => {
-          return !(appliedMatchingIds.includes(matching.dataValues.id))
+          return !appliedMatchingIds.includes(matching.dataValues.id)
         })
         sentMatchings = sentMatchings.concat(matchings)
       }

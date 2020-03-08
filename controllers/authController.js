@@ -1,4 +1,5 @@
 const fs = require('fs')
+const qs = require('qs')
 const path = require('path')
 
 const UserService = require('../services/UserService')
@@ -239,10 +240,10 @@ const checkValidityAndSendEmail = async (req, res) => {
 
 // 이메일 토큰 확인
 const confirmEmailToken = async (req, res) => {
-  const authServcie = new AuthService()
+  const authService = new AuthService()
   const { token } = req
   try {
-    await authServcie.setIsAuthenticatedOfAuth(token)
+    await authService.setIsAuthenticatedOfAuth(token)
     const confirmSchool = fs.readFileSync(
       path.resolve(__dirname, '../public/html/confirmSchool.html'),
       'utf8'
@@ -256,12 +257,12 @@ const confirmEmailToken = async (req, res) => {
 
 // 이메일 인증 여부 재확인
 const checkEmailAuth = async (req, res) => {
-  const authServcie = new AuthService()
+  const authService = new AuthService()
   const {
     query: { email }
   } = req
   try {
-    const isAuthenticated = await authServcie.checkIsAuthenticatedByEmail(email)
+    const isAuthenticated = await authService.checkIsAuthenticatedByEmail(email)
     if (isAuthenticated) {
       const data = { message: '인증이 완료된 이메일입니다.' }
       console.log(data)
@@ -294,6 +295,123 @@ const uploadThumbnail = async (req, res) => {
   }
 }
 
+// 아이디 찾기
+const checkValidityForIdAndSendEmail = async (req, res) => {
+  const userService = new UserService()
+  const authService = new AuthService()
+  const {
+    body: { email }
+  } = req
+  try {
+    const localId = await userService.findLocalIdByEmail(email)
+    if (!localId) {
+      const errorMessage = '존재하지 않는 이메일입니다.'
+      console.log({ errorMessage })
+      res.status(400).json({ errorMessage })
+    } else {
+      await authService.sendEmailToFindId(email, localId)
+      const data = { message: '아이디 찾기 메일을 전송했습니다.' }
+      console.log(data)
+      res.status(200).json({ data })
+    }
+  } catch (error) {
+    console.log(error)
+    res.status(500).json({ errorMessage: '서버 에러' })
+  }
+}
+
+// 비밀번호 찾기 - 유저 존재 여부
+const checkValidityForPasswordAndSendEmail = async (req, res) => {
+  const userService = new UserService()
+  const authService = new AuthService()
+  const {
+    body: { localId, email }
+  } = req
+  try {
+    const exUserId = await userService.findUserIdByLocalIdAndEmail(localId, email)
+    if (!exUserId) {
+      const errorMessage = '잘못된 아이디 또는 이메일입니다.'
+      console.log({ errorMessage })
+      res.status(400).json({ errorMessage })
+    } else {
+      const code = authService.makeCode(email)
+      await authService.saveAuthenticatedEmailAndCode(email, code)
+      await authService.sendEmailToResetPassword(email, code)
+      const data = { code }
+      console.log(data)
+      res.status(201).json({ data })
+    }
+  } catch (error) {
+    console.log(error)
+    res.status(500).json({ errorMessage: '서버 에러' })
+  }
+}
+
+const confirmEmailCodeForPassword = async (req, res) => {
+  const authService = new AuthService()
+  const query = req._parsedUrl.query
+  const code = query.substr(5)
+  try {
+    await authService.setIsAuthenticatedOfAuthToResetPassword(code)
+    const confirmPassword = fs.readFileSync(
+      path.resolve(__dirname, '../public/html/confirmPassword.html'),
+      'utf8'
+    )
+    res.send(confirmPassword)
+  } catch (error) {
+    console.log(error)
+    res.status(500).json({ errorMessage: '서버 에러' })
+  }
+}
+
+const checkEmailAuthForPassword = async (req, res) => {
+  const authService = new AuthService()
+  const code = req.headers.authorization
+  try {
+    const isAuthenticated = await authService.checkIsAuthenticatedByCodeForPassword(code)
+    if (isAuthenticated) {
+      const data = { message: '인증이 완료된 이메일입니다.' }
+      console.log(data)
+      res.status(200).json({ data })
+    } else {
+      const errorMessage = '인증이 필요한 이메일입니다.'
+      console.log({ errorMessage })
+      res.status(401).json({ errorMessage })
+    }
+  } catch (error) {
+    console.log(error)
+    res.status(500).json({ errorMessage: '서버 에러' })
+  }
+}
+
+// 비밀번호 찾기 - 비밀번호 재설정
+const resetPassword = async (req, res) => {
+  const userService = new UserService()
+  const authService = new AuthService()
+  const code = req.headers.authorization
+  const {
+    body: { password, email }
+  } = req
+  try {
+    if (code) {
+      const isAuthenticated = await authService.checkIsAuthenticatedByCodeForPassword(code)
+      if (isAuthenticated) {
+        const encryptInfo = await authService.encryptPassword(password)
+        await userService.updatePassword(email, encryptInfo)
+        const data = { message: '비밀번호를 재설정하였습니다.' }
+        console.log(data)
+        return res.status(200).json({ data })
+      }
+    }
+    const errorMessage = '인증이 필요한 이메일입니다.'
+    console.log({ errorMessage })
+    res.status(401).json({ errorMessage })
+  } catch (error) {
+    console.log(error)
+    res.status(500).json({ errorMessage: '서버 에러' })
+  }
+}
+
 module.exports = {
   kakaoLogin,
   localLogin,
@@ -303,5 +421,11 @@ module.exports = {
   checkValidityAndSendEmail,
   confirmEmailToken,
   checkEmailAuth,
-  uploadThumbnail
+  uploadThumbnail,
+  checkValidityForIdAndSendEmail,
+  checkValidityForPasswordAndSendEmail,
+  confirmEmailCodeForPassword,
+  checkEmailAuthForPassword,
+  resetPassword
 }
+

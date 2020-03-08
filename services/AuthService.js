@@ -4,6 +4,7 @@ const nodemailer = require('nodemailer')
 const AvailableEmailModel = require('../models/AvailableEmailModel')
 const AuthModel = require('../models/AuthModel.js')
 const UserModel = require('../models/UserModel.js')
+const AuthPasswordModel = require('../models/AuthPasswordModel.js')
 const fs = require('fs')
 const path = require('path')
 const axios = require('axios')
@@ -13,6 +14,7 @@ class AuthService {
     this.availableEmailModel = new AvailableEmailModel()
     this.authModel = new AuthModel()
     this.userModel = new UserModel()
+    this.authPasswordModel = new AuthPasswordModel()
   }
 
   async getKakaoId (accessToken) {
@@ -63,6 +65,15 @@ class AuthService {
     return token
   }
 
+  makeCode (email) {
+    const now = new Date()
+    const salt = process.env.SALT
+    const code = crypto
+        .pbkdf2Sync(email+now, salt, 100000, 64, 'sha512')
+        .toString('base64')
+    return code
+  }
+
   encryptPassword (password) {
     try {
       const salt = crypto.randomBytes(64).toString('base64')
@@ -99,6 +110,17 @@ class AuthService {
   async checkIsAuthenticatedByEmail (email) {
     try {
       const auth = await this.authModel.findLastAuthByEmail(email)
+      const isAuthenticated = auth && auth.is_authenticated === 1
+      return isAuthenticated
+    } catch (error) {
+      console.log(error)
+      throw new Error(error)
+    }
+  }
+
+  async checkIsAuthenticatedByCodeForPassword (code) {
+    try {
+      const auth = await this.authPasswordModel.findAuthByCode(code)
       const isAuthenticated = auth && auth.is_authenticated === 1
       return isAuthenticated
     } catch (error) {
@@ -151,6 +173,68 @@ class AuthService {
     }
   }
 
+  async sendEmailToFindId (email, localId) {
+    const mailConfig = {
+      service: 'Naver',
+      host: 'smtp.naver.com',
+      port: 587,
+      auth: {
+        user: process.env.SMTP_EMAIL,
+        pass: process.env.SMTP_PASSWORD
+      }
+    }
+    const html = fs.readFileSync(
+      path.resolve(__dirname, '../public/html/findIdMail.html'),
+      'utf8'
+    )
+    try {
+      const splitedHtml = html.split('<strong>')
+      const finalHtml = splitedHtml[0] + '<strong>' + localId + splitedHtml[1]
+      const message = {
+        from: process.env.SMTP_EMAIL,
+        to: email,
+        subject: '[팅팅] 아이디 찾기',
+        html: finalHtml
+      }
+      const transporter = nodemailer.createTransport(mailConfig)
+      transporter.sendMail(message)
+    } catch (error) {
+      console.log(error)
+      throw new Error(error)
+    }
+  }
+
+  async sendEmailToResetPassword (email, code) {
+    const mailConfig = {
+      service: 'Naver',
+      host: 'smtp.naver.com',
+      port: 587,
+      auth: {
+        user: process.env.SMTP_EMAIL,
+        pass: process.env.SMTP_PASSWORD
+      }
+    }
+    const html = fs.readFileSync(
+      path.resolve(__dirname, '../public/html/resetPasswordMail.html'),
+      'utf8'
+    )
+    try {
+      const splitedHtml = html.split('code=')
+      const finalHtml = splitedHtml[0] + 'code=' + code + splitedHtml[1]
+      const message = {
+        from: process.env.SMTP_EMAIL,
+        to: email,
+        subject: '[팅팅] 비밀번호 재설정을 위한 인증 요청',
+        html: finalHtml
+      }
+      const transporter = nodemailer.createTransport(mailConfig)
+      transporter.sendMail(message)
+    } catch (error) {
+      console.log(error)
+      throw new Error(error)
+    }
+  }
+
   async checkIsDuplicatedLocalId (localId) {
     try {
       const user = await this.userModel.findUserByLocalId(localId)
@@ -193,6 +277,15 @@ class AuthService {
     }
   }
 
+  async saveAuthenticatedEmailAndCode (email, code) {
+    try { 
+      await this.authPasswordModel.saveAuthPassword(email, code)
+    } catch (error) {
+      console.log(error)
+      throw new Error(error)
+    }
+  }
+
   async setIsAuthenticatedOfAuth (token) {
     try {
       const { email } = token
@@ -202,6 +295,16 @@ class AuthService {
       throw new Error(error)
     }
   }
+
+  async setIsAuthenticatedOfAuthToResetPassword (code) {
+    try {
+      await this.authPasswordModel.setIsAuthenticatedByCode(code)
+    } catch (error) {
+      console.log(error)
+      throw new Error(error)
+    }
+  }
+
 }
 
 module.exports = AuthService
