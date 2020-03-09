@@ -1,11 +1,11 @@
 const api = require('../routes/index')
 const bodyParser = require('body-parser')
-const config = require('../config')
+const configs = require('../configs')
 const cookieParser = require('cookie-parser')
 const logger = require('morgan')
 
 const expressLoader = app => {
-  app.set('port', config.PORT)
+  app.set('port', configs.APP.PORT)
   app.use(bodyParser.json())
   app.use(bodyParser.urlencoded({ extended: true }))
   app.use(cookieParser())
