@@ -1,7 +1,7 @@
 const fs = require('fs')
 const path = require('path')
 
-const getmain = async (req, res) => {
+const getMain = async (req, res) => {
   try {
     const main = fs.readFileSync(
       path.resolve(__dirname, '../public/html/index.html'),
@@ -15,5 +15,5 @@ const getmain = async (req, res) => {
 }
 
 module.exports = {
-    getmain
+    getMain
 }

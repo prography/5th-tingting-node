@@ -4,6 +4,8 @@ const config = require('../config')
 const cookieParser = require('cookie-parser')
 const logger = require('morgan')
 
+const { getMain } = require('../controllers/mainController')
+
 const expressLoader = app => {
   app.set('port', config.PORT)
   app.use(bodyParser.json())
@@ -18,6 +20,7 @@ const expressLoader = app => {
     )
   )
   app.use('/api', api)
+  app.get('/', getMain)
 }
 
 module.exports = expressLoader
