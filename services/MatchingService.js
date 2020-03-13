@@ -4,6 +4,7 @@ const AcceptModel = require('../models/AcceptModel')
 const UserModel = require('../models/UserModel')
 const TeamModel = require('../models/TeamModel')
 const BelongModel = require('../models/BelongModel')
+const TeamTagModel = require('../models/TeamTagModel')
 
 class MatchingService {
   constructor () {
@@ -13,6 +14,7 @@ class MatchingService {
     this.userModel = new UserModel()
     this.teamModel = new TeamModel()
     this.belongModel = new BelongModel()
+    this.teamTagModel = new TeamTagModel()
   }
 
   async checkIsMatched (teamId) {
@@ -76,6 +78,12 @@ class MatchingService {
         gender
       )
       for (const team of verifiedTeamsWithOppositeGender) {
+        let tagList = []
+        const teamTags = await this.teamTagModel.findTeamTagByTeamId(team.id)
+        for (const [index, teamTag] of teamTags.entries()) {
+          tagList[index] = teamTag.tag.name
+        }
+        team.tag = tagList
         const membersInfo = await this.belongModel.findUsersByTeamId(team.id)
         for (const memberInfo of membersInfo) {
           memberInfo.thumbnail = `https://api.tingting.kr/api/v1/users/${memberInfo.id}/thumbnail-img`
