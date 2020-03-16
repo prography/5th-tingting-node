@@ -4,8 +4,8 @@
     "description": "",
     "main": "src/app.js",
     "scripts": {
-        "dev": "NODE_ENV=development nodemon --exec babel-node src/app.js",
-        "start": "NODE_ENV=test nodemon --exec babel-node src/app.js"
+        "start": "nodemon --exec babel-node src/app.js",
+        "test": "echo \"Error: no test specified\" && exit 1"
     }, 
     "author": "jiwon-yang",
     "license": "ISC",
