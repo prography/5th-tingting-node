@@ -12,7 +12,7 @@ const loaders = async app => {
     .catch(err => {
       console.error('DB 연결 실패: ', err)
     })
-  if(configs.NODE_ENV === "development"){
+  if(configs.ENV === 'development'){
     await dbLoader.sync()
     console.log('DB sync 완료')
   }

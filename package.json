@@ -4,9 +4,10 @@
     "description": "",
     "main": "src/app.js",
     "scripts": {
-        "start": "nodemon --exec babel-node src/app.js",
-        "test": "echo \"Error: no test specified\" && exit 1"
-    },
+        "dev": "NODE_ENV=development nodemon --exec babel-node src/app.js",
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "start": "NODE_ENV=production nodemon --exec babel-node src/app.js"
+    }, 
     "author": "jiwon-yang",
     "license": "ISC",
     "dependencies": {
