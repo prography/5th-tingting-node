@@ -38,7 +38,6 @@ class TeamModel {
       name: data.name,
       chat_address: data.chat_address,
       owner_id: data.owner_id,
-      intro: data.intro,
       gender: data.gender,
       place: data.place,
       password: data.password, // 수정 필요
@@ -101,7 +100,6 @@ class TeamModel {
       {
         name: data.name,
         chat_address: data.chat_address,
-        intro: data.intro, //delete
         place: data.place,
         password: data.password,
         max_member_number: data.max_member_number
