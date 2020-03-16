@@ -1,6 +1,5 @@
 const dbLoader = require('./dbLoader.js')
 const expressLoader = require('./expressLoader')
-const configs = require('../configs')
 
 const loaders = async app => {
   console.log('로더 실행')
@@ -12,10 +11,6 @@ const loaders = async app => {
     .catch(err => {
       console.error('DB 연결 실패: ', err)
     })
-  if(configs.ENV === 'development'){
-    await dbLoader.sync()
-    console.log('DB sync 완료')
-  }
   expressLoader(app)
   console.log('로더 완료')
 }
