@@ -12,7 +12,7 @@ AWS.config.update({
 const options = {
   storage: multerS3({
     s3: new AWS.S3(),
-    bucket: 'tingting-profile-img',
+    bucket: process.env.BUCKET,
     contentType: multerS3.AUTO_CONTENT_TYPE,
     key (req, file, cb) {
       cb(null, `${+new Date()}${path.basename(file.originalname)}`)
