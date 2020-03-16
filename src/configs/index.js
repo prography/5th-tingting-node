@@ -1,6 +1,6 @@
 const dotenv = require('dotenv')
 let path = `${__dirname}/../../.env/dev.env`
-if(process.env.NODE_ENV === 'production') path = `${__dirname}/../../.env/prod.env` 
+if(process.env.NODE_ENV === 'test') path = `${__dirname}/../../.env/test.env` 
 dotenv.config({ path })
 
 module.exports = {
