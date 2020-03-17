@@ -57,13 +57,13 @@ class TeamService {
           teamList[idx].id
         )
         for (const teamMemberInfo of teamMembersInfo) {
-          teamMemberInfo.thumbnail = `https://api.tingting.kr/api/v1/users/${teamMemberInfo.id}/thumbnail-img`
+          teamMemberInfo.thumbnail = `${process.env.HOST_BASE_URL}/api/v1/users/${teamMemberInfo.id}/thumbnail-img`
         }
         const ownerInfo = await this.userModel.findUserInfo(teamList[idx].owner_id)
         teamMembersInfo.push({
           id: teamList[idx].owner_id,
           name: ownerInfo.name,
-          thumbnail: `https://api.tingting.kr/api/v1/users/${teamList[idx].owner_id}/thumbnail-img`
+          thumbnail: `${process.env.HOST_BASE_URL}/api/v1/users/${teamList[idx].owner_id}/thumbnail-img`
         })
         teamList[idx].teamMembersInfo = teamMembersInfo
       }
@@ -93,12 +93,12 @@ class TeamService {
       const teamMembersInfo = await this.belongModel.findUsersByTeamId(teamId)
       const ownerInfo = await this.userModel.findUserInfo(ownerId)
       for (const teamMemberInfo of teamMembersInfo) {
-        teamMemberInfo.thumbnail = `https://api.tingting.kr/api/v1/users/${teamMemberInfo.id}/thumbnail-img`
+        teamMemberInfo.thumbnail = `${process.env.HOST_BASE_URL}/api/v1/users/${teamMemberInfo.id}/thumbnail-img`
       }
       teamMembersInfo.push({
         id: ownerId,
         name: ownerInfo.name,
-        thumbnail: `https://api.tingting.kr/api/v1/users/${ownerId}/thumbnail-img`
+        thumbnail: `${process.env.HOST_BASE_URL}/api/v1/users/${ownerId}/thumbnail-img`
       })
       return teamMembersInfo
     } catch (error) {
@@ -151,13 +151,13 @@ class TeamService {
       for (const team of teamReceivedList) {
         const membersInfo = await this.belongModel.findUsersByTeamId(team.sendTeam.id)
         for (const memberInfo of membersInfo) {
-          memberInfo.thumbnail = `https://api.tingting.kr/api/v1/users/${memberInfo.id}/thumbnail-img`
+          memberInfo.thumbnail = `${process.env.HOST_BASE_URL}/api/v1/users/${memberInfo.id}/thumbnail-img`
         }
         const ownerInfo = await this.userModel.findUserInfo(team.sendTeam.owner_id)
         membersInfo.push({
           id: team.sendTeam.owner_id,
           name: ownerInfo.name,
-          thumbnail: `https://api.tingting.kr/api/v1/users/${team.sendTeam.owner_id}/thumbnail-img`
+          thumbnail: `${process.env.HOST_BASE_URL}/api/v1/users/${team.sendTeam.owner_id}/thumbnail-img`
         })
         team.sendTeam.dataValues.membersInfo = membersInfo
       }

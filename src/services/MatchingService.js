@@ -78,13 +78,13 @@ class MatchingService {
       for (const team of verifiedTeamsWithOppositeGender) {
         const membersInfo = await this.belongModel.findUsersByTeamId(team.id)
         for (const memberInfo of membersInfo) {
-          memberInfo.thumbnail = `https://api.tingting.kr/api/v1/users/${memberInfo.id}/thumbnail-img`
+          memberInfo.thumbnail = `${process.env.HOST_BASE_URL}/api/v1/users/${memberInfo.id}/thumbnail-img`
         }
         const ownerInfo = await this.userModel.findUserInfo(team.owner_id)
         membersInfo.push({
           id: team.owner_id,
           name: ownerInfo.name,
-          thumbnail: `https://api.tingting.kr/api/v1/users/${ownerInfo.id}/thumbnail-img`
+          thumbnail: `${process.env.HOST_BASE_URL}/api/v1/users/${ownerInfo.id}/thumbnail-img`
         })
         team.membersInfo = membersInfo
       }

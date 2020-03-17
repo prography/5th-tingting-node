@@ -19,7 +19,7 @@ class UserService {
       const profileImgIds = await this.profileImgModel.findProfileImgIdsByUserId(userId)
       userInfo.profileImgIds = profileImgIds
       delete userInfo.authenticated_address
-      userInfo.thumbnail = `https://api.tingting.kr/api/v1/users/${userId}/thumbnail-img`
+      userInfo.thumbnail = `${process.env.HOST_BASE_URL}/api/v1/users/${userId}/thumbnail-img`
       return userInfo
     } catch (error) {
       console.log(error)
