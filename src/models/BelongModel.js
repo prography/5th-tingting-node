@@ -28,7 +28,7 @@ class BelongModel {
       include: [
         {
           model: Team,
-          attributes: ['id', 'name', 'max_member_number']
+          attributes: ['id', 'name', 'max_member_number',['is_verified','is_ready']]
         }
       ]
     })
