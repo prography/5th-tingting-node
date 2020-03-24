@@ -37,6 +37,9 @@ class BelongModel {
       delete teams[idx].dataValues.belongs
       teams[idx] = teams[idx].dataValues
     }
+    teams.forEach(team =>{
+      team.is_ready = team.is_ready ? 'true' : 'false'
+    })
     return teams
   }
 

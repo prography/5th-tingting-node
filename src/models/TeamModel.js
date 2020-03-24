@@ -92,6 +92,9 @@ class TeamModel {
       },
       raw: true
     })
+    teams.forEach(team =>{
+      team.is_ready = team.is_ready ? 'true' : 'false'
+    })
     return teams
   }
 
