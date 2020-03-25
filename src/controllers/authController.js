@@ -39,22 +39,30 @@ const kakaoLogin = async (req, res) => {
           console.log({ errorMessage })
           return res.status(401).json({ errorMessage })
         }
-        await userService.saveUserByKakao({
-          kakao_id: kakaoId,
-          name,
-          birth,
-          height,
-          authenticated_address,
-          gender
-        })
-        const userId = await userService.findUserIdByKaKaoId(kakaoId)
-        const token = authService.makeToken(userId)
-        const data = {
-          message: '회원가입에 성공했습니다. 이미지를 추가해주세요.',
-          token
+        const usersAge = await authService.checkAge(birth)
+        if (usersAge >= 18) {
+          await userService.saveUserByKakao({
+            kakao_id: kakaoId,
+            name,
+            birth,
+            height,
+            authenticated_address,
+            gender
+          })
+          const userId = await userService.findUserIdByKaKaoId(kakaoId)
+          const token = authService.makeToken(userId)
+          const data = {
+            message: '회원가입에 성공했습니다. 이미지를 추가해주세요.',
+            token
+          }
+          console.log(data)
+          res.status(201).json({ data })
         }
-        console.log(data)
-        res.status(201).json({ data })
+        else {
+          const errorMessage = '만 18세 미만으로 가입할 수 없습니다.'
+          console.log({ errorMessage })
+          return res.status(400).json({ errorMessage })
+        }
       }
     }
   } catch (error) {
@@ -143,24 +151,31 @@ const localSignup = async (req, res) => {
         console.log({ errorMessage })
         return res.status(401).json({ errorMessage })
       }
-      await userService.saveUserByLocal({
-        local_id,
-        password: encryptInfo.encryptedPassword,
-        salt: encryptInfo.salt,
-        name,
-        birth,
-        height,
-        authenticated_address,
-        gender
-      })
-      const userId = await userService.findUserIdByLocalId(local_id)
-      const token = authService.makeToken(userId)
-      const data = {
-        message: '회원가입에 성공했습니다. 이미지를 추가해주세요.',
-        token
+      const usersAge = await authService.checkAge(birth)
+      if (usersAge >= 18) {
+        await userService.saveUserByLocal({
+          local_id,
+          password: encryptInfo.encryptedPassword,
+          salt: encryptInfo.salt,
+          name,
+          birth,
+          height,
+          authenticated_address,
+          gender
+        })
+        const userId = await userService.findUserIdByLocalId(local_id)
+        const token = authService.makeToken(userId)
+        const data = {
+          message: '회원가입에 성공했습니다. 이미지를 추가해주세요.',
+          token
+        }
+        console.log(data)
+        res.status(201).json({ data })
+      } else {
+        const errorMessage = '만 18세 미만으로 가입할 수 없습니다.'
+        console.log({ errorMessage })
+        return res.status(400).json({ errorMessage })
       }
-      console.log(data)
-      res.status(201).json({ data })
     }
   } catch (error) {
     const errorMessage = '회원가입에 실패하였습니다.'
