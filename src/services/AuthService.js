@@ -305,6 +305,22 @@ class AuthService {
     }
   }
 
+  async checkAge(userBirth){           
+      var date = new Date()
+      var year = date.getFullYear()
+      var month = (date.getMonth() + 1)
+      var day = date.getDate()
+      if (month < 10) month = '0' + month
+      if (day < 10) day = '0' + day
+      var monthDay = month + day
+
+      userBirth = userBirth.replace('-', '').replace('-', '')
+      var yearOfUserBirth = userBirth.substr(0, 4)
+      var monthDayOfUserBirth = userBirth.substr(4, 4)
+  
+      var age = monthDay < monthDayOfUserBirth ? year - yearOfUserBirth - 1 : year - yearOfUserBirth
+      return age
+  }
 }
 
 module.exports = AuthService
