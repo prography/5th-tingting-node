@@ -1,7 +1,7 @@
 import TeamTag from './entities/TeamTag.entity'
 import Tag from './entities/Tag.entity'
 
-TeamTag.belongsTo(Tag,{foreignKey:'tag_id', as: 'tag'})
+TeamTag.belongsTo(Tag,{foreignKey:'tag_id', as: 'tags'})
 
 class TeamTagModel {
 
@@ -12,8 +12,8 @@ class TeamTagModel {
     })
   }
 
-  async findTeamTagByTeamId(team_id){
-      const teamTag = await TeamTag.findAll({
+  async findTeamTagsByTeamId(team_id){
+      const teamTags = await TeamTag.findAll({
         attributes: [],
           where:{
               team_id
@@ -21,15 +21,15 @@ class TeamTagModel {
           include:[
               {
                   model : Tag,
-                  as: 'tag',
+                  as: 'tags',
                   attributes : ['id','name']
               }
           ]
       })
-      return teamTag
+      return teamTags
   }
 
-  async deleteTeamTag(team_id){
+  async deleteTeamTagsByTeamId(team_id){
     await TeamTag.destroy({
       where:{team_id}
     })

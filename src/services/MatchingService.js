@@ -78,12 +78,12 @@ class MatchingService {
         gender
       )
       for (const team of verifiedTeamsWithOppositeGender) {
-        let tagList = []
-        const teamTags = await this.teamTagModel.findTeamTagByTeamId(team.id)
+        const tagList = []
+        const teamTags = await this.teamTagModel.findTeamTagsByTeamId(team.id)
         for (const [index, teamTag] of teamTags.entries()) {
-          tagList[index] = teamTag.tag.name
+          tagList[index] = teamTag.tags.name
         }
-        team.tag = tagList
+        team.tags = tagList
         const membersInfo = await this.belongModel.findUsersByTeamId(team.id)
         for (const memberInfo of membersInfo) {
           memberInfo.thumbnail = `${process.env.HOST_BASE_URL}/api/v1/users/${memberInfo.id}/thumbnail-img`

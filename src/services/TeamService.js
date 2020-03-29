@@ -23,10 +23,8 @@ class TeamService {
       data.gender = gender
       const teamInfo = await this.teamModel.saveTeam(data)
       const teamId = teamInfo.id
-      const tagList = data.tag
-      for (const tag of tagList) {
-        const tagInfo = await this.tagModel.findTagIdByTagName(tag)
-        const tagId = tagInfo.id
+      const tagIdList = data.tagIds
+      for (const tagId of tagIdList) {
         await this.teamTagModel.saveTeamTag({ teamId, tagId })
       }
     } catch (error) {
@@ -62,12 +60,12 @@ class TeamService {
       for (const idx in teamList) {
         const teamPassword = await this.teamModel.findTeamPassword(teamList[idx].id)
         teamList[idx].hasPassword = teamPassword !== null && teamPassword !== '' // legacy
-        let tagList = []
-        const teamTags = await this.teamTagModel.findTeamTagByTeamId(teamList[idx].id)
+        const tagList = []
+        const teamTags = await this.teamTagModel.findTeamTagsByTeamId(teamList[idx].id)
         for (const [index, teamTag] of teamTags.entries()) {
-          tagList[index] = teamTag.tag.name
+          tagList[index] = teamTag.tags.name
         }
-        teamList[idx].tag = tagList
+        teamList[idx].tags = tagList
         const teamMembersInfo = await this.belongModel.findUsersByTeamId(teamList[idx].id)
         for (const teamMemberInfo of teamMembersInfo) {
           teamMemberInfo.thumbnail = `${process.env.HOST_BASE_URL}/api/v1/users/${teamMemberInfo.id}/thumbnail-img`
@@ -90,12 +88,12 @@ class TeamService {
   async getTeamInfo(teamId, withoutPassword = true) {
     try {
       const teamInfo = await this.teamModel.findTeamInfo(teamId)
-      const teamTags = await this.teamTagModel.findTeamTagByTeamId(teamId)
-      let tagList = []
+      const teamTags = await this.teamTagModel.findTeamTagsByTeamId(teamId)
+      const tagList = []
       for (const [index, teamTag] of teamTags.entries()) {
-        tagList[index] = teamTag.tag.name
+        tagList[index] = teamTag.tags.name
       }
-      teamInfo.tag = tagList
+      teamInfo.tags = tagList
       if (teamInfo) {
         teamInfo.hasPassword = teamInfo.password !== null && teamInfo.password !== ''
         if (withoutPassword) delete teamInfo.password
@@ -187,9 +185,9 @@ class TeamService {
     }
   }
 
-  async getAllTagList(){
+  async getAllTags(){
     try {
-      const tagList = await this.tagModel.getAllTagList()
+      const tagList = await this.tagModel.getAllTags()
       return tagList
     } catch (error) {
       console.log(error)

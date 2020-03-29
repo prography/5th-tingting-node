@@ -86,12 +86,10 @@ class MeService {
   async updateMyTeam (data) {
     try {
       const teamId = data.teamId
-      const tagList = data.tag
+      const tagIdList = data.tagIds
       await this.teamModel.updateTeam(data)
-      await this.teamTagModel.deleteTeamTag(teamId)
-      for (const tag of tagList) {
-        const tagInfo = await this.tagModel.findTagIdByTagName(tag)
-        const tagId = tagInfo.id
+      await this.teamTagModel.deleteTeamTagsByTeamId(teamId)
+      for (const tagId of tagIdList) {
         await this.teamTagModel.saveTeamTag({ teamId, tagId })
       }
     } catch (error) {

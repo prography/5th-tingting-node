@@ -29,10 +29,10 @@ const createTeam = async (req, res) => {
   const teamService = new TeamService()
   const userId = req.token.id
   const {
-    body: { name, chat_address, place, password, max_member_number, tag }
+    body: { name, chat_address, place, password, max_member_number, tagIds }
   } = req
   try {
-    if (tag.length < 2 || tag.length>5) {
+    if (tagIds.length < 2 || tagIds.length>5) {
       const errorMessage = '태그의 개수가 올바르지 않습니다.'
       console.log({ errorMessage })
       res.status(404).json({ errorMessage })
@@ -45,7 +45,7 @@ const createTeam = async (req, res) => {
         place,
         password,
         max_member_number,
-        tag
+        tagIds
       })
       const data = { message: '팀 생성 성공' }
       console.log(data)
@@ -156,11 +156,11 @@ const joinTeam = async (req, res) => {
   }
 }
 
-const getAllTagList = async (req, res) => {
+const getAllTags = async (req, res) => {
   const teamService = new TeamService()
   try {
-    const tagList = await teamService.getAllTagList()
-    const data = { tagList }
+    const tags = await teamService.getAllTags()
+    const data = { tags }
     console.log(data)
     res.status(200).json({ data })
   } catch (error) {
@@ -175,5 +175,5 @@ module.exports = {
   checkDuplicateTeamName,
   getTeamInfo,
   joinTeam,
-  getAllTagList
+  getAllTags
 }

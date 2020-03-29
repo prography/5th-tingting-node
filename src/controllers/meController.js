@@ -91,7 +91,7 @@ const updateMyTeam = async (req, res) => {
   const teamId = parseInt(req.params.id)
   const userId = req.token.id
   const {
-    body: { name, chat_address, place, password, max_member_number, tag }
+    body: { name, chat_address, place, password, max_member_number, tagIds }
   } = req
   try {
     const myTeamList = await myService.getMyTeamList(userId)
@@ -105,7 +105,7 @@ const updateMyTeam = async (req, res) => {
         place,
         password,
         max_member_number,
-        tag
+        tagIds
       })
       const data = { message: '내 팀 수정에 성공했습니다.' }
       console.log(data)
