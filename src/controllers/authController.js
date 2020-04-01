@@ -1,5 +1,4 @@
 const fs = require('fs')
-const qs = require('qs')
 const path = require('path')
 
 const UserService = require('../services/UserService')
