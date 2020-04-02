@@ -35,7 +35,7 @@ const createTeam = async (req, res) => {
     if (tagIds.length < 2 || tagIds.length>5) {
       const errorMessage = '태그의 개수가 올바르지 않습니다.'
       console.log({ errorMessage })
-      res.status(404).json({ errorMessage })
+      res.status(400).json({ errorMessage })
     }
     else {
       await teamService.saveTeam({
