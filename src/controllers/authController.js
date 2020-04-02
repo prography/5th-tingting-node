@@ -314,7 +314,7 @@ const checkValidityForIdAndSendEmail = async (req, res) => {
   const userService = new UserService()
   const authService = new AuthService()
   const {
-    body: { email }
+    query: { email }
   } = req
   try {
     const localId = await userService.findLocalIdByEmail(email)
