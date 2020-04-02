@@ -94,26 +94,33 @@ const updateMyTeam = async (req, res) => {
     body: { name, chat_address, place, password, max_member_number, tagIds }
   } = req
   try {
-    const myTeamList = await myService.getMyTeamList(userId)
-    const myTeamIdList = myTeamList.map(team => team.id)
-    const isMember = myTeamIdList.includes(teamId)
-    if (isMember) {
-      await myService.updateMyTeam({
-        teamId,
-        name,
-        chat_address,
-        place,
-        password,
-        max_member_number,
-        tagIds
-      })
-      const data = { message: '내 팀 수정에 성공했습니다.' }
-      console.log(data)
-      res.status(201).json({ data })
-    } else {
-      const errorMessage = '수정하고자 하는 팀에 속해있지 않음'
+    if (tagIds.length < 2 || tagIds.length > 5) {
+      const errorMessage = '태그의 개수가 올바르지 않습니다.'
       console.log({ errorMessage })
-      res.status(403).json({ errorMessage })
+      res.status(404).json({ errorMessage })
+    }
+    else {
+      const myTeamList = await myService.getMyTeamList(userId)
+      const myTeamIdList = myTeamList.map(team => team.id)
+      const isMember = myTeamIdList.includes(teamId)
+      if (isMember) {
+        await myService.updateMyTeam({
+          teamId,
+          name,
+          chat_address,
+          place,
+          password,
+          max_member_number,
+          tagIds
+        })
+        const data = { message: '내 팀 수정에 성공했습니다.' }
+        console.log(data)
+        res.status(201).json({ data })
+      } else {
+        const errorMessage = '수정하고자 하는 팀에 속해있지 않음'
+        console.log({ errorMessage })
+        res.status(403).json({ errorMessage })
+      }
     }
   } catch (error) {
     console.log(error)
