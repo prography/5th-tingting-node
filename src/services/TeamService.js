@@ -164,7 +164,6 @@ class TeamService {
   async getTeamMatchingInfo(teamId) {
     try {
       const teamReceivedList = await this.matchingModel.findReceivedMatchingList(teamId)
-
       for (const team of teamReceivedList) {
         const membersInfo = await this.belongModel.findUsersByTeamId(team.sendTeam.id)
         for (const memberInfo of membersInfo) {

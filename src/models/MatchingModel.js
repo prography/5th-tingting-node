@@ -197,5 +197,20 @@ class MatchingModel {
     })
     return teams
   }
+
+  async deleteMatchingByMatchingId (matchingId) {
+    await Matching.update(
+      {
+        is_deleted: 1,
+        deleted_at: new Date()
+      },
+      {
+        where: {
+          is_deleted: 0,
+          id: matchingId
+        },
+       }
+    )
+  }
 }
 module.exports = MatchingModel

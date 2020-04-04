@@ -54,14 +54,14 @@ class MeService {
 
   async getMySentMatchings (userId, teamList) {
     try {
+      const myApplys = await this.applyModel.findMyApplys(userId)
+      const appliedMatchingIds = myApplys.map(apply => apply.matching_id)
       let sentMatchings = []
       for (const team of teamList) {
         const teamId = team.id
         let matchings = await this.matchingModel.findMatchingsSentByTeamId(
           teamId
         )
-        const myApplys = await this.applyModel.findMyApplys(userId)
-        const appliedMatchingIds = myApplys.map(apply => apply.matching_id)
         matchings = matchings.filter(matching => {
           return !appliedMatchingIds.includes(matching.dataValues.id)
         })
