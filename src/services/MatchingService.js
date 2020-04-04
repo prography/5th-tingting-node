@@ -195,6 +195,17 @@ class MatchingService {
       throw new Error(error)
     }
   }
+
+  async deleteMatching (matchingId) {
+    try {
+      await this.matchingModel.deleteMatchingByMatchingId(matchingId)
+      await this.applyModel.deleteApplysByMatchingId(matchingId)
+      await this.acceptModel.deleteAcceptsByMatchingId(matchingId)
+    } catch (error) {
+      console.log(error)
+      throw new Error(error)
+    }
+  }
 }
 
 module.exports = MatchingService
