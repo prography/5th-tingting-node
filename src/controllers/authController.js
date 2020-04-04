@@ -339,7 +339,7 @@ const checkValidityForPasswordAndSendEmail = async (req, res) => {
   const userService = new UserService()
   const authService = new AuthService()
   const {
-    body: { localId, email }
+    query: { localId, email }
   } = req
   try {
     const exUserId = await userService.findUserIdByLocalIdAndEmail(localId, email)
