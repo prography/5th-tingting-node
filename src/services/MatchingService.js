@@ -198,7 +198,7 @@ class MatchingService {
 
   async deleteMatching (matchingId) {
     try {
-      await this.matchingModel.deleteMatchingByMatchingId(matchingId)
+      await this.matchingModel.deleteMatching(matchingId)
       await this.applyModel.deleteApplysByMatchingId(matchingId)
       await this.acceptModel.deleteAcceptsByMatchingId(matchingId)
     } catch (error) {

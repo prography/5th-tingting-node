@@ -198,7 +198,7 @@ class MatchingModel {
     return teams
   }
 
-  async deleteMatchingByMatchingId (matchingId) {
+  async deleteMatching (matchingId) {
     await Matching.update(
       {
         is_deleted: 1,
