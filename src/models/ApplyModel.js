@@ -44,16 +44,6 @@ class ApplyModel {
     })
     return rows
   }
-
-  async deleteApplysByMatchingId (matchingId) {
-    await Apply.destroy(
-      {
-        where: {
-          matching_id: matchingId
-        },
-       }
-    )
-  }
 }
 
 module.exports = ApplyModel

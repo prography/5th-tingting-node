@@ -34,16 +34,6 @@ class AcceptModel {
     })
     return rows
   }
-
-  async deleteAcceptsByMatchingId (matchingId) {
-    await Accept.destroy(
-      {
-        where: {
-          matching_id: matchingId
-        },
-       }
-    )
-  }
 }
 
 module.exports = AcceptModel

@@ -34,18 +34,18 @@ class TeamModel {
 
   // 팀 생성
   async saveTeam (data) {
-   const row = await Team.create({
+    await Team.create({
       name: data.name,
       chat_address: data.chat_address,
       owner_id: data.owner_id,
+      intro: data.intro,
       gender: data.gender,
       place: data.place,
       password: data.password, // 수정 필요
       max_member_number: data.max_member_number
     })
-    return row
   }
-  
+
   // 팀 이름 존재하는지 찾기
   async findTeamByName (name) {
     const team = await Team.findOne({
@@ -66,6 +66,7 @@ class TeamModel {
         'id',
         'name',
         'owner_id',
+        'intro',
         'gender',
         'place',
         'password',
@@ -103,6 +104,7 @@ class TeamModel {
       {
         name: data.name,
         chat_address: data.chat_address,
+        intro: data.intro,
         place: data.place,
         password: data.password,
         max_member_number: data.max_member_number

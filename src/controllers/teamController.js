@@ -29,28 +29,21 @@ const createTeam = async (req, res) => {
   const teamService = new TeamService()
   const userId = req.token.id
   const {
-    body: { name, chat_address, place, password, max_member_number, tagIds }
+    body: { name, chat_address, intro, place, password, max_member_number }
   } = req
   try {
-    if (tagIds.length < 2 || tagIds.length>5) {
-      const errorMessage = '태그의 개수가 올바르지 않습니다.'
-      console.log({ errorMessage })
-      res.status(400).json({ errorMessage })
-    }
-    else {
-      await teamService.saveTeam({
-        name,
-        chat_address,
-        owner_id: userId,
-        place,
-        password,
-        max_member_number,
-        tagIds
-      })
-      const data = { message: '팀 생성 성공' }
-      console.log(data)
-      res.status(201).json({ data })
-    }
+    await teamService.saveTeam({
+      name,
+      chat_address,
+      owner_id: userId,
+      intro,
+      place,
+      password,
+      max_member_number
+    })
+    const data = { message: '팀 생성 성공' }
+    console.log(data)
+    res.status(201).json({ data }) // 생성된 팀 정보(name) name으로 id 찾아서 정보 반환 --> 기능 찾아서 추가
   } catch (error) {
     console.log(error)
     res.status(500).json({ errorMessage: '서버 에러' })
@@ -156,24 +149,10 @@ const joinTeam = async (req, res) => {
   }
 }
 
-const getAllTags = async (req, res) => {
-  const teamService = new TeamService()
-  try {
-    const tags = await teamService.getAllTags()
-    const data = { tags }
-    console.log(data)
-    res.status(200).json({ data })
-  } catch (error) {
-    console.log(error)
-    res.status(500).json({ errorMessage: '서버 에러' })
-  }
-}
-
 module.exports = {
   getTeamList,
   createTeam,
   checkDuplicateTeamName,
   getTeamInfo,
-  joinTeam,
-  getAllTags
+  joinTeam
 }

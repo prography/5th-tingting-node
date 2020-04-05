@@ -17,6 +17,6 @@ router.get('/applied-teams/:id', getAppliedTeamInfo)
 router.post('/send-heart/first', verifyToken, sendHeartForFirst)
 router.post('/send-heart', verifyToken, sendHeart)
 router.post('/receive-heart', verifyToken, receiveHeart)
-router.post('/refuse-heart', verifyToken, refuseHeart)
+router.post('/refuse-heart', refuseHeart) // token 추가하기
 
 module.exports = router

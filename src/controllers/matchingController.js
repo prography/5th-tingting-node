@@ -216,38 +216,7 @@ const receiveHeart = async (req, res) => {
 }
 
 const refuseHeart = async (req, res) => {
-  try {
-    const userId = req.token.id
-    const { matchingId } = req.body
-    const meService = new MeService()
-    const matchingService = new MatchingService()
-    const matchingInfo = await matchingService.getMatchingInfo(matchingId)
-    if (!matchingInfo) {
-      const errorMessage = '매칭 정보가 없습니다!'
-      console.log({ errorMessage })
-      res.status(400).json({ errorMessage })
-    }
-    if (matchingInfo.send_accept_all === 0) {
-      const errorMessage = '아직 신청이 완료된 매칭이 아니에요!'
-      console.log({ errorMessage })
-      res.status(400).json({ errorMessage })
-    }
-    const receiveTeamId = matchingInfo.receive_team_id
-    const myTeamList = await meService.getMyTeamList(userId)
-    const myTeamIdList = myTeamList.map(team => team.id)
-    if (!myTeamIdList.includes(receiveTeamId)) {
-      const errorMessage = '팀에 속해있지 않습니다!'
-      console.log({ errorMessage })
-      res.status(403).json({ errorMessage })
-    }
-    await matchingService.deleteMatching(matchingId)
-    const data = { message: '매칭 거절하기 성공' }
-    console.log(data)
-    res.status(201).json({ data })
-  } catch (error) {
-    console.log(error)
-    res.status(500).json({ errorMessage: '서버 에러' })
-  }
+  res.json('refuseHeart')
 }
 
 module.exports = {

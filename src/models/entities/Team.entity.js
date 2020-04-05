@@ -23,6 +23,10 @@ const Team = db.define(
       type: Sequelize.INTEGER,
       allowNull: false
     },
+    intro: {
+      type: Sequelize.TEXT,
+      allowNull: false
+    },
     gender: {
       type: Sequelize.INTEGER(1),
       allowNull: false

@@ -5,8 +5,6 @@ const AvailableEmailModel = require('../models/AvailableEmailModel')
 const MatchingModel = require('../models/MatchingModel')
 const ApplyModel = require('../models/ApplyModel')
 const ProfileImgModel = require('../models/ProfileImgModel')
-const TeamTagModel = require('../models/TeamTagModel')
-const TagModel = require('../models/TagModel')
 
 class MeService {
   constructor () {
@@ -17,8 +15,6 @@ class MeService {
     this.matchingModel = new MatchingModel()
     this.applyModel = new ApplyModel()
     this.profileImgModel = new ProfileImgModel()
-    this.teamTagModel = new TeamTagModel()
-    this.tagModel = new TagModel()
   }
 
   async getMyInfo (userId) {
@@ -54,14 +50,14 @@ class MeService {
 
   async getMySentMatchings (userId, teamList) {
     try {
-      const myApplys = await this.applyModel.findMyApplys(userId)
-      const appliedMatchingIds = myApplys.map(apply => apply.matching_id)
       let sentMatchings = []
       for (const team of teamList) {
         const teamId = team.id
         let matchings = await this.matchingModel.findMatchingsSentByTeamId(
           teamId
         )
+        const myApplys = await this.applyModel.findMyApplys(userId)
+        const appliedMatchingIds = myApplys.map(apply => apply.matching_id)
         matchings = matchings.filter(matching => {
           return !appliedMatchingIds.includes(matching.dataValues.id)
         })
@@ -85,13 +81,7 @@ class MeService {
 
   async updateMyTeam (data) {
     try {
-      const teamId = data.teamId
-      const tagIdList = data.tagIds
       await this.teamModel.updateTeam(data)
-      await this.teamTagModel.deleteTeamTagsByTeamId(teamId)
-      for (const tagId of tagIdList) {
-        await this.teamTagModel.saveTeamTag({ teamId, tagId })
-      }
     } catch (error) {
       console.log(error)
       throw new Error(error)
