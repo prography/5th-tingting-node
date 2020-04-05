@@ -4,6 +4,7 @@ const AcceptModel = require('../models/AcceptModel')
 const UserModel = require('../models/UserModel')
 const TeamModel = require('../models/TeamModel')
 const BelongModel = require('../models/BelongModel')
+const TeamTagModel = require('../models/TeamTagModel')
 
 class MatchingService {
   constructor () {
@@ -13,6 +14,7 @@ class MatchingService {
     this.userModel = new UserModel()
     this.teamModel = new TeamModel()
     this.belongModel = new BelongModel()
+    this.teamTagModel = new TeamTagModel()
   }
 
   async checkIsMatched (teamId) {
@@ -76,6 +78,12 @@ class MatchingService {
         gender
       )
       for (const team of verifiedTeamsWithOppositeGender) {
+        const tagList = []
+        const teamTags = await this.teamTagModel.findTeamTagsByTeamId(team.id)
+        for (const [index, teamTag] of teamTags.entries()) {
+          tagList[index] = teamTag.tags.name
+        }
+        team.tags = tagList
         const membersInfo = await this.belongModel.findUsersByTeamId(team.id)
         for (const memberInfo of membersInfo) {
           memberInfo.thumbnail = `${process.env.HOST_BASE_URL}/api/v1/users/${memberInfo.id}/thumbnail-img`
@@ -182,6 +190,17 @@ class MatchingService {
           await this.matchingModel.setMatchingReceiveAcceptAll(matchingId)
         }
       }
+    } catch (error) {
+      console.log(error)
+      throw new Error(error)
+    }
+  }
+
+  async deleteMatching (matchingId) {
+    try {
+      await this.matchingModel.deleteMatching(matchingId)
+      await this.applyModel.deleteApplysByMatchingId(matchingId)
+      await this.acceptModel.deleteAcceptsByMatchingId(matchingId)
     } catch (error) {
       console.log(error)
       throw new Error(error)
