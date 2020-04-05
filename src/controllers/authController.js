@@ -365,7 +365,6 @@ const confirmEmailCodeForPassword = async (req, res) => {
   const authService = new AuthService()
   const query = req._parsedUrl.query
   const code = query.substr(5)
-  console.log(code)
   try {
     await authService.setIsAuthenticatedOfAuthToResetPassword(code)
     const confirmPassword = fs.readFileSync(
