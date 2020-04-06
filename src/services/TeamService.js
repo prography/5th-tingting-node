@@ -161,11 +161,16 @@ class TeamService {
     }
   }
 
-  async getTeamMatchingInfo(teamId) {
+  async getTeamMatchingInfo(data) {
     try {
-      const teamReceivedList = await this.matchingModel.findReceivedMatchingList(teamId)
+      const teamReceivedList = await this.matchingModel.findReceivedMatchingList(data.teamId)
 
       for (const team of teamReceivedList) {
+        for(const accept of team.accepts){
+          if (accept.dataValues.accepter_id == data.userId){
+            team.dataValues.is_accept = true;
+          }
+        }
         const membersInfo = await this.belongModel.findUsersByTeamId(team.sendTeam.id)
         for (const memberInfo of membersInfo) {
           memberInfo.thumbnail = `${process.env.HOST_BASE_URL}/api/v1/users/${memberInfo.id}/thumbnail-img`
