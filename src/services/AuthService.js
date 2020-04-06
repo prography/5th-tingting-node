@@ -2,10 +2,11 @@ const jwt = require('jsonwebtoken')
 const crypto = require('crypto')
 const nodemailer = require('nodemailer')
 const AvailableEmailModel = require('../models/AvailableEmailModel')
-const AuthModel = require('../models/AuthModel.js')
-const UserModel = require('../models/UserModel.js')
-const AuthPasswordModel = require('../models/AuthPasswordModel.js')
-const fs = require('fs')
+const AuthModel = require('../models/AuthModel')
+const UserModel = require('../models/UserModel')
+const AuthPasswordModel = require('../models/AuthPasswordModel')
+const sendEmail = require('../utils/sendMail')
+const pug = require('pug')
 const path = require('path')
 const axios = require('axios')
 
@@ -141,32 +142,13 @@ class AuthService {
     }
   }
 
-  async sendEmail (email) {
-    const mailConfig = {
-      service: 'Naver',
-      host: 'smtp.naver.com',
-      port: 587,
-      auth: {
-        user: process.env.SMTP_EMAIL,
-        pass: process.env.SMTP_PASSWORD
-      }
-    }
-    const html = fs.readFileSync(
-      path.resolve(__dirname, '../public/html/authMail.html'),
-      'utf8'
-    )
+  async sendEmailToAuthenticateSchool (email) {
     try {
       const token = this._makeEmailToken(email)
-      const splitedHtml = html.split('token=')
-      const finalHtml = splitedHtml[0] + 'token=' + token + splitedHtml[1]
-      const message = {
-        from: process.env.SMTP_EMAIL,
-        to: email,
-        subject: '[팅팅] 이메일 인증 요청',
-        html: finalHtml
-      }
-      const transporter = nodemailer.createTransport(mailConfig)
-      transporter.sendMail(message)
+      const subject = '[팅팅] 이메일 인증 요청'
+      const authenticationUrl = process.env.HOST + '/api/v1/auth//school/confirm?token=' + token
+      const html = pug.renderFile(path.resolve(__dirname, '../public/templates/authMail.pug'), { authenticationUrl });
+      sendEmail(email, subject, html)
     } catch (error) {
       console.log(error)
       throw new Error(error)
@@ -174,30 +156,10 @@ class AuthService {
   }
 
   async sendEmailToFindId (email, localId) {
-    const mailConfig = {
-      service: 'Naver',
-      host: 'smtp.naver.com',
-      port: 587,
-      auth: {
-        user: process.env.SMTP_EMAIL,
-        pass: process.env.SMTP_PASSWORD
-      }
-    }
-    const html = fs.readFileSync(
-      path.resolve(__dirname, '../public/html/findIdMail.html'),
-      'utf8'
-    )
     try {
-      const splitedHtml = html.split('<strong>')
-      const finalHtml = splitedHtml[0] + '<strong>' + localId + splitedHtml[1]
-      const message = {
-        from: process.env.SMTP_EMAIL,
-        to: email,
-        subject: '[팅팅] 아이디 찾기',
-        html: finalHtml
-      }
-      const transporter = nodemailer.createTransport(mailConfig)
-      transporter.sendMail(message)
+      const subject = '[팅팅] 아이디 찾기'
+      const html = pug.renderFile(path.resolve(__dirname, '../public/templates/findIdMail.pug'), { localId });
+      sendEmail(email, subject, html)  
     } catch (error) {
       console.log(error)
       throw new Error(error)
@@ -205,30 +167,11 @@ class AuthService {
   }
 
   async sendEmailToResetPassword (email, code) {
-    const mailConfig = {
-      service: 'Naver',
-      host: 'smtp.naver.com',
-      port: 587,
-      auth: {
-        user: process.env.SMTP_EMAIL,
-        pass: process.env.SMTP_PASSWORD
-      }
-    }
-    const html = fs.readFileSync(
-      path.resolve(__dirname, '../public/html/resetPasswordMail.html'),
-      'utf8'
-    )
     try {
-      const splitedHtml = html.split('code=')
-      const finalHtml = splitedHtml[0] + 'code=' + code + splitedHtml[1]
-      const message = {
-        from: process.env.SMTP_EMAIL,
-        to: email,
-        subject: '[팅팅] 비밀번호 재설정을 위한 인증 요청',
-        html: finalHtml
-      }
-      const transporter = nodemailer.createTransport(mailConfig)
-      transporter.sendMail(message)
+      const subject = '[팅팅] 비밀번호 재설정을 위한 인증 요청'
+      const authenticationUrl = process.env.HOST + '/api/v1/auth/find/password/confirm?code=' + code 
+      const html = pug.renderFile(path.resolve(__dirname, '../public/templates/resetPasswordMail.pug'), { authenticationUrl });
+      sendEmail(email, subject, html)
     } catch (error) {
       console.log(error)
       throw new Error(error)
