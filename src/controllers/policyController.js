@@ -4,7 +4,7 @@ const path = require('path')
 const getRule = async (req, res) => {
   try {
     const rule = fs.readFileSync(
-      path.resolve(__dirname, '../public/html/rule.html'),
+      path.resolve(__dirname, '../public/templates/rule.html'),
       'utf8'
     )
     res.send(rule)
@@ -17,7 +17,7 @@ const getRule = async (req, res) => {
 const getPrivacy = async (req, res) => {
   try {
     const privacy = fs.readFileSync(
-      path.resolve(__dirname, '../public/html/privacy.html'),
+      path.resolve(__dirname, '../public/templates/privacy.html'),
       'utf8'
     )
     res.send(privacy)

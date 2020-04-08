@@ -241,7 +241,7 @@ const checkValidityAndSendEmail = async (req, res) => {
       res.status(401).json({ errorMessage })
     } else {
       await authService.saveAuthenticatedEmail(email)
-      await authService.sendEmail(email)
+      await authService.sendEmailToAuthenticateSchool(email)
       const data = { message: '인증메일을 전송했습니다.' }
       console.log(data)
       res.status(201).json({ data })
@@ -259,7 +259,7 @@ const confirmEmailToken = async (req, res) => {
   try {
     await authService.setIsAuthenticatedOfAuth(token)
     const confirmSchool = fs.readFileSync(
-      path.resolve(__dirname, '../public/html/confirmSchool.html'),
+      path.resolve(__dirname, '../public/templates/confirmAlert.html'),
       'utf8'
     )
     res.send(confirmSchool)
@@ -368,7 +368,7 @@ const confirmEmailCodeForPassword = async (req, res) => {
   try {
     await authService.setIsAuthenticatedOfAuthToResetPassword(code)
     const confirmPassword = fs.readFileSync(
-      path.resolve(__dirname, '../public/html/confirmPassword.html'),
+      path.resolve(__dirname, '../public/templates/confirmAlert.html'),
       'utf8'
     )
     res.send(confirmPassword)
