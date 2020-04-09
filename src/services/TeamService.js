@@ -168,7 +168,7 @@ class TeamService {
       for (const team of teamReceivedList) {
         for(const accept of team.accepts){
           if (accept.dataValues.accepter_id == data.userId){
-            team.dataValues.is_accept = true;
+            team.dataValues.is_accepted = true;
           }
         }
         const membersInfo = await this.belongModel.findUsersByTeamId(team.sendTeam.id)
