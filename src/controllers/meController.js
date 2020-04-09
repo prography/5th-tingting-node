@@ -61,7 +61,7 @@ const getMyTeamInfo = async (req, res) => {
           req.params.id,
           teamInfo.owner_id
         )
-        const teamMatchings = await teamService.getTeamMatchingInfo(teamId)
+        const teamMatchings = await teamService.getTeamMatchingInfo({teamId, userId})
         const data = {
           teamInfo,
           teamMembers,
