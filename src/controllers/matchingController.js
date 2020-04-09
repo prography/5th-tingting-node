@@ -77,6 +77,7 @@ const getAppliedTeamInfo = async (req, res) => {
       teamId,
       myTeamId
     )
+    const isMatchingCompleted = await matchingService.checkIsMatchingCompleted(teamId, myTeamId)
     if (teamInfo === null) {
       const errorMessage = '신청 팀이 존재하지 않습니다.'
       console.log({ errorMessage })
@@ -87,14 +88,21 @@ const getAppliedTeamInfo = async (req, res) => {
         console.log({ errorMessage })
         res.status(400).json({ errorMessage })
       } else {
-        const teamMembers = await teamService.getTeamMembersInfo(
-          teamId,
-          teamInfo.owner_id
-        )
-        const message = await matchingService.getMessage(teamId, myTeamId)
-        const data = { teamInfo, teamMembers, message }
-        console.log(data)
-        res.status(200).json({ data })
+        if (isMatchingCompleted) {
+          const errorMessage = '이미 매칭이 완료되었습니다.'
+          console.log({ errorMessage })
+          res.status(403).json({ errorMessage })
+        }
+        else {
+          const teamMembers = await teamService.getTeamMembersInfo(
+            teamId,
+            teamInfo.owner_id
+          )
+          const message = await matchingService.getMessage(teamId, myTeamId)
+          const data = { teamInfo, teamMembers, message }
+          console.log(data)
+          res.status(200).json({ data })
+        }
       }
     }
   } catch (error) {
