@@ -146,7 +146,7 @@ class AuthService {
     try {
       const token = this._makeEmailToken(email)
       const subject = '[팅팅] 이메일 인증 요청'
-      const authenticationUrl = process.env.HOST + '/api/v1/auth//school/confirm?token=' + token
+      const authenticationUrl = process.env.HOST_BASE_URL + '/api/v1/auth//school/confirm?token=' + token
       const html = pug.renderFile(path.resolve(__dirname, '../public/templates/authMail.pug'), { authenticationUrl });
       sendEmail(email, subject, html)
     } catch (error) {
@@ -169,7 +169,7 @@ class AuthService {
   async sendEmailToResetPassword (email, code) {
     try {
       const subject = '[팅팅] 비밀번호 재설정을 위한 인증 요청'
-      const authenticationUrl = process.env.HOST + '/api/v1/auth/find/password/confirm?code=' + code 
+      const authenticationUrl = process.env.HOST_BASE_URL + '/api/v1/auth/find/password/confirm?code=' + code 
       const html = pug.renderFile(path.resolve(__dirname, '../public/templates/resetPasswordMail.pug'), { authenticationUrl });
       sendEmail(email, subject, html)
     } catch (error) {
