@@ -7,7 +7,7 @@ const BelongModel = require('../models/BelongModel')
 const TeamTagModel = require('../models/TeamTagModel')
 
 class MatchingService {
-  constructor () {
+  constructor() {
     this.matchingModel = new MatchingModel()
     this.applyModel = new ApplyModel()
     this.acceptModel = new AcceptModel()
@@ -17,7 +17,7 @@ class MatchingService {
     this.teamTagModel = new TeamTagModel()
   }
 
-  async checkIsMatched (teamId) {
+  async checkIsMatched(teamId) {
     try {
       const isMatched = await this.matchingModel.checkIsMatched(teamId)
       return isMatched
@@ -27,7 +27,17 @@ class MatchingService {
     }
   }
 
-  async checkIsHeartSent (sendTeamId, receiveTeamId) {
+  async checkIsMatchingCompleted(sendTeamId, receiveTeamId) {
+    try {
+      const isMatchingCompleted = await this.matchingModel.checkIsMatchingCompleted(sendTeamId, receiveTeamId)
+      return isMatchingCompleted
+    } catch (error) {
+      console.log(error)
+      throw new Error(error)
+    }
+  }
+
+  async checkIsHeartSent(sendTeamId, receiveTeamId) {
     try {
       const isHeartSent = await this.matchingModel.checkIsHeartSent(
         sendTeamId,
@@ -40,7 +50,7 @@ class MatchingService {
     }
   }
 
-  async checkIsValidityOfHeart (sendTeamId, receiveTeamId) {
+  async checkIsValidityOfHeart(sendTeamId, receiveTeamId) {
     try {
       const isValdityOfHeart = await this.matchingModel.checkIsValidityOfHeart(
         sendTeamId,
@@ -53,7 +63,7 @@ class MatchingService {
     }
   }
 
-  async deleteMatchingdata (teamId) {
+  async deleteMatchingdata(teamId) {
     try {
       // matching id 찾기 matching deleted 1
       const matchings = await this.matchingModel.findMatchingsByTeamId(teamId)
@@ -70,7 +80,7 @@ class MatchingService {
     }
   }
 
-  async findAllMatchingList (userId) {
+  async findAllMatchingList(userId) {
     try {
       const userInfo = await this.userModel.findUserInfo(userId)
       const gender = userInfo.gender
@@ -112,7 +122,7 @@ class MatchingService {
     }
   }
 
-  async saveNewMatching (userId, sendTeamId, receiveTeamId, message) {
+  async saveNewMatching(userId, sendTeamId, receiveTeamId, message) {
     try {
       const matchingId = await this.matchingModel.saveMatching(
         sendTeamId,
@@ -131,7 +141,7 @@ class MatchingService {
     }
   }
 
-  async getMatchingInfo (matchingId) {
+  async getMatchingInfo(matchingId) {
     try {
       const matchingInfo = await this.matchingModel.findMatching(matchingId)
       return matchingInfo
@@ -141,7 +151,7 @@ class MatchingService {
     }
   }
 
-  async getMessage (sendTeamId, receiveTeamId) {
+  async getMessage(sendTeamId, receiveTeamId) {
     try {
       const message = await this.matchingModel.findMessage(
         sendTeamId,
@@ -154,7 +164,7 @@ class MatchingService {
     }
   }
 
-  async saveNewApply (userId, matchingId, sendTeamId) {
+  async saveNewApply(userId, matchingId, sendTeamId) {
     try {
       const prevApply = await this.applyModel.findApplyByUserIdAndMatchingId(
         userId,
@@ -174,7 +184,7 @@ class MatchingService {
     }
   }
 
-  async saveNewAccept (userId, matchingId, receiveTeamId) {
+  async saveNewAccept(userId, matchingId, receiveTeamId) {
     try {
       const prevAccept = await this.acceptModel.findAcceptByUserIdAndMatchingId(
         userId,
@@ -196,7 +206,7 @@ class MatchingService {
     }
   }
 
-  async deleteMatching (matchingId) {
+  async deleteMatching(matchingId) {
     try {
       await this.matchingModel.deleteMatching(matchingId)
       await this.applyModel.deleteApplysByMatchingId(matchingId)

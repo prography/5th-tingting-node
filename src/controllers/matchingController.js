@@ -77,11 +77,17 @@ const getAppliedTeamInfo = async (req, res) => {
       teamId,
       myTeamId
     )
+    const isMatchingCompleted = await matchingService.checkIsMatchingCompleted(teamId, myTeamId)
     if (teamInfo === null) {
       const errorMessage = '신청 팀이 존재하지 않습니다.'
       console.log({ errorMessage })
       res.status(404).json({ errorMessage })
     } else {
+      if (isMatchingCompleted) {
+        const errorMessage = '이미 매칭이 완료되었습니다.'
+        console.log({ errorMessage })
+        res.status(403).json({ errorMessage })
+      }
       if (!isValid) {
         const errorMessage = '해당 팀은 매칭을 신청하지 않았습니다.'
         console.log({ errorMessage })
