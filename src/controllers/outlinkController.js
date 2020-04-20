@@ -16,5 +16,5 @@ const redirectToStoreUrl = async (req, res) => {
 }
 
 module.exports = {
-  redirectToStoreUrl,
+  redirectToStoreUrl
 }

@@ -50,8 +50,8 @@ class ApplyModel {
       {
         where: {
           matching_id: matchingId
-        },
-       }
+        }
+      }
     )
   }
 }

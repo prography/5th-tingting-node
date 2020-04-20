@@ -1,7 +1,7 @@
 import AuthPassword from './entities/AuthPassword.entity'
 
 class AuthPasswordModel {
-  async saveAuthPassword (email, code) { 
+  async saveAuthPassword (email, code) {
     await AuthPassword.create({
       authenticated_email: email,
       code
@@ -28,7 +28,7 @@ class AuthPasswordModel {
       },
       raw: true
     })
-    const auth = row ? row : null
+    const auth = row || null
     return auth
   }
 }

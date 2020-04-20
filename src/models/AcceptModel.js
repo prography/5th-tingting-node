@@ -40,8 +40,8 @@ class AcceptModel {
       {
         where: {
           matching_id: matchingId
-        },
-       }
+        }
+      }
     )
   }
 }

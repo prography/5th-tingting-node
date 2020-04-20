@@ -1,6 +1,5 @@
 const jwt = require('jsonwebtoken')
 const crypto = require('crypto')
-const nodemailer = require('nodemailer')
 const AvailableEmailModel = require('../models/AvailableEmailModel')
 const AuthModel = require('../models/AuthModel')
 const UserModel = require('../models/UserModel')
@@ -70,8 +69,8 @@ class AuthService {
     const now = new Date()
     const salt = process.env.SALT
     const code = crypto
-        .pbkdf2Sync(email+now, salt, 100000, 64, 'sha512')
-        .toString('base64')
+      .pbkdf2Sync(email + now, salt, 100000, 64, 'sha512')
+      .toString('base64')
     return code
   }
 
@@ -147,7 +146,7 @@ class AuthService {
       const token = this._makeEmailToken(email)
       const subject = '[팅팅] 이메일 인증 요청'
       const authenticationUrl = process.env.HOST_BASE_URL + '/api/v1/auth//school/confirm?token=' + token
-      const html = pug.renderFile(path.resolve(__dirname, '../public/templates/authMail.pug'), { authenticationUrl });
+      const html = pug.renderFile(path.resolve(__dirname, '../public/templates/authMail.pug'), { authenticationUrl })
       sendEmail(email, subject, html)
     } catch (error) {
       console.log(error)
@@ -158,8 +157,8 @@ class AuthService {
   async sendEmailToFindId (email, localId) {
     try {
       const subject = '[팅팅] 아이디 찾기'
-      const html = pug.renderFile(path.resolve(__dirname, '../public/templates/findIdMail.pug'), { localId });
-      sendEmail(email, subject, html)  
+      const html = pug.renderFile(path.resolve(__dirname, '../public/templates/findIdMail.pug'), { localId })
+      sendEmail(email, subject, html)
     } catch (error) {
       console.log(error)
       throw new Error(error)
@@ -169,8 +168,8 @@ class AuthService {
   async sendEmailToResetPassword (email, code) {
     try {
       const subject = '[팅팅] 비밀번호 재설정을 위한 인증 요청'
-      const authenticationUrl = process.env.HOST_BASE_URL + '/api/v1/auth/find/password/confirm?code=' + code 
-      const html = pug.renderFile(path.resolve(__dirname, '../public/templates/resetPasswordMail.pug'), { authenticationUrl });
+      const authenticationUrl = process.env.HOST_BASE_URL + '/api/v1/auth/find/password/confirm?code=' + code
+      const html = pug.renderFile(path.resolve(__dirname, '../public/templates/resetPasswordMail.pug'), { authenticationUrl })
       sendEmail(email, subject, html)
     } catch (error) {
       console.log(error)
@@ -221,7 +220,7 @@ class AuthService {
   }
 
   async saveAuthenticatedEmailAndCode (email, code) {
-    try { 
+    try {
       await this.authPasswordModel.saveAuthPassword(email, code)
     } catch (error) {
       console.log(error)
@@ -248,21 +247,21 @@ class AuthService {
     }
   }
 
-  async checkAge(userBirth){           
-      var date = new Date()
-      var year = date.getFullYear()
-      var month = (date.getMonth() + 1)
-      var day = date.getDate()
-      if (month < 10) month = '0' + month
-      if (day < 10) day = '0' + day
-      var monthDay = month + day
+  async checkAge (userBirth) {
+    var date = new Date()
+    var year = date.getFullYear()
+    var month = (date.getMonth() + 1)
+    var day = date.getDate()
+    if (month < 10) month = '0' + month
+    if (day < 10) day = '0' + day
+    var monthDay = month + day
 
-      userBirth = userBirth.replace('-', '').replace('-', '')
-      var yearOfUserBirth = userBirth.substr(0, 4)
-      var monthDayOfUserBirth = userBirth.substr(4, 4)
-  
-      var age = monthDay < monthDayOfUserBirth ? year - yearOfUserBirth - 1 : year - yearOfUserBirth
-      return age
+    userBirth = userBirth.replace('-', '').replace('-', '')
+    var yearOfUserBirth = userBirth.substr(0, 4)
+    var monthDayOfUserBirth = userBirth.substr(4, 4)
+
+    var age = monthDay < monthDayOfUserBirth ? year - yearOfUserBirth - 1 : year - yearOfUserBirth
+    return age
   }
 }
 

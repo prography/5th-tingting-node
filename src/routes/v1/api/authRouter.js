@@ -31,8 +31,8 @@ router.post('/school', checkValidityAndSendEmail)
 router.get('/school/confirm', verifyEmailToken, confirmEmailToken)
 router.get('/school/complete', checkEmailAuth)
 
-router.get('/find/id', checkValidityForIdAndSendEmail) 
-router.get('/find/password', checkValidityForPasswordAndSendEmail) 
+router.get('/find/id', checkValidityForIdAndSendEmail)
+router.get('/find/password', checkValidityForPasswordAndSendEmail)
 router.get('/find/password/confirm', confirmEmailCodeForPassword)
 router.get('/find/password/complete', checkEmailAuthForPassword)
 

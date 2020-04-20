@@ -34,7 +34,7 @@ class TeamModel {
 
   // 팀 생성
   async saveTeam (data) {
-   const row = await Team.create({
+    const row = await Team.create({
       name: data.name,
       chat_address: data.chat_address,
       owner_id: data.owner_id,
@@ -45,7 +45,7 @@ class TeamModel {
     })
     return row
   }
-  
+
   // 팀 이름 존재하는지 찾기
   async findTeamByName (name) {
     const team = await Team.findOne({
@@ -84,14 +84,14 @@ class TeamModel {
   // 해당 유저가 주인으로 있는 팀 목록 찾기
   async findTeamsOwnedByUserId (userId) {
     const teams = await Team.findAll({
-      attributes: ['id', 'name', 'max_member_number', ['is_verified','is_ready']],
+      attributes: ['id', 'name', 'max_member_number', ['is_verified', 'is_ready']],
       where: {
         owner_id: userId,
         is_deleted: 0
       },
       raw: true
     })
-    teams.forEach(team =>{
+    teams.forEach(team => {
       team.is_ready = team.is_ready ? 'true' : 'false'
     })
     return teams

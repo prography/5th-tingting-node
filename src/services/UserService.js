@@ -137,7 +137,6 @@ class UserService {
       throw new Error(error)
     }
   }
- 
 }
 
 module.exports = UserService

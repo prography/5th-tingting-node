@@ -15,5 +15,5 @@ const getMain = async (req, res) => {
 }
 
 module.exports = {
-    getMain
+  getMain
 }

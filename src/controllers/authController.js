@@ -56,8 +56,7 @@ const kakaoLogin = async (req, res) => {
           }
           console.log(data)
           res.status(201).json({ data })
-        }
-        else {
+        } else {
           const errorMessage = '만 18세 미만으로 가입할 수 없습니다.'
           console.log({ errorMessage })
           return res.status(400).json({ errorMessage })
@@ -442,4 +441,3 @@ module.exports = {
   checkEmailAuthForPassword,
   resetPassword
 }
-

@@ -32,12 +32,11 @@ const createTeam = async (req, res) => {
     body: { name, chat_address, place, password, max_member_number, tagIds }
   } = req
   try {
-    if (tagIds.length < 2 || tagIds.length>5) {
+    if (tagIds.length < 2 || tagIds.length > 5) {
       const errorMessage = '태그의 개수가 올바르지 않습니다.'
       console.log({ errorMessage })
       res.status(400).json({ errorMessage })
-    }
-    else {
+    } else {
       await teamService.saveTeam({
         name,
         chat_address,

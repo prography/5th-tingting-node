@@ -1,10 +1,9 @@
 import Tag from './entities/Tag.entity'
 
 class TagModel {
-
-  async getAllTags(){
+  async getAllTags () {
     const tags = await Tag.findAll({
-      attributes:['id','name'],
+      attributes: ['id', 'name'],
       raw: true
     })
     return tags

@@ -191,7 +191,7 @@ class MatchingModel {
     })
     teams.forEach(team => {
       team.dataValues.accepter_number = team.accepts.length
-      team.dataValues.is_accepted = false;
+      team.dataValues.is_accepted = false
       delete team.dataValues.accepts
       team.dataValues.is_matched = team.verified_at !== null
       delete team.dataValues.verified_at
@@ -209,8 +209,8 @@ class MatchingModel {
         where: {
           is_deleted: 0,
           id: matchingId
-        },
-       }
+        }
+      }
     )
   }
 }

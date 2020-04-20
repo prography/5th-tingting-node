@@ -117,7 +117,7 @@ class UserModel {
   async updateUserInfo (data) {
     await User.update(
       {
-        height: data.height,
+        height: data.height
       },
       { where: { id: data.userId } }
     )

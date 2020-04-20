@@ -61,7 +61,7 @@ const getMyTeamInfo = async (req, res) => {
           req.params.id,
           teamInfo.owner_id
         )
-        const teamMatchings = await teamService.getTeamMatchingInfo({teamId, userId})
+        const teamMatchings = await teamService.getTeamMatchingInfo({ teamId, userId })
         const data = {
           teamInfo,
           teamMembers,
@@ -98,8 +98,7 @@ const updateMyTeam = async (req, res) => {
       const errorMessage = '태그의 개수가 올바르지 않습니다.'
       console.log({ errorMessage })
       res.status(400).json({ errorMessage })
-    }
-    else {
+    } else {
       const myTeamList = await myService.getMyTeamList(userId)
       const myTeamIdList = myTeamList.map(team => team.id)
       const isMember = myTeamIdList.includes(teamId)
