@@ -188,6 +188,9 @@ class MatchingService {
         const teamInfo = await this.teamModel.findTeamInfo(receiveTeamId)
         if (accepts.length === teamInfo.max_member_number) {
           await this.matchingModel.setMatchingReceiveAcceptAll(matchingId)
+          return true
+        } else {
+          return false
         }
       }
     } catch (error) {

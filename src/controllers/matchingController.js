@@ -205,7 +205,10 @@ const receiveHeart = async (req, res) => {
       console.log({ errorMessage })
       res.status(403).json({ errorMessage })
     }
-    await matchingService.saveNewAccept(userId, matchingId, receiveTeamId)
+    const isMatched = await matchingService.saveNewAccept(userId, matchingId, receiveTeamId)
+    if (isMatched) {
+      console.log('send web push')
+    }
     const data = { message: '매칭 수락하기 성공' }
     console.log(data)
     res.status(201).json({ data })
