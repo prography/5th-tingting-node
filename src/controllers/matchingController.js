@@ -1,6 +1,7 @@
 const MeService = require('../services/MeService')
 const MatchingService = require('../services/MatchingService')
 const TeamService = require('../services/TeamService')
+const { socketSessions } = require('../utils/sockets')
 
 const getMatchingList = async (req, res) => {
   try {
@@ -181,6 +182,7 @@ const receiveHeart = async (req, res) => {
     const { matchingId } = req.body
     const meService = new MeService()
     const matchingService = new MatchingService()
+    const teamService = new TeamService()
     const matchingInfo = await matchingService.getMatchingInfo(matchingId)
     if (!matchingInfo) {
       const errorMessage = '매칭 정보가 없습니다!'
@@ -207,6 +209,22 @@ const receiveHeart = async (req, res) => {
     }
     const isMatched = await matchingService.saveNewAccept(userId, matchingId, receiveTeamId)
     if (isMatched) {
+      const sendTeamId = matchingInfo.send_team_id
+      const sendTeamInfo = await teamService.getTeamInfo(sendTeamId)
+      const receiveTeamInfo = await teamService.getTeamInfo(receiveTeamId)
+      const sendTeamMembers = await teamService.getTeamMembersInfo(sendTeamId, sendTeamInfo.owner_id)
+      const receiveTeamMembers = await teamService.getTeamMembersInfo(receiveTeamId, receiveTeamInfo.owner_id)
+      const sendTeamMemberIds = sendTeamMembers.map(sendTeamMember => sendTeamMember.id)
+      const receiveTeamMemberIds = receiveTeamMembers.map(receiveTeamMember => receiveTeamMember.id)
+      for (sendTeamMemberId of sendTeamMemberIds) {
+        const sendTeamMemberIdString = sendTeamMemberId.toString()
+        if (sendTeamMemberIdString in socketSessions) socketSessions[sendTeamMemberIdString].emit('성사됐어요!')
+      }
+      for (receiveTeamMemberId of receiveTeamMemberIds) {
+        if (receiveTeamMemberId === userId) continue
+        const receiveTeamMemberIdString = receiveTeamMemberId.toString()
+        if (receiveTeamMemberIdString in socketSessions) socketSessions[receiveTeamMemberIdString].emit('성사됐어요!')
+      }
       console.log('send web push')
     }
     const data = { message: '매칭 수락하기 성공' }
