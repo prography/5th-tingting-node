@@ -41,7 +41,9 @@
         "session": "^0.1.0",
         "socket-io": "^1.0.0",
         "socket.io": "^2.3.0",
-        "socket.io-client": "^2.3.0"
+        "socket.io-client": "^2.3.0",
+        "swagger-jsdoc": "^4.0.0",
+        "swagger-ui-express": "^4.1.4"
     },
     "devDependencies": {
         "@babel/cli": "^7.6.4",

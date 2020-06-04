@@ -33,7 +33,7 @@ const getUserThumbnailImg = async (req, res) => {
       stream.pipe(res)
     }
   } catch (error) {
-    res.status(500).json({ errorMessage: '사용자 불러오기 실패' })
+    res.status(500).json({ errorMessage: '사진 불러오기 실패' })
   }
 }
 
@@ -51,7 +51,7 @@ const getUserProfileImg = async (req, res) => {
       stream.pipe(res)
     }
   } catch (error) {
-    res.status(500).json({ errorMessage: '사용자 불러오기 실패' })
+    res.status(500).json({ errorMessage: '사진 불러오기 실패' })
   }
 }
 
