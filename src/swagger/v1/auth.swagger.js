@@ -42,7 +42,7 @@ const localSignup = {
               description: '성별(남자 0/여자 1)',
               type: 'integer',
               example: '1'
-            },
+            }
           },
           required: [
             'local_id',
@@ -57,7 +57,7 @@ const localSignup = {
     }
   },
   responses: {
-    '201': {
+    201: {
       description: 'Created',
       content: {
         'application/json': {
@@ -74,7 +74,7 @@ const localSignup = {
       links: {
       }
     },
-    '400': {
+    400: {
       description: 'Bad Request',
       content: {
         'application/json': {
@@ -83,12 +83,12 @@ const localSignup = {
           example: {
             errorType1: {
               data: {
-                errorMessage: '이미 가입된 사용자입니다.',
+                errorMessage: '이미 가입된 사용자입니다.'
               }
             },
             errorType2: {
               data: {
-                errorMessage: '만 18세 미만으로 가입할 수 없습니다.',
+                errorMessage: '만 18세 미만으로 가입할 수 없습니다.'
               }
             }
           }
@@ -97,7 +97,7 @@ const localSignup = {
       links: {
       }
     },
-    '401': {
+    401: {
       description: 'Unauthorized',
       content: {
         'application/json': {
@@ -105,7 +105,7 @@ const localSignup = {
           },
           example: {
             data: {
-              errorMessage: '인증된 이메일이 아닙니다.',
+              errorMessage: '인증된 이메일이 아닙니다.'
             }
           }
         }
@@ -113,7 +113,7 @@ const localSignup = {
       links: {
       }
     },
-    '500': {
+    500: {
       description: 'Internal Server error',
       content: {
         'application/json': {
@@ -121,14 +121,14 @@ const localSignup = {
           },
           example: {
             data: {
-              errorMessage: '회원가입에 실패하였습니다.',
+              errorMessage: '회원가입에 실패하였습니다.'
             }
           }
         }
       },
       links: {
       }
-    },
+    }
   }
 }
 
@@ -145,7 +145,7 @@ const kakaoSignup = {
     name: 'Authorization',
     description: 'kakaoId',
     schema: {
-      type: 'string',
+      type: 'string'
     },
     required: true
   }],
@@ -180,7 +180,7 @@ const kakaoSignup = {
               description: '성별(남자 0/여자 1)',
               type: 'integer',
               example: '1'
-            },
+            }
           },
           required: [
             'name',
@@ -193,7 +193,7 @@ const kakaoSignup = {
     }
   },
   responses: {
-    '201': {
+    201: {
       description: 'Created',
       content: {
         'application/json': {
@@ -210,7 +210,7 @@ const kakaoSignup = {
       links: {
       }
     },
-    '400': {
+    400: {
       description: 'Bad Request',
       content: {
         'application/json': {
@@ -218,7 +218,7 @@ const kakaoSignup = {
           },
           example: {
             data: {
-              errorMessage: '만 18세 미만으로 가입할 수 없습니다.',
+              errorMessage: '만 18세 미만으로 가입할 수 없습니다.'
             }
           }
         }
@@ -226,7 +226,7 @@ const kakaoSignup = {
       links: {
       }
     },
-    '401': {
+    401: {
       description: 'Unauthorized',
       content: {
         'application/json': {
@@ -235,12 +235,12 @@ const kakaoSignup = {
           example: {
             errorType1: {
               data: {
-                errorMessage: '유효하지 않은 토큰입니다.',
+                errorMessage: '유효하지 않은 토큰입니다.'
               }
             },
             errorType2: {
               data: {
-                errorMessage: '인증된 이메일이 아닙니다.',
+                errorMessage: '인증된 이메일이 아닙니다.'
               }
             }
           }
@@ -249,7 +249,7 @@ const kakaoSignup = {
       links: {
       }
     },
-    '500': {
+    500: {
       description: 'Internal Server error',
       content: {
         'application/json': {
@@ -257,14 +257,14 @@ const kakaoSignup = {
           },
           example: {
             data: {
-              errorMessage: '로그인 혹은 회원가입에 실패했습니다.',
+              errorMessage: '로그인 혹은 회원가입에 실패했습니다.'
             }
           }
         }
       },
       links: {
       }
-    },
+    }
   }
 }
 const kakaoLogin = {
@@ -275,12 +275,12 @@ const kakaoLogin = {
     name: 'Authorization',
     description: 'kakaoId',
     schema: {
-      type: 'string',
+      type: 'string'
     },
     required: true
   }],
   responses: {
-    '200': {
+    200: {
       description: 'OK',
       content: {
         'application/json': {
@@ -297,7 +297,7 @@ const kakaoLogin = {
       links: {
       }
     },
-    '401': {
+    401: {
       description: 'Unauthorized',
       content: {
         'application/json': {
@@ -305,7 +305,7 @@ const kakaoLogin = {
           },
           example: {
             data: {
-              errorMessage: '유효하지 않은 토큰입니다.',
+              errorMessage: '유효하지 않은 토큰입니다.'
             }
           }
         }
@@ -313,7 +313,7 @@ const kakaoLogin = {
       links: {
       }
     },
-    '500': {
+    500: {
       description: 'Internal Server error',
       content: {
         'application/json': {
@@ -321,14 +321,14 @@ const kakaoLogin = {
           },
           example: {
             data: {
-              errorMessage: '로그인 혹은 회원가입에 실패했습니다.',
+              errorMessage: '로그인 혹은 회원가입에 실패했습니다.'
             }
           }
         }
       },
       links: {
       }
-    },
+    }
   }
 }
 const localLogin = {
@@ -359,7 +359,7 @@ const localLogin = {
     }
   },
   responses: {
-    '200': {
+    200: {
       description: 'OK',
       content: {
         'application/json': {
@@ -376,7 +376,7 @@ const localLogin = {
       links: {
       }
     },
-    '400': {
+    400: {
       description: 'Bad Request',
       content: {
         'application/json': {
@@ -385,12 +385,12 @@ const localLogin = {
           example: {
             errorType1: {
               data: {
-                errorMessage: '아이디와 비밀번호를 입력해주세요!',
+                errorMessage: '아이디와 비밀번호를 입력해주세요!'
               }
             },
             errorType2: {
               data: {
-                errorMessage: '존재하지 않는 아이디입니다.',
+                errorMessage: '존재하지 않는 아이디입니다.'
               }
             }
           }
@@ -399,7 +399,7 @@ const localLogin = {
       links: {
       }
     },
-    '401': {
+    401: {
       description: 'Unauthorized',
       content: {
         'application/json': {
@@ -407,7 +407,7 @@ const localLogin = {
           },
           example: {
             data: {
-              errorMessage: '비밀번호가 틀렸습니다.',
+              errorMessage: '비밀번호가 틀렸습니다.'
             }
           }
         }
@@ -415,7 +415,7 @@ const localLogin = {
       links: {
       }
     },
-    '500': {
+    500: {
       description: 'Internal Server error',
       content: {
         'application/json': {
@@ -423,14 +423,14 @@ const localLogin = {
           },
           example: {
             data: {
-              errorMessage: '로그인에 실패했습니다.',
+              errorMessage: '로그인에 실패했습니다.'
             }
           }
         }
       },
       links: {
       }
-    },
+    }
   }
 }
 const checkValidityAndSendEmail = {
@@ -446,7 +446,7 @@ const checkValidityAndSendEmail = {
               description: '학교 이메일',
               type: 'string',
               example: 'tingkobel@tingjataengja.ac.kr'
-            },
+            }
           },
           required: ['email']
         }
@@ -454,7 +454,7 @@ const checkValidityAndSendEmail = {
     }
   },
   responses: {
-    '201': {
+    201: {
       description: 'Created',
       content: {
         'application/json': {
@@ -470,7 +470,7 @@ const checkValidityAndSendEmail = {
       links: {
       }
     },
-    '400': {
+    400: {
       description: 'Bad Request',
       content: {
         'application/json': {
@@ -478,7 +478,7 @@ const checkValidityAndSendEmail = {
           },
           example: {
             data: {
-              errorMessage: '이미 가입된 이메일입니다.',
+              errorMessage: '이미 가입된 이메일입니다.'
             }
           }
         }
@@ -486,7 +486,7 @@ const checkValidityAndSendEmail = {
       links: {
       }
     },
-    '401': {
+    401: {
       description: 'Unauthorized',
       content: {
         'application/json': {
@@ -494,7 +494,7 @@ const checkValidityAndSendEmail = {
           },
           example: {
             data: {
-              errorMessage: '가입이 불가능한 이메일입니다.',
+              errorMessage: '가입이 불가능한 이메일입니다.'
             }
           }
         }
@@ -502,7 +502,7 @@ const checkValidityAndSendEmail = {
       links: {
       }
     },
-    '500': {
+    500: {
       description: 'Internal Server error',
       content: {
         'application/json': {
@@ -510,14 +510,14 @@ const checkValidityAndSendEmail = {
           },
           example: {
             data: {
-              errorMessage: '서버 에러',
+              errorMessage: '서버 에러'
             }
           }
         }
       },
       links: {
       }
-    },
+    }
   }
 }
 const confirmEmailToken = {
@@ -528,12 +528,12 @@ const confirmEmailToken = {
     name: 'token',
     description: 'token',
     schema: {
-      type: 'string',
+      type: 'string'
     },
     required: true
   }],
   responses: {
-    '401': {
+    401: {
       description: 'Unauthorized',
       content: {
         'application/json': {
@@ -541,7 +541,7 @@ const confirmEmailToken = {
           },
           example: {
             data: {
-              errorMessage: '토큰이 유효하지 않음',
+              errorMessage: '토큰이 유효하지 않음'
             }
           }
         }
@@ -549,7 +549,7 @@ const confirmEmailToken = {
       links: {
       }
     },
-    '419': {
+    419: {
       description: 'Laravel error',
       content: {
         'application/json': {
@@ -557,7 +557,7 @@ const confirmEmailToken = {
           },
           example: {
             data: {
-              errorMessage: '토큰 만료',
+              errorMessage: '토큰 만료'
             }
           }
         }
@@ -565,7 +565,7 @@ const confirmEmailToken = {
       links: {
       }
     },
-    '500': {
+    500: {
       description: 'Internal Server error',
       content: {
         'application/json': {
@@ -573,14 +573,14 @@ const confirmEmailToken = {
           },
           example: {
             data: {
-              errorMessage: '서버 에러',
+              errorMessage: '서버 에러'
             }
           }
         }
       },
       links: {
       }
-    },
+    }
   }
 }
 const checkEmailAuth = {
@@ -596,7 +596,7 @@ const checkEmailAuth = {
               description: '학교 이메일',
               type: 'string',
               example: 'tingkobel@tingjataengja.ac.kr'
-            },
+            }
           },
           required: ['email']
         }
@@ -604,7 +604,7 @@ const checkEmailAuth = {
     }
   },
   responses: {
-    '200': {
+    200: {
       description: 'OK',
       content: {
         'application/json': {
@@ -620,7 +620,7 @@ const checkEmailAuth = {
       links: {
       }
     },
-    '401': {
+    401: {
       description: 'Unauthorized',
       content: {
         'application/json': {
@@ -628,7 +628,7 @@ const checkEmailAuth = {
           },
           example: {
             data: {
-              errorMessage: '인증이 필요한 이메일입니다.',
+              errorMessage: '인증이 필요한 이메일입니다.'
             }
           }
         }
@@ -636,7 +636,7 @@ const checkEmailAuth = {
       links: {
       }
     },
-    '500': {
+    500: {
       description: 'Internal Server error',
       content: {
         'application/json': {
@@ -644,14 +644,14 @@ const checkEmailAuth = {
           },
           example: {
             data: {
-              errorMessage: '서버 에러',
+              errorMessage: '서버 에러'
             }
           }
         }
       },
       links: {
       }
-    },
+    }
   }
 }
 const checkDuplicateLocalId = {
@@ -662,12 +662,12 @@ const checkDuplicateLocalId = {
     name: 'local_id',
     description: 'local Id',
     schema: {
-      type: 'string',
+      type: 'string'
     },
     required: true
   }],
   responses: {
-    '200': {
+    200: {
       description: 'OK',
       content: {
         'application/json': {
@@ -683,7 +683,7 @@ const checkDuplicateLocalId = {
       links: {
       }
     },
-    '400': {
+    400: {
       description: 'Bad Request',
       content: {
         'application/json': {
@@ -691,14 +691,14 @@ const checkDuplicateLocalId = {
           },
           example: {
             data: {
-              errorMessage: '이미 존재하는 아이디입니다.',
+              errorMessage: '이미 존재하는 아이디입니다.'
             }
           }
         }
       },
       links: {
       }
-    },
+    }
   }
 }
 const checkDuplicateName = {
@@ -709,12 +709,12 @@ const checkDuplicateName = {
     name: 'name',
     description: '이름(닉네임)',
     schema: {
-      type: 'string',
+      type: 'string'
     },
     required: true
   }],
   responses: {
-    '200': {
+    200: {
       description: 'OK',
       content: {
         'application/json': {
@@ -730,7 +730,7 @@ const checkDuplicateName = {
       links: {
       }
     },
-    '400': {
+    400: {
       description: 'Bad Request',
       content: {
         'application/json': {
@@ -738,14 +738,14 @@ const checkDuplicateName = {
           },
           example: {
             data: {
-              errorMessage: '이미 존재하는 이름입니다.',
+              errorMessage: '이미 존재하는 이름입니다.'
             }
           }
         }
       },
       links: {
       }
-    },
+    }
   }
 }
 
@@ -762,7 +762,7 @@ const uploadThumbnail = {
     name: 'Authorization',
     description: 'token',
     schema: {
-      type: 'string',
+      type: 'string'
     },
     required: true
   }],
@@ -777,14 +777,14 @@ const uploadThumbnail = {
               type: 'string',
               format: 'file',
               example: 'tingkobeltingjataengja.jpeg'
-            },
+            }
           },
           required: ['thumbnail']
         }
-      },
+      }
     },
     responses: {
-      '201': {
+      201: {
         description: 'Created',
         content: {
           'application/json': {
@@ -800,7 +800,7 @@ const uploadThumbnail = {
         links: {
         }
       },
-      '401': {
+      401: {
         description: 'Unauthorized',
         content: {
           'application/json': {
@@ -808,7 +808,7 @@ const uploadThumbnail = {
             },
             example: {
               data: {
-                errorMessage: '토큰이 유효하지 않음',
+                errorMessage: '토큰이 유효하지 않음'
               }
             }
           }
@@ -816,7 +816,7 @@ const uploadThumbnail = {
         links: {
         }
       },
-      '419': {
+      419: {
         description: 'Laravel error',
         content: {
           'application/json': {
@@ -824,7 +824,7 @@ const uploadThumbnail = {
             },
             example: {
               data: {
-                errorMessage: '토큰 만료',
+                errorMessage: '토큰 만료'
               }
             }
           }
@@ -832,7 +832,7 @@ const uploadThumbnail = {
         links: {
         }
       },
-      '500': {
+      500: {
         description: 'Internal Server error',
         content: {
           'application/json': {
@@ -840,14 +840,14 @@ const uploadThumbnail = {
             },
             example: {
               data: {
-                errorMessage: '이미지 저장에 실패하였습니다.',
+                errorMessage: '이미지 저장에 실패하였습니다.'
               }
             }
           }
         },
         links: {
         }
-      },
+      }
     }
   }
 }
@@ -859,12 +859,12 @@ const checkValidityForIdAndSendEmail = {
     name: 'email',
     description: '가입한 학교 이메일',
     schema: {
-      type: 'string',
+      type: 'string'
     },
     required: true
   }],
   responses: {
-    '200': {
+    200: {
       description: 'OK',
       content: {
         'application/json': {
@@ -880,7 +880,7 @@ const checkValidityForIdAndSendEmail = {
       links: {
       }
     },
-    '400': {
+    400: {
       description: 'Bad Request',
       content: {
         'application/json': {
@@ -888,7 +888,7 @@ const checkValidityForIdAndSendEmail = {
           },
           example: {
             data: {
-              errorMessage: '존재하지 않는 이메일입니다.',
+              errorMessage: '존재하지 않는 이메일입니다.'
             }
           }
         }
@@ -903,14 +903,14 @@ const checkValidityForIdAndSendEmail = {
         },
         example: {
           data: {
-            errorMessage: '서버 에러',
+            errorMessage: '서버 에러'
           }
         }
       }
     },
     links: {
     }
-  },
+  }
 }
 const checkValidityForPasswordAndSendEmail = {
   tags: ['Auth'],
@@ -920,7 +920,7 @@ const checkValidityForPasswordAndSendEmail = {
     name: 'localId',
     description: '가입한 로컬 아이디',
     schema: {
-      type: 'string',
+      type: 'string'
     },
     required: true
   },
@@ -929,12 +929,12 @@ const checkValidityForPasswordAndSendEmail = {
     name: 'email',
     description: '가입한 학교 이메일',
     schema: {
-      type: 'string',
+      type: 'string'
     },
     required: true
   }],
   responses: {
-    '201': {
+    201: {
       description: 'Created',
       content: {
         'application/json': {
@@ -950,7 +950,7 @@ const checkValidityForPasswordAndSendEmail = {
       links: {
       }
     },
-    '400': {
+    400: {
       description: 'Bad Request',
       content: {
         'application/json': {
@@ -958,7 +958,7 @@ const checkValidityForPasswordAndSendEmail = {
           },
           example: {
             data: {
-              errorMessage: '잘못된 아이디 또는 이메일입니다.',
+              errorMessage: '잘못된 아이디 또는 이메일입니다.'
             }
           }
         }
@@ -966,7 +966,7 @@ const checkValidityForPasswordAndSendEmail = {
       links: {
       }
     },
-    '500': {
+    500: {
       description: 'Internal Server error',
       content: {
         'application/json': {
@@ -974,14 +974,14 @@ const checkValidityForPasswordAndSendEmail = {
           },
           example: {
             data: {
-              errorMessage: '서버 에러',
+              errorMessage: '서버 에러'
             }
           }
         }
       },
       links: {
       }
-    },
+    }
   }
 }
 const checkEmailAuthForPassword = {
@@ -992,12 +992,12 @@ const checkEmailAuthForPassword = {
     name: 'Authorization',
     description: 'code',
     schema: {
-      type: 'string',
+      type: 'string'
     },
     required: true
   }],
   responses: {
-    '200': {
+    200: {
       description: 'OK',
       content: {
         'application/json': {
@@ -1013,7 +1013,7 @@ const checkEmailAuthForPassword = {
       links: {
       }
     },
-    '401': {
+    401: {
       description: 'Unauthorized',
       content: {
         'application/json': {
@@ -1021,7 +1021,7 @@ const checkEmailAuthForPassword = {
           },
           example: {
             data: {
-              errorMessage: '인증이 필요한 이메일입니다.',
+              errorMessage: '인증이 필요한 이메일입니다.'
             }
           }
         }
@@ -1029,7 +1029,7 @@ const checkEmailAuthForPassword = {
       links: {
       }
     },
-    '500': {
+    500: {
       description: 'Internal Server error',
       content: {
         'application/json': {
@@ -1037,14 +1037,14 @@ const checkEmailAuthForPassword = {
           },
           example: {
             data: {
-              errorMessage: '서버 에러',
+              errorMessage: '서버 에러'
             }
           }
         }
       },
       links: {
       }
-    },
+    }
   }
 }
 const resetPassword = {
@@ -1055,7 +1055,7 @@ const resetPassword = {
     name: 'Authorization',
     description: 'code',
     schema: {
-      type: 'string',
+      type: 'string'
     },
     required: true
   }],
@@ -1084,7 +1084,7 @@ const resetPassword = {
     }
   },
   responses: {
-    '200': {
+    200: {
       description: 'OK',
       content: {
         'application/json': {
@@ -1099,7 +1099,8 @@ const resetPassword = {
       },
       links: {
       }
-    }, '401': {
+    },
+    401: {
       description: 'Unauthorized',
       content: {
         'application/json': {
@@ -1107,7 +1108,7 @@ const resetPassword = {
           },
           example: {
             data: {
-              errorMessage: '인증이 필요한 이메일입니다.',
+              errorMessage: '인증이 필요한 이메일입니다.'
             }
           }
         }
@@ -1115,7 +1116,7 @@ const resetPassword = {
       links: {
       }
     },
-    '500': {
+    500: {
       description: 'Internal Server error',
       content: {
         'application/json': {
@@ -1123,14 +1124,14 @@ const resetPassword = {
           },
           example: {
             data: {
-              errorMessage: '서버 에러',
+              errorMessage: '서버 에러'
             }
           }
         }
       },
       links: {
       }
-    },
+    }
   }
 }
 module.exports = {

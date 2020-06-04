@@ -12,7 +12,7 @@ const getTeamList = {
       name: 'limit',
       description: '한번에 보여질 리스트 수 default : 20',
       schema: {
-        type: 'integer',
+        type: 'integer'
       },
       required: true
     },
@@ -21,7 +21,7 @@ const getTeamList = {
       name: 'page',
       description: '페이지 번호 default : 1',
       schema: {
-        type: 'integer',
+        type: 'integer'
       },
       required: true
     },
@@ -30,12 +30,12 @@ const getTeamList = {
       name: 'Authorization',
       description: 'token',
       schema: {
-        type: 'string',
+        type: 'string'
       },
       required: true
     }],
   responses: {
-    '200': {
+    200: {
       description: 'OK',
       content: {
         'application/json': {
@@ -45,7 +45,7 @@ const getTeamList = {
             data: {
               teamList: [
                 {
-//추가
+                  // 추가
                 }
               ]
             }
@@ -55,7 +55,7 @@ const getTeamList = {
       links: {
       }
     },
-    '401': {
+    401: {
       description: 'Unauthorized',
       content: {
         'application/json': {
@@ -63,7 +63,7 @@ const getTeamList = {
           },
           example: {
             data: {
-              errorMessage: '토큰이 유효하지 않음',
+              errorMessage: '토큰이 유효하지 않음'
             }
           }
         }
@@ -71,7 +71,7 @@ const getTeamList = {
       links: {
       }
     },
-    '404': {
+    404: {
       description: 'Not Found',
       content: {
         'application/json': {
@@ -79,7 +79,7 @@ const getTeamList = {
           },
           example: {
             data: {
-              errorMessage: '팀이 존재하지 않습니다.',
+              errorMessage: '팀이 존재하지 않습니다.'
             }
           }
         }
@@ -87,7 +87,7 @@ const getTeamList = {
       links: {
       }
     },
-    '419': {
+    419: {
       description: 'Laravel error',
       content: {
         'application/json': {
@@ -95,7 +95,7 @@ const getTeamList = {
           },
           example: {
             data: {
-              errorMessage: '토큰 만료',
+              errorMessage: '토큰 만료'
             }
           }
         }
@@ -103,7 +103,7 @@ const getTeamList = {
       links: {
       }
     },
-    '500': {
+    500: {
       description: 'Internal Server error',
       content: {
         'application/json': {
@@ -111,7 +111,7 @@ const getTeamList = {
           },
           example: {
             data: {
-              errorMessage: '서버 에러',
+              errorMessage: '서버 에러'
             }
           }
         }
@@ -123,28 +123,28 @@ const getTeamList = {
 }
 
 const createTeam = {
-  tags: ['Team'],
+  tags: ['Team']
 }
 const checkDuplicateTeamName = {
-  tags: ['Team'],
+  tags: ['Team']
 }
 const getAllTags = {
-  tags: ['Team'],
+  tags: ['Team']
 }
 const getTeamInfo = {
-  tags: ['Team'],
+  tags: ['Team']
 }
 const getMyTeamInfo = {
-  tags: ['Team'],
+  tags: ['Team']
 }
 const updateMyTeam = {
-  tags: ['Team'],
+  tags: ['Team']
 }
 const leaveMyTeam = {
-  tags: ['Team'],
+  tags: ['Team']
 }
 const joinTeam = {
-  tags: ['Team'],
+  tags: ['Team']
 }
 
 module.exports = {

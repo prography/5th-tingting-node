@@ -11,12 +11,12 @@ const getMyInfo = {
     name: 'Authorization',
     description: 'token',
     schema: {
-      type: 'string',
+      type: 'string'
     },
     required: true
   }],
   responses: {
-    '200': {
+    200: {
       description: 'OK',
       content: {
         'application/json': {
@@ -45,7 +45,7 @@ const getMyInfo = {
                     description: '키',
                     type: 'integer',
                     example: '193'
-                  },
+                  }
                 }
               },
               id: {
@@ -68,7 +68,7 @@ const getMyInfo = {
                 description: '키',
                 type: 'integer',
                 example: '193'
-              },
+              }
             }
           },
           example: {
@@ -124,7 +124,7 @@ const getMyInfo = {
       links: {
       }
     },
-    '401': {
+    401: {
       description: 'Unauthorized',
       content: {
         'application/json': {
@@ -132,7 +132,7 @@ const getMyInfo = {
           },
           example: {
             data: {
-              errorMessage: '토큰이 유효하지 않음',
+              errorMessage: '토큰이 유효하지 않음'
             }
           }
         }
@@ -140,7 +140,7 @@ const getMyInfo = {
       links: {
       }
     },
-    '419': {
+    419: {
       description: 'Laravel error',
       content: {
         'application/json': {
@@ -148,7 +148,7 @@ const getMyInfo = {
           },
           example: {
             data: {
-              errorMessage: '토큰 만료',
+              errorMessage: '토큰 만료'
             }
           }
         }
@@ -156,7 +156,7 @@ const getMyInfo = {
       links: {
       }
     },
-    '500': {
+    500: {
       description: 'Internal Server error',
       content: {
         'application/json': {
@@ -164,7 +164,7 @@ const getMyInfo = {
           },
           example: {
             data: {
-              errorMessage: '서버 에러',
+              errorMessage: '서버 에러'
             }
           }
         }
@@ -187,7 +187,7 @@ const updateMyInfo = {
     name: 'Authorization',
     description: 'token',
     schema: {
-      type: 'string',
+      type: 'string'
     },
     required: true
   }],
@@ -214,13 +214,13 @@ const updateMyInfo = {
             }
           },
           required: [
-            'height',]
+            'height']
         }
       }
     }
   },
   responses: {
-    '201': {
+    201: {
       description: 'Created',
       content: {
         'application/json': {
@@ -236,7 +236,7 @@ const updateMyInfo = {
       links: {
       }
     },
-    '401': {
+    401: {
       description: 'Unauthorized',
       content: {
         'application/json': {
@@ -244,7 +244,7 @@ const updateMyInfo = {
           },
           example: {
             data: {
-              errorMessage: '토큰이 유효하지 않음',
+              errorMessage: '토큰이 유효하지 않음'
             }
           }
         }
@@ -252,7 +252,7 @@ const updateMyInfo = {
       links: {
       }
     },
-    '419': {
+    419: {
       description: 'Laravel error',
       content: {
         'application/json': {
@@ -260,7 +260,7 @@ const updateMyInfo = {
           },
           example: {
             data: {
-              errorMessage: '토큰 만료',
+              errorMessage: '토큰 만료'
             }
           }
         }
@@ -268,7 +268,7 @@ const updateMyInfo = {
       links: {
       }
     },
-    '500': {
+    500: {
       description: 'Internal Server error',
       content: {
         'application/json': {
@@ -276,7 +276,7 @@ const updateMyInfo = {
           },
           example: {
             data: {
-              errorMessage: '서버 에러',
+              errorMessage: '서버 에러'
             }
           }
         }
@@ -299,7 +299,7 @@ const updateMyThumbnailImg = {
     name: 'Authorization',
     description: 'token',
     schema: {
-      type: 'string',
+      type: 'string'
     },
     required: true
   }],
@@ -316,13 +316,13 @@ const updateMyThumbnailImg = {
               example: 'tingting.png'
             }
           },
-          required: ['thumbnail',]
+          required: ['thumbnail']
         }
       }
     }
   },
   responses: {
-    '201': {
+    201: {
       description: 'Created',
       content: {
         'application/json': {
@@ -338,7 +338,7 @@ const updateMyThumbnailImg = {
       links: {
       }
     },
-    '401': {
+    401: {
       description: 'Unauthorized',
       content: {
         'application/json': {
@@ -346,7 +346,7 @@ const updateMyThumbnailImg = {
           },
           example: {
             data: {
-              errorMessage: '토큰이 유효하지 않음',
+              errorMessage: '토큰이 유효하지 않음'
             }
           }
         }
@@ -354,7 +354,7 @@ const updateMyThumbnailImg = {
       links: {
       }
     },
-    '419': {
+    419: {
       description: 'Laravel error',
       content: {
         'application/json': {
@@ -362,7 +362,7 @@ const updateMyThumbnailImg = {
           },
           example: {
             data: {
-              errorMessage: '토큰 만료',
+              errorMessage: '토큰 만료'
             }
           }
         }
@@ -370,7 +370,7 @@ const updateMyThumbnailImg = {
       links: {
       }
     },
-    '500': {
+    500: {
       description: 'Internal Server error',
       content: {
         'application/json': {
@@ -378,7 +378,7 @@ const updateMyThumbnailImg = {
           },
           example: {
             data: {
-              errorMessage: '서버 에러',
+              errorMessage: '서버 에러'
             }
           }
         }
@@ -401,7 +401,7 @@ const saveMyProfileImg = {
     name: 'Authorization',
     description: 'token',
     schema: {
-      type: 'string',
+      type: 'string'
     },
     required: true
   }],
@@ -418,13 +418,13 @@ const saveMyProfileImg = {
               example: 'tingting.png'
             }
           },
-          required: ['profileImg',]
+          required: ['profileImg']
         }
       }
     }
   },
   responses: {
-    '201': {
+    201: {
       description: 'Created',
       content: {
         'application/json': {
@@ -440,7 +440,7 @@ const saveMyProfileImg = {
       links: {
       }
     },
-    '401': {
+    401: {
       description: 'Unauthorized',
       content: {
         'application/json': {
@@ -448,7 +448,7 @@ const saveMyProfileImg = {
           },
           example: {
             data: {
-              errorMessage: '토큰이 유효하지 않음',
+              errorMessage: '토큰이 유효하지 않음'
             }
           }
         }
@@ -456,7 +456,7 @@ const saveMyProfileImg = {
       links: {
       }
     },
-    '419': {
+    419: {
       description: 'Laravel error',
       content: {
         'application/json': {
@@ -464,7 +464,7 @@ const saveMyProfileImg = {
           },
           example: {
             data: {
-              errorMessage: '토큰 만료',
+              errorMessage: '토큰 만료'
             }
           }
         }
@@ -472,7 +472,7 @@ const saveMyProfileImg = {
       links: {
       }
     },
-    '500': {
+    500: {
       description: 'Internal Server error',
       content: {
         'application/json': {
@@ -480,7 +480,7 @@ const saveMyProfileImg = {
           },
           example: {
             data: {
-              errorMessage: '이미지 저장에 실패하였습니다.',
+              errorMessage: '이미지 저장에 실패하였습니다.'
             }
           }
         }
@@ -504,7 +504,7 @@ const updateMyProfileImg = {
       name: 'imgId',
       description: '이미지 Id(DB)',
       schema: {
-        type: 'integer',
+        type: 'integer'
       },
       required: true
     },
@@ -513,7 +513,7 @@ const updateMyProfileImg = {
       name: 'Authorization',
       description: 'token',
       schema: {
-        type: 'string',
+        type: 'string'
       },
       required: true
     }],
@@ -530,13 +530,13 @@ const updateMyProfileImg = {
               example: 'tingting.png'
             }
           },
-          required: ['profileImg',]
+          required: ['profileImg']
         }
       }
     }
   },
   responses: {
-    '201': {
+    201: {
       description: 'Created',
       content: {
         'application/json': {
@@ -552,7 +552,7 @@ const updateMyProfileImg = {
       links: {
       }
     },
-    '401': {
+    401: {
       description: 'Unauthorized',
       content: {
         'application/json': {
@@ -560,7 +560,7 @@ const updateMyProfileImg = {
           },
           example: {
             data: {
-              errorMessage: '토큰이 유효하지 않음',
+              errorMessage: '토큰이 유효하지 않음'
             }
           }
         }
@@ -568,7 +568,7 @@ const updateMyProfileImg = {
       links: {
       }
     },
-    '419': {
+    419: {
       description: 'Laravel error',
       content: {
         'application/json': {
@@ -576,7 +576,7 @@ const updateMyProfileImg = {
           },
           example: {
             data: {
-              errorMessage: '토큰 만료',
+              errorMessage: '토큰 만료'
             }
           }
         }
@@ -584,7 +584,7 @@ const updateMyProfileImg = {
       links: {
       }
     },
-    '500': {
+    500: {
       description: 'Internal Server error',
       content: {
         'application/json': {
@@ -592,7 +592,7 @@ const updateMyProfileImg = {
           },
           example: {
             data: {
-              errorMessage: '서버 에러',
+              errorMessage: '서버 에러'
             }
           }
         }
@@ -616,7 +616,7 @@ const deleteMyProfileImg = {
       name: 'imgId',
       description: '이미지 Id(DB)',
       schema: {
-        type: 'integer',
+        type: 'integer'
       },
       required: true
     },
@@ -625,12 +625,12 @@ const deleteMyProfileImg = {
       name: 'Authorization',
       description: 'token',
       schema: {
-        type: 'string',
+        type: 'string'
       },
       required: true
     }],
   responses: {
-    '201': {
+    201: {
       description: 'Created',
       content: {
         'application/json': {
@@ -646,7 +646,7 @@ const deleteMyProfileImg = {
       links: {
       }
     },
-    '401': {
+    401: {
       description: 'Unauthorized',
       content: {
         'application/json': {
@@ -654,7 +654,7 @@ const deleteMyProfileImg = {
           },
           example: {
             data: {
-              errorMessage: '토큰이 유효하지 않음',
+              errorMessage: '토큰이 유효하지 않음'
             }
           }
         }
@@ -662,7 +662,7 @@ const deleteMyProfileImg = {
       links: {
       }
     },
-    '419': {
+    419: {
       description: 'Laravel error',
       content: {
         'application/json': {
@@ -670,7 +670,7 @@ const deleteMyProfileImg = {
           },
           example: {
             data: {
-              errorMessage: '토큰 만료',
+              errorMessage: '토큰 만료'
             }
           }
         }
@@ -678,7 +678,7 @@ const deleteMyProfileImg = {
       links: {
       }
     },
-    '500': {
+    500: {
       description: 'Internal Server error',
       content: {
         'application/json': {
@@ -686,7 +686,7 @@ const deleteMyProfileImg = {
           },
           example: {
             data: {
-              errorMessage: '서버 에러',
+              errorMessage: '서버 에러'
             }
           }
         }
@@ -710,7 +710,7 @@ const getUserInfo = {
       name: 'id',
       description: '다른 사용자 Id(DB)',
       schema: {
-        type: 'integer',
+        type: 'integer'
       },
       required: true
     },
@@ -719,32 +719,32 @@ const getUserInfo = {
       name: 'Authorization',
       description: 'token',
       schema: {
-        type: 'string',
+        type: 'string'
       },
       required: true
     }],
   responses: {
-    '200': {
+    200: {
       description: 'OK',
       content: {
         'application/json': {
           schema: {
             id: {
               description: '회원 Id(DB)',
-              type: 'string',
+              type: 'string'
             },
             name: {
               description: '이름(닉네임)',
-              type: 'string',
+              type: 'string'
             },
             birth: {
               description: '생년월일',
               type: 'string',
-              format: 'date',
+              format: 'date'
             },
             height: {
               description: '키',
-              type: 'integer',
+              type: 'integer'
             },
             thumbnail: {
               description: '대표사진 보기 API',
@@ -752,7 +752,7 @@ const getUserInfo = {
             },
             gender: {
               description: '성별 (0/1)',
-              type: 'integer',
+              type: 'integer'
             },
             SchoolName: {
               description: '대학교 이름',
@@ -761,7 +761,7 @@ const getUserInfo = {
             profileImgIds: {
               description: '서브(프로필) 이미지 ID(DB)',
               type: 'array'
-            },
+            }
           },
           example: {
             data: {
@@ -782,7 +782,7 @@ const getUserInfo = {
       links: {
       }
     },
-    '401': {
+    401: {
       description: 'Unauthorized',
       content: {
         'application/json': {
@@ -790,7 +790,7 @@ const getUserInfo = {
           },
           example: {
             data: {
-              errorMessage: '토큰이 유효하지 않음',
+              errorMessage: '토큰이 유효하지 않음'
             }
           }
         }
@@ -798,7 +798,7 @@ const getUserInfo = {
       links: {
       }
     },
-    '404': {
+    404: {
       description: 'Not Found',
       content: {
         'application/json': {
@@ -806,7 +806,7 @@ const getUserInfo = {
           },
           example: {
             data: {
-              errorMessage: '사용자가 존재하지 않음',
+              errorMessage: '사용자가 존재하지 않음'
             }
           }
         }
@@ -814,7 +814,7 @@ const getUserInfo = {
       links: {
       }
     },
-    '419': {
+    419: {
       description: 'Laravel error',
       content: {
         'application/json': {
@@ -822,7 +822,7 @@ const getUserInfo = {
           },
           example: {
             data: {
-              errorMessage: '토큰 만료',
+              errorMessage: '토큰 만료'
             }
           }
         }
@@ -830,7 +830,7 @@ const getUserInfo = {
       links: {
       }
     },
-    '500': {
+    500: {
       description: 'Internal Server error',
       content: {
         'application/json': {
@@ -838,7 +838,7 @@ const getUserInfo = {
           },
           example: {
             data: {
-              errorMessage: '서버 에러',
+              errorMessage: '서버 에러'
             }
           }
         }
@@ -862,7 +862,7 @@ const getUserThumbnailImg = {
       name: 'userId',
       description: '사용자 Id(DB)',
       schema: {
-        type: 'integer',
+        type: 'integer'
       },
       required: true
     },
@@ -871,12 +871,12 @@ const getUserThumbnailImg = {
       name: 'Authorization',
       description: 'token',
       schema: {
-        type: 'string',
+        type: 'string'
       },
       required: true
     }],
   responses: {
-    '401': {
+    401: {
       description: 'Unauthorized',
       content: {
         'application/json': {
@@ -884,7 +884,7 @@ const getUserThumbnailImg = {
           },
           example: {
             data: {
-              errorMessage: '토큰이 유효하지 않음',
+              errorMessage: '토큰이 유효하지 않음'
             }
           }
         }
@@ -892,7 +892,7 @@ const getUserThumbnailImg = {
       links: {
       }
     },
-    '404': {
+    404: {
       description: 'Not Found',
       content: {
         'application/json': {
@@ -900,7 +900,7 @@ const getUserThumbnailImg = {
           },
           example: {
             data: {
-              errorMessage: '사진이 존재하지 않음',
+              errorMessage: '사진이 존재하지 않음'
             }
           }
         }
@@ -908,7 +908,7 @@ const getUserThumbnailImg = {
       links: {
       }
     },
-    '419': {
+    419: {
       description: 'Laravel error',
       content: {
         'application/json': {
@@ -916,7 +916,7 @@ const getUserThumbnailImg = {
           },
           example: {
             data: {
-              errorMessage: '토큰 만료',
+              errorMessage: '토큰 만료'
             }
           }
         }
@@ -924,7 +924,7 @@ const getUserThumbnailImg = {
       links: {
       }
     },
-    '500': {
+    500: {
       description: 'Internal Server error',
       content: {
         'application/json': {
@@ -932,7 +932,7 @@ const getUserThumbnailImg = {
           },
           example: {
             data: {
-              errorMessage: '사진 불러오기 실패',
+              errorMessage: '사진 불러오기 실패'
             }
           }
         }
@@ -956,7 +956,7 @@ const getUserProfileImg = {
       name: 'userId',
       description: '사용자 Id(DB)',
       schema: {
-        type: 'integer',
+        type: 'integer'
       },
       required: true
     },
@@ -965,7 +965,7 @@ const getUserProfileImg = {
       name: 'imgId',
       description: '이미지 Id(DB)',
       schema: {
-        type: 'integer',
+        type: 'integer'
       },
       required: true
     },
@@ -974,12 +974,12 @@ const getUserProfileImg = {
       name: 'Authorization',
       description: 'token',
       schema: {
-        type: 'string',
+        type: 'string'
       },
       required: true
     }],
   responses: {
-    '401': {
+    401: {
       description: 'Unauthorized',
       content: {
         'application/json': {
@@ -987,7 +987,7 @@ const getUserProfileImg = {
           },
           example: {
             data: {
-              errorMessage: '토큰이 유효하지 않음',
+              errorMessage: '토큰이 유효하지 않음'
             }
           }
         }
@@ -995,7 +995,7 @@ const getUserProfileImg = {
       links: {
       }
     },
-    '404': {
+    404: {
       description: 'Not Found',
       content: {
         'application/json': {
@@ -1003,7 +1003,7 @@ const getUserProfileImg = {
           },
           example: {
             data: {
-              errorMessage: '사진이 존재하지 않음',
+              errorMessage: '사진이 존재하지 않음'
             }
           }
         }
@@ -1011,7 +1011,7 @@ const getUserProfileImg = {
       links: {
       }
     },
-    '419': {
+    419: {
       description: 'Laravel error',
       content: {
         'application/json': {
@@ -1019,7 +1019,7 @@ const getUserProfileImg = {
           },
           example: {
             data: {
-              errorMessage: '토큰 만료',
+              errorMessage: '토큰 만료'
             }
           }
         }
@@ -1027,7 +1027,7 @@ const getUserProfileImg = {
       links: {
       }
     },
-    '500': {
+    500: {
       description: 'Internal Server error',
       content: {
         'application/json': {
@@ -1035,7 +1035,7 @@ const getUserProfileImg = {
           },
           example: {
             data: {
-              errorMessage: '사진 불러오기 실패',
+              errorMessage: '사진 불러오기 실패'
             }
           }
         }
@@ -1057,5 +1057,3 @@ module.exports = {
   getUserThumbnailImg,
   getUserProfileImg
 }
-
-
