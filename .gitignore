@@ -113,3 +113,6 @@ dist
 !.elasticbeanstalk/*.global.yml
 
 .aws
+
+db/data
+docker-compose.yml
