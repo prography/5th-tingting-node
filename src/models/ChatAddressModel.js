@@ -16,14 +16,6 @@ class ChatAddressModel {
       where: { id }
     })
   }
-
-  async savefindChatAddress (name, address, manager) {
-    await ChatAddress.create({
-      name,
-      address,
-      manager
-    })
-  }
 }
 
 module.exports = ChatAddressModel
