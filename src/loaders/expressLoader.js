@@ -3,10 +3,13 @@ const bodyParser = require('body-parser')
 const configs = require('../configs')
 const cookieParser = require('cookie-parser')
 const logger = require('morgan')
+const Sentry = require('@sentry/node')
 
 const { getMain } = require('../controllers/mainController')
 
 const expressLoader = app => {
+  Sentry.init({ dsn: configs.SENTRY_DSN })
+  app.use(Sentry.Handlers.requestHandler())
   app.set('port', configs.APP.PORT)
   app.use(bodyParser.json())
   app.use(bodyParser.urlencoded({ extended: true }))
@@ -21,6 +24,7 @@ const expressLoader = app => {
   )
   app.use('/api', api)
   app.get('/', getMain)
+  app.use(Sentry.Handlers.errorHandler())
 }
 
 module.exports = expressLoader

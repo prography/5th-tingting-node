@@ -45,6 +45,10 @@ class MeService {
       const teamsWithOwner = await this.teamModel.findTeamsOwnedByUserId(userId)
       const teamsWithMember = await this.belongModel.findTeamsByUserId(userId)
       const teamList = teamsWithOwner.concat(teamsWithMember)
+      for (const team of teamList) {
+        const teamId = team.id
+        team.isMatched = await this.matchingModel.checkIsMatched(teamId)
+      }
       return teamList
     } catch (error) {
       console.log(error)
