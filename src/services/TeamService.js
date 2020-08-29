@@ -4,6 +4,7 @@ const UserModel = require('../models/UserModel')
 const MatchingModel = require('../models/MatchingModel')
 const TeamTagModel = require('../models/TeamTagModel')
 const TagModel = require('../models/TagModel')
+const ChatAddressModel = require('../models/ChatAddressModel')
 
 class TeamService {
   constructor () {
@@ -13,6 +14,7 @@ class TeamService {
     this.matchingModel = new MatchingModel()
     this.teamTagModel = new TeamTagModel()
     this.tagModel = new TagModel()
+    this.chatAddressModel = new ChatAddressModel()
   }
 
   async saveTeam (data) {
@@ -167,7 +169,7 @@ class TeamService {
 
       for (const team of teamReceivedList) {
         for (const accept of team.accepts) {
-          if (accept.dataValues.accepter_id == data.userId) {
+          if (accept.dataValues.accepter_id === data.userId) {
             team.dataValues.is_accepted = true
           }
         }
@@ -194,6 +196,17 @@ class TeamService {
     try {
       const tagList = await this.tagModel.getAllTags()
       return tagList
+    } catch (error) {
+      console.log(error)
+      throw new Error(error)
+    }
+  }
+
+  async getAndDeleteChatAddress () {
+    try {
+      const chatAddress = await this.chatAddressModel.findChatAddress()
+      await this.chatAddressModel.deleteChatAddress(chatAddress.id)
+      return chatAddress.address
     } catch (error) {
       console.log(error)
       throw new Error(error)

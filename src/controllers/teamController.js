@@ -29,7 +29,7 @@ const createTeam = async (req, res) => {
   const teamService = new TeamService()
   const userId = req.token.id
   const {
-    body: { name, chat_address, place, password, max_member_number, tagIds }
+    body: { name, place, password, maxMemberNumber, tagIds }
   } = req
   try {
     if (tagIds.length < 2 || tagIds.length > 5) {
@@ -37,13 +37,20 @@ const createTeam = async (req, res) => {
       console.log({ errorMessage })
       res.status(400).json({ errorMessage })
     } else {
+      const chatAddress = await teamService.getAndDeleteChatAddress()
+      if (!chatAddress) {
+        const errorMessage = '할당 가능한 채팅방이 존재하지 않습니다.'
+        console.log({ errorMessage })
+        res.status(400).json({ errorMessage })
+      }
+      console.log(chatAddress)
       await teamService.saveTeam({
         name,
-        chat_address,
+        chat_address: chatAddress,
         owner_id: userId,
         place,
         password,
-        max_member_number,
+        max_member_number: maxMemberNumber,
         tagIds
       })
       const data = { message: '팀 생성 성공' }
