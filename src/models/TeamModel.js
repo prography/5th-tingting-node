@@ -13,7 +13,10 @@ class TeamModel {
         is_verified: 0,
         is_deleted: 0
       },
-      raw: true
+      raw: true,
+      order: [
+        ['id', 'DESC']
+      ]
     })
     return teams
   }
