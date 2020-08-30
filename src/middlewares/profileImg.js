@@ -18,7 +18,7 @@ const options = {
       cb(null, `${+new Date()}${path.basename(file.originalname)}`)
     }
   }),
-  limits: { fileSize: 200 * 1024 * 1024 }
+  limits: { fileSize: 500 * 1024 * 1024 }
 }
 
 const thumbnailMulter = multer(options).single('thumbnail')
