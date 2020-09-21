@@ -1,4 +1,4 @@
-import AuthPassword from './entities/AuthPassword.entity'
+const AuthPassword = require('./entities/AuthPassword.entity')
 
 class AuthPasswordModel {
   async saveAuthPassword (email, code) {

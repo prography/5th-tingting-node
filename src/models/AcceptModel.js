@@ -1,4 +1,4 @@
-import Accept from './entities/Accept.entity'
+const Accept = require('./entities/Accept.entity')
 
 class AcceptModel {
   async deleteAcceptByMatchingId (matching_id) {

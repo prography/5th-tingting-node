@@ -1,4 +1,4 @@
-import Auth from './entities/Auth.entity'
+const Auth = require('./entities/Auth.entity')
 
 class AuthModel {
   async saveAuthenticatedEmail (email) {

@@ -1,4 +1,4 @@
-import Apply from './entities/Apply.entity'
+const Apply = require('./entities/Apply.entity')
 
 class ApplyModel {
   async deleteApplyByMatchingId (matching_id) {

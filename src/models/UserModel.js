@@ -1,4 +1,4 @@
-import User from './entities/User.entity'
+const User = require('./entities/User.entity')
 
 class UserModel {
   async saveUserByLocal (data) {

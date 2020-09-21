@@ -1,4 +1,4 @@
-import ProfileImg from './entities/ProfileImg.entity'
+const ProfileImg = require('./entities/ProfileImg.entity')
 
 class ProfileImgModel {
   async findProfileImg (imgId) {

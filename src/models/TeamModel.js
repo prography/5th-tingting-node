@@ -1,4 +1,4 @@
-import Team from './entities/Team.entity'
+const Team = require('./entities/Team.entity')
 const Sequelize = require('sequelize')
 const Op = Sequelize.Op
 

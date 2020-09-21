@@ -1,4 +1,4 @@
-import ChatAddress from './entities/ChatAddress.entity'
+const ChatAddress = require('./entities/ChatAddress.entity')
 
 class ChatAddressModel {
   async findChatAddress () {

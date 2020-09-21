@@ -1,4 +1,4 @@
-import Tag from './entities/Tag.entity'
+const Tag = require('./entities/Tag.entity')
 
 class TagModel {
   async getAllTags () {

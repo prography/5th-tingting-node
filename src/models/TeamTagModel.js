@@ -1,5 +1,5 @@
-import TeamTag from './entities/TeamTag.entity'
-import Tag from './entities/Tag.entity'
+const TeamTag = require('./entities/TeamTag.entity')
+const Tag = require('./entities/Tag.entity')
 
 TeamTag.belongsTo(Tag, { foreignKey: 'tag_id', as: 'tags' })
 

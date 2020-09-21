@@ -1,6 +1,6 @@
-import Matching from './entities/Matching.entity'
-import Team from './entities/Team.entity'
-import Accept from './entities/Accept.entity'
+const Matching = require('./entities/Matching.entity')
+const Team = require('./entities/Team.entity')
+const Accept = require('./entities/Accept.entity')
 const Sequelize = require('sequelize')
 const Op = Sequelize.Op
 

@@ -1,6 +1,6 @@
-import Belong from './entities/Belong.entity'
-import User from './entities/User.entity'
-import Team from './entities/Team.entity'
+const Belong = require('./entities/Belong.entity')
+const User = require('./entities/User.entity')
+const Team = require('./entities/Team.entity')
 
 User.belongsToMany(Team, { through: 'belongs' })
 Team.belongsToMany(User, { through: 'belongs' })

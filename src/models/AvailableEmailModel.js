@@ -1,4 +1,4 @@
-import AvailableEmail from './entities/AvailableEmail.entity'
+const AvailableEmail = require('./entities/AvailableEmail.entity')
 
 class AvailableEmailModel {
   async findSchoolByDomain (domain) {
