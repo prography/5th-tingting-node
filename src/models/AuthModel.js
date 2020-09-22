@@ -3,7 +3,7 @@ const Auth = require('./entities/Auth.entity')
 class AuthModel {
   async saveAuthenticatedEmail (email) {
     await Auth.create({
-      authenticated_email: email
+      authenticated_address: email
     })
   }
 
@@ -14,7 +14,7 @@ class AuthModel {
       },
       {
         where: {
-          authenticated_email: email
+          authenticated_address: email
         }
       }
     )
@@ -24,7 +24,7 @@ class AuthModel {
     const rows = await Auth.findAll({
       limit: 1,
       where: {
-        authenticated_email: email
+        authenticated_address: email
       },
       order: [['created_at', 'DESC']],
       raw: true

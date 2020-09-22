@@ -3,7 +3,7 @@ const AuthPassword = require('./entities/AuthPassword.entity')
 class AuthPasswordModel {
   async saveAuthPassword (email, code) {
     await AuthPassword.create({
-      authenticated_email: email,
+      authenticated_address: email,
       code
     })
   }

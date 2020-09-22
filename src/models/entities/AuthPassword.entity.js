@@ -10,7 +10,7 @@ const AuthPassword = db.define(
       primaryKey: true,
       autoIncrement: true
     },
-    authenticated_email: {
+    authenticated_address: {
       type: Sequelize.STRING(45),
       allowNull: false
     },
