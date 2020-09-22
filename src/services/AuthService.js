@@ -20,8 +20,8 @@ class AuthService {
   async getKakaoId (accessToken) {
     try {
       const kakaoUserInfo = await axios({
-        method: 'post',
-        url: 'https://kapi.kakao.com/v2/user/me',
+        method: 'get',
+        url: 'https://kapi.kakao.com/v1/user/access_token_info',
         headers: { Authorization: `Bearer ${accessToken}` }
       })
       const kakaoId = kakaoUserInfo.data.id ? kakaoUserInfo.data.id : null
